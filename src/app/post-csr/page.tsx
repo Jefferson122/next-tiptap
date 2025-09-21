@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import Image from "next/image";
 
 import PostHeader from "../../components/shared/PostHeader";
 import PostToc from "../../components/shared/PostToc";
@@ -8,9 +9,9 @@ import PostContent from "../../components/shared/PostContent";
 import PostSharing from "../../components/shared/PostSharing";
 import PostReadingProgress from "../../components/shared/PostReadingProgress";
 import TiptapRenderer from "@/components/TiptapRenderer/ClientRenderer";
-import Image from "next/image";
 
 import { getPost } from "@/services/post";
+import AudioPractice from "@/components/shared/AudioPractice"; // <-- import modular
 
 export default function PostPage() {
   const [post, setPost] = useState<any>(null);
@@ -28,10 +29,13 @@ export default function PostPage() {
 
   return (
     <article className="py-10 px-6 flex flex-col items-center">
-      {/* Mensaje extra que siempre aparece al inicio */}
-      <div className="w-full max-w-[56rem] mb-6 p-4 bg-blue-100 text-blue-800 rounded text-center">
+      {/* Mensaje inicial */}
+      <div className="w-full max-w-3xl mb-6 p-4 bg-blue-100 text-blue-800 rounded text-center">
         🔔 Bienvenido a mi sitio de pronunciación – ¡aprende y practica todos los días!
       </div>
+
+      {/* Componente modular de audio practice */}
+      <AudioPractice />
 
       <PostReadingProgress />
       <PostHeader
@@ -41,7 +45,8 @@ export default function PostPage() {
         readingTime={readingTime}
         cover={post.cover}
       />
-      <div className="grid grid-cols-1 w-full lg:w-auto lg:grid-cols-[minmax(auto,256px)_minmax(720px,1fr)_minmax(auto,256px)] gap-6 lg:gap-8">
+
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(auto,256px)_minmax(720px,1fr)_minmax(auto,256px)] gap-6 lg:gap-8 w-full">
         <PostSharing />
         <PostContent>
           <TiptapRenderer>{post.content}</TiptapRenderer>
@@ -49,16 +54,16 @@ export default function PostPage() {
         <PostToc />
       </div>
 
-      {/* Mensaje extra al final */}
-      <div className="w-full max-w-[56rem] mt-10 p-4 bg-green-100 text-green-800 rounded text-center">
+      {/* Mensaje final */}
+      <div className="w-full max-w-3xl mt-10 p-4 bg-green-100 text-green-800 rounded text-center">
         ✅ Gracias por leer este post. ¡No olvides practicar la pronunciación hoy!
       </div>
 
       <Image
-        src={"/doraemon.png"}
+        src="/doraemon.png"
         width={350}
         height={350}
-        alt=""
+        alt="Doraemon"
         className="mx-auto mt-20"
       />
     </article>

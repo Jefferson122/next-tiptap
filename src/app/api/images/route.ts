@@ -2,11 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 import { createCanvas } from "canvas";
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+// --- Configuración Cloudinary ---
+cloudinary.config({}); // usa CLOUDINARY_URL desde .env.local
 
 export const dynamic = "force-dynamic";
 
@@ -89,7 +86,7 @@ export async function GET() {
   }
 }
 
-// ---------- POST: audio o imagen ----------
+// ---------- POST: subir audio o imagen ----------
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();

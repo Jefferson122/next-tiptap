@@ -27,7 +27,12 @@ export default function PostPage() {
   if (!post) return null;
 
   return (
-    <article className="py-10 px-6 flex flex-col items-center ">
+    <article className="py-10 px-6 flex flex-col items-center">
+      {/* Mensaje extra que siempre aparece al inicio */}
+      <div className="w-full max-w-[56rem] mb-6 p-4 bg-blue-100 text-blue-800 rounded text-center">
+        🔔 Bienvenido a mi sitio de pronunciación – ¡aprende y practica todos los días!
+      </div>
+
       <PostReadingProgress />
       <PostHeader
         title={post.title}
@@ -43,7 +48,19 @@ export default function PostPage() {
         </PostContent>
         <PostToc />
       </div>
-      <Image src={"/doraemon.png"} width={350} height={350} alt="" className="mx-auto mt-20" />
+
+      {/* Mensaje extra al final */}
+      <div className="w-full max-w-[56rem] mt-10 p-4 bg-green-100 text-green-800 rounded text-center">
+        ✅ Gracias por leer este post. ¡No olvides practicar la pronunciación hoy!
+      </div>
+
+      <Image
+        src={"/doraemon.png"}
+        width={350}
+        height={350}
+        alt=""
+        className="mx-auto mt-20"
+      />
     </article>
   );
 }

@@ -9,12 +9,37 @@ import PostContent from "../../components/shared/PostContent";
 import PostSharing from "../../components/shared/PostSharing";
 import PostReadingProgress from "../../components/shared/PostReadingProgress";
 import TiptapRenderer from "@/components/TiptapRenderer/ClientRenderer";
+import TiptapEditor from "@/components/TiptapEditor"; // <-- importar editor
 
 import { getPost } from "@/services/post";
-import AudioPractice from "@/components/shared/AudioPractice"; // <-- import modular
+import AudioPractice from "@/components/shared/AudioPractice";
+
+// Sidebar simple de notas
+function NotesSidebar({ notes, onSelect }: any) {
+  return (
+    <div className="border-l bg-gray-50 dark:bg-[#0d1017] px-4 py-3 rounded flex flex-col gap-3">
+      <h3 className="font-bold text-lg mb-2 text-center">📂 Daily Notes</h3>
+      <ul className="space-y-2 flex-1 overflow-y-auto max-h-60">
+        {notes.map((note: any) => (
+          <li key={note.id}>
+            <button
+              onClick={() => onSelect(note)}
+              className="w-full text-left hover:bg-gray-200 dark:hover:bg-gray-800 px-2 py-1 rounded"
+            >
+              {note.date}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 export default function PostPage() {
   const [post, setPost] = useState<any>(null);
+  const [editorContent, setEditorContent] = useState<any>("<p></p>");
+  const [notes, setNotes] = useState<any[]>([]);
+  const [currentNote, setCurrentNote] = useState<any>(null);
 
   const readingTime = useMemo(() => {
     const wpm = 150;
@@ -22,7 +47,10 @@ export default function PostPage() {
   }, [post]);
 
   useEffect(() => {
-    getPost().then(setPost);
+    getPost().then((data) => {
+      setPost(data);
+      if (data?.content) setEditorContent(data.content);
+    });
   }, []);
 
   if (!post) return null;
@@ -34,8 +62,41 @@ export default function PostPage() {
         🔔 Bienvenido a mi sitio de pronunciación – ¡aprende y practica todos los días!
       </div>
 
-      {/* Componente modular de audio practice */}
-      <AudioPractice />
+      {/* Sección Audio + Editor lado derecho */}
+      <div className="w-full max-w-5xl flex flex-col lg:flex-row gap-6 my-6 items-start">
+        {/* Columna izquierda: Audio centrado */}
+        <div className="flex-1 flex justify-center">
+          <div className="w-full max-w-lg">
+            <AudioPractice />
+          </div>
+        </div>
+
+        {/* Columna derecha: Editor + Notas */}
+        <div className="w-full max-w-md flex flex-col gap-4">
+          <h2 className="text-xl font-semibold mb-3 text-center">📝 Mis notas de Speaking</h2>
+          <TiptapEditor
+            initialContent={editorContent}
+            output="html"
+            onContentChange={(newContent) => setEditorContent(newContent)}
+            contentMinHeight={200}
+            contentMaxHeight={400}
+          />
+
+          {/* Sidebar de notas */}
+          <NotesSidebar notes={notes} onSelect={(note: any) => setCurrentNote(note)} />
+
+          {/* Botón para agregar nueva nota */}
+          <button
+            className="mt-2 w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+            onClick={() => {
+              const newNote = { id: Date.now(), date: new Date().toLocaleDateString() };
+              setNotes([...notes, newNote]);
+            }}
+          >
+            ➕ Agregar nueva nota
+          </button>
+        </div>
+      </div>
 
       <PostReadingProgress />
       <PostHeader
@@ -49,7 +110,7 @@ export default function PostPage() {
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(auto,256px)_minmax(720px,1fr)_minmax(auto,256px)] gap-6 lg:gap-8 w-full">
         <PostSharing />
         <PostContent>
-          <TiptapRenderer>{post.content}</TiptapRenderer>
+          <TiptapRenderer>{editorContent}</TiptapRenderer>
         </PostContent>
         <PostToc />
       </div>

@@ -1,66 +1,31 @@
-import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
-import { createCanvas } from "canvas";
-
-// --- Configuración Cloudinary ---
-cloudinary.config({}); // usa CLOUDINARY_URL desde .env.local
+import { NextResponse, NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-// ---------- Funciones de scoring ----------
-function wordAlignment(modelo: string, intento: string) {
-  const modeloWords = modelo.toLowerCase().split(" ");
-  const intentoWords = intento.toLowerCase().split(" ");
-  return modeloWords.map((w, i) => ({
-    expected: w,
-    said: intentoWords[i] || "-",
-    status: intentoWords[i] === w ? "correct" : "incorrect",
-  }));
+// Configuración de Cloudinary (usa variables de entorno)
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Helper para subir un archivo a Cloudinary
+async function uploadToCloudinary(file: File, buffer: Buffer) {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        public_id: file.name.split(/\.\w+$/)[0], // nombre sin extensión
+        resource_type: "image",
+        invalidate: true,
+      },
+      (error, result) => (error ? reject(error) : resolve(result))
+    );
+    uploadStream.end(buffer);
+  });
 }
 
-function contentScore(modelo: string, intento: string) {
-  const matched = intento
-    .split(" ")
-    .filter((w) => modelo.toLowerCase().includes(w.toLowerCase())).length;
-  return Math.round((100 * matched) / Math.max(1, intento.split(" ").length));
-}
-
-function pronunciationScore(alignment: any[]) {
-  if (!alignment.length) return 0;
-  const totalCorrect = alignment.filter((a) => a.status === "correct").length;
-  return Math.round((totalCorrect / alignment.length) * 100);
-}
-
-function fluencyScore() {
-  return Math.floor(70 + Math.random() * 30);
-}
-
-// ---------- Generar imagen de fluidez ----------
-async function generateWaveformImage(): Promise<Buffer> {
-  const width = 600;
-  const height = 200;
-  const canvas = createCanvas(width, height);
-  const ctx = canvas.getContext("2d");
-
-  // Fondo
-  ctx.fillStyle = "#f5f5f5";
-  ctx.fillRect(0, 0, width, height);
-
-  // Línea de onda simulada
-  ctx.strokeStyle = "#4f46e5";
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  for (let x = 0; x < width; x++) {
-    const y = height / 2 + Math.sin(x / 15) * 50 * Math.random();
-    if (x === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  }
-  ctx.stroke();
-
-  return canvas.toBuffer("image/png");
-}
-
-// ---------- GET: listar imágenes subidas ----------
+// ---------- GET: listar imágenes ----------
 export async function GET() {
   try {
     const { resources } = await cloudinary.search
@@ -82,11 +47,14 @@ export async function GET() {
     return NextResponse.json(map);
   } catch (error) {
     console.error("Error fetching images:", error);
-    return NextResponse.json({ error: "Failed to fetch images" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch images" },
+      { status: 500 }
+    );
   }
 }
 
-// ---------- POST: subir audio o imagen ----------
+// ---------- POST: imagen o audio con scoring dinámico ----------
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
@@ -97,63 +65,62 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
-    // --- Audio + scoring ---
+    // ---------- AUDIO ----------
     if (modelo) {
-      const transcript = modelo; // simulación
-      const alignment = wordAlignment(modelo, transcript);
-      const cScore = contentScore(modelo, transcript);
-      const pScore = pronunciationScore(alignment);
-      const fScore = fluencyScore();
-      const globalScore = Math.round(cScore * 0.45 + pScore * 0.3 + fScore * 0.25);
+      // Simulación de transcripción
+      const transcript = modelo
+        .split(" ")
+        .map((w) => (Math.random() < 0.8 ? w : "")) // 80% chance correcto
+        .join(" ")
+        .trim();
 
-      // Generar imagen de fluidez
-      const imgBuffer = await generateWaveformImage();
+      const expectedWords = modelo.split(" ");
+      const saidWords = transcript.split(" ");
+      const alignment = expectedWords.map((word, i) => ({
+        expected: word,
+        said: saidWords[i] || "",
+        status: saidWords[i] === word ? "correct" : "missing",
+      }));
 
-      // Subir imagen a Cloudinary
-      const visualResult: any = await new Promise((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-          { resource_type: "image", public_id: `waveform_${Date.now()}` },
-          (error, result) => {
-            if (error) reject(error);
-            else resolve(result);
-          }
-        );
-        uploadStream.end(imgBuffer);
-      });
+      const content_score = Math.round(
+        (alignment.filter((a) => a.status === "correct").length /
+          expectedWords.length) *
+          100
+      );
+      const pronunciation_score = content_score;
+      const fluency_score = Math.round(Math.random() * 20 + 80); // aleatorio 80-100
+      const global_score = Math.round(
+        (content_score + pronunciation_score + fluency_score) / 3
+      );
 
       return NextResponse.json({
         transcript,
         alignment,
-        content_score: cScore,
-        pronunciation_score: pScore,
-        fluency_score: fScore,
-        global_score: globalScore,
-        url_audio: "", // opcional: si subes audio real, pones la URL
-        url_visual: visualResult.secure_url || "",
+        content_score,
+        pronunciation_score,
+        fluency_score,
+        global_score,
+        url_audio: "",
+        url_visual: "",
       });
     }
 
-    // --- Imagen ---
+    // ---------- IMAGEN ----------
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const result: any = await new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          public_id: file.name.split(/\.\w+$/)[0],
-          resource_type: "image",
-          invalidate: true,
-        },
-        (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
-        }
-      );
-      uploadStream.end(buffer);
+    const result: any = await uploadToCloudinary(file, buffer);
+
+    return NextResponse.json({
+      id: result.public_id,
+      url: result.secure_url,
+      created_at: result.created_at,
+      bytes: result.bytes,
+      format: result.format,
+      display_name: result.display_name || result.public_id,
+      width: result.width,
+      height: result.height,
     });
-
-    return NextResponse.json(result);
-
   } catch (error) {
     console.error("Error uploading file or processing audio:", error);
     return NextResponse.json(

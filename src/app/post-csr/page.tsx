@@ -9,24 +9,34 @@ import PostContent from "../../components/shared/PostContent";
 import PostSharing from "../../components/shared/PostSharing";
 import PostReadingProgress from "../../components/shared/PostReadingProgress";
 import TiptapRenderer from "@/components/TiptapRenderer/ClientRenderer";
-import TiptapEditor from "@/components/TiptapEditor"; // <-- importar editor
-
+import TiptapEditor from "@/components/TiptapEditor"; 
 import { getPost } from "@/services/post";
 import AudioPractice from "@/components/shared/AudioPractice";
 
 // Sidebar simple de notas
-function NotesSidebar({ notes, onSelect }: any) {
+function NotesSidebar({ notes, currentNote, onSelect, onDelete }: any) {
   return (
     <div className="border-l bg-gray-50 dark:bg-[#0d1017] px-4 py-3 rounded flex flex-col gap-3">
       <h3 className="font-bold text-lg mb-2 text-center">📂 Daily Notes</h3>
       <ul className="space-y-2 flex-1 overflow-y-auto max-h-60">
         {notes.map((note: any) => (
-          <li key={note.id}>
+          <li key={note.id} className="flex items-center justify-between">
             <button
               onClick={() => onSelect(note)}
-              className="w-full text-left hover:bg-gray-200 dark:hover:bg-gray-800 px-2 py-1 rounded"
+              className={`flex-1 text-left px-2 py-1 rounded ${
+                currentNote?.id === note.id
+                  ? "bg-blue-200 dark:bg-blue-800"
+                  : "hover:bg-gray-200 dark:hover:bg-gray-800"
+              }`}
             >
               {note.date}
+            </button>
+            <button
+              onClick={() => onDelete(note.id)}
+              className="ml-2 text-red-500 hover:text-red-700"
+              title="Eliminar nota"
+            >
+              ❌
             </button>
           </li>
         ))}
@@ -37,7 +47,6 @@ function NotesSidebar({ notes, onSelect }: any) {
 
 export default function PostPage() {
   const [post, setPost] = useState<any>(null);
-  const [editorContent, setEditorContent] = useState<any>("<p></p>");
   const [notes, setNotes] = useState<any[]>([]);
   const [currentNote, setCurrentNote] = useState<any>(null);
 
@@ -46,12 +55,34 @@ export default function PostPage() {
     return Math.ceil(post?.wordCount / wpm);
   }, [post]);
 
+  // 1. Cargar notas desde localStorage al montar
+  useEffect(() => {
+    const savedNotes = localStorage.getItem("dailyNotes");
+    if (savedNotes) {
+      const parsed = JSON.parse(savedNotes);
+      setNotes(parsed);
+      if (parsed.length > 0) setCurrentNote(parsed[0]);
+    }
+  }, []);
+
+  // 2. Guardar notas en localStorage cada vez que cambien
+  useEffect(() => {
+    localStorage.setItem("dailyNotes", JSON.stringify(notes));
+  }, [notes]);
+
   useEffect(() => {
     getPost().then((data) => {
       setPost(data);
-      if (data?.content) setEditorContent(data.content);
     });
   }, []);
+
+  const handleDeleteNote = (id: number) => {
+    const updatedNotes = notes.filter((note) => note.id !== id);
+    setNotes(updatedNotes);
+    if (currentNote?.id === id) {
+      setCurrentNote(updatedNotes[0] || null);
+    }
+  };
 
   if (!post) return null;
 
@@ -64,7 +95,7 @@ export default function PostPage() {
 
       {/* Sección Audio + Editor lado derecho */}
       <div className="w-full max-w-5xl flex flex-col lg:flex-row gap-6 my-6 items-start">
-        {/* Columna izquierda: Audio centrado */}
+        {/* Columna izquierda: Audio */}
         <div className="flex-1 flex justify-center">
           <div className="w-full max-w-lg">
             <AudioPractice />
@@ -74,23 +105,46 @@ export default function PostPage() {
         {/* Columna derecha: Editor + Notas */}
         <div className="w-full max-w-md flex flex-col gap-4">
           <h2 className="text-xl font-semibold mb-3 text-center">📝 Mis notas de Speaking</h2>
-          <TiptapEditor
-            initialContent={editorContent}
-            output="html"
-            onContentChange={(newContent) => setEditorContent(newContent)}
-            contentMinHeight={200}
-            contentMaxHeight={400}
-          />
+
+          {/* Editor ligado a la nota actual */}
+          {currentNote ? (
+            <TiptapEditor
+              key={currentNote.id}
+              initialContent={currentNote.content || "<p></p>"}
+              output="html"
+              onContentChange={(newContent) => {
+                setNotes((prevNotes) =>
+                  prevNotes.map((note) =>
+                    note.id === currentNote.id ? { ...note, content: newContent } : note
+                  )
+                );
+              }}
+              contentMinHeight={200}
+              contentMaxHeight={400}
+            />
+          ) : (
+            <p className="text-gray-500 text-center">Selecciona o crea una nota para empezar ✍️</p>
+          )}
 
           {/* Sidebar de notas */}
-          <NotesSidebar notes={notes} onSelect={(note: any) => setCurrentNote(note)} />
+          <NotesSidebar
+            notes={notes}
+            currentNote={currentNote}
+            onSelect={(note: any) => setCurrentNote(note)}
+            onDelete={handleDeleteNote}
+          />
 
           {/* Botón para agregar nueva nota */}
           <button
             className="mt-2 w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
             onClick={() => {
-              const newNote = { id: Date.now(), date: new Date().toLocaleDateString() };
+              const newNote = {
+                id: Date.now(),
+                date: new Date().toLocaleDateString(),
+                content: "<p></p>",
+              };
               setNotes([...notes, newNote]);
+              setCurrentNote(newNote);
             }}
           >
             ➕ Agregar nueva nota
@@ -110,7 +164,7 @@ export default function PostPage() {
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(auto,256px)_minmax(720px,1fr)_minmax(auto,256px)] gap-6 lg:gap-8 w-full">
         <PostSharing />
         <PostContent>
-          <TiptapRenderer>{editorContent}</TiptapRenderer>
+          <TiptapRenderer>{post.content}</TiptapRenderer>
         </PostContent>
         <PostToc />
       </div>

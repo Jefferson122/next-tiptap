@@ -4,9 +4,18 @@ import { useState, useEffect, useRef } from "react";
 
 const AudioPractice = () => {
   const QUESTIONS = [
-    "As a child, I used to spend hours playing in my grandmother's garden. She had an array of colorful flowers and herbs growing throughout the yard, and she would teach me about each one. She had a particular love of lavender, and I remember her telling me stories about how she used to dry it and make sachets to put in her drawers.",
-    "In Germany, over 100,000 tons of diapers are discarded each year...",
-    "Around 250 million years ago, 700 species of reptiles..."
+    "Schools host parent teacher conferences four times a year and it is important for families to attend. This is your chance to meet with teachers and ask questions about your child's progress. It can be helpful to write down questions ahead of time.",
+    "Cheerful sunny yellow is an attention geer. While it is considered an optimistic color, people lose their tempers more oOen in yellow rooms, and babies will cry more. It is the most difficult color for the eye to take in, so it can be overpowering if overused. Yellow enhances concentration, hence its use for legal pads. It also speeds metabolism.",
+    "The Office of Personnel Management was the target of the aMack, but data from nearly every government agency was stolen. U.S. investigators say they believe Chinese hackers were behind the breach.",
+    "As far as politics go, the responses are just as varied. Mitigation is common and calls for a reduction of emissions and less reliance on fossil fuels. Coal burning power plants are now replaced with hydraulic power plants and electrical cars are replacing some gasoline efficient cars. Many people, however, feel that this is not enough.",
+    "In 2005, donor countries agreed on an accord to harmonize their practices. Since then, aid officials have complained that too likely has changed on the ground. Conferences of donors in developing countries still tend to be dominated by a small group of north European governments, with the US often absent.",
+    "The coastal wetlands have environmental and economic importance. Wetlands provide natural wealth. They have important filtering capabilities. As the runoff water passes, they retain excess nutrients and some pollutants. They maintain water flow during dry periods. Thousands of people depend on ground water for drinking. They act as natural sponges of flood waters and contains oil erosion. They control floods and save the buildings from collapsing during heavy rains.",
+    "The tsunamis could provide crucial information about the habitability of ancient Mars. The first one occurred when the planet must have been relatively warm and amenable for life, because it carved out backwash channels as it returned to the sea. By contrast, the planet had become much cooler by the time the second tsunami hit.",
+    "The second group that is particularly vulnerable are night shift workers, and the third group that is particularly vulnerable are people with sleep disorders, particularly sleep apnea. One out of three men and one out of six women have sleep apnea. And yet, 85 percent are undiagnosed and untreated. And it more than doubles the risk of cancers.",
+    "A university is not a business. More precisely, a not-for-profit college or university is significantly different than a for-profit business. A university has no owners and it is a public trust. A business has a single over-riding goal: the maximization of return for the owners. A university has a multiplicity of goals: to foster learning, to create knowledge, and to serve its community.",
+    "Margaret Simons explains the changes taking place in the Australian media. She analyses audiences, our major media organisations, the role of government and the implications of all of these for our society and our democracy. Her examination leads her to the conclusion that the challenges facing the content providers in the modern world are part of a broader striving.",
+    "The one-year program of the master in global management is designed only for those who have the graduate degree in the thesis. It increases the temporary skill of new managers in an international capacity, something that recruiters are looking for more and more.",
+    "At the beginning of each fiscal year, funds are allocated to each State account in accordance with the University's financial plan. Funds are allocated to each account by objects of expenditure. Account managers are responsible for ensuring that adequate funds are available in the appropriate object before initiating transactions to use the funds."
   ];
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -75,7 +84,7 @@ const AudioPractice = () => {
     const phraseDict: Record<string,string> = { "grandmother's garden":"grandmozerz gárden", "throughout the yard":"zruáut ze yard", "would teach me":"wuud tíich mi", "as a child":"as a chaild", "in my":"in mai" };
     
     // Reemplazar frases completas
-    for(let phrase in phraseDict){ text = text.replace(new RegExp(phrase,"gi"), phraseDict[phrase]); }
+    for(const phrase in phraseDict){ text = text.replace(new RegExp(phrase,"gi"), phraseDict[phrase]); }
 
     // Reglas fonéticas generales
     const reglas = (word: string) => {
@@ -85,9 +94,10 @@ const AudioPractice = () => {
     }
 
     return text.split(/\s+/).map(w=>{
-      let clean = w.replace(/[^a-zA-Z']/g,"");
-      let punct = w.replace(/[a-zA-Z']/g,"");
-      let isCapital = w[0] && w[0] === w[0].toUpperCase();
+      const phrase = w;
+      const clean = phrase.replace(/[^a-zA-Z']/g,"");
+      const punct = phrase.replace(/[a-zA-Z']/g,"");
+      const isCapital = phrase[0] && phrase[0] === phrase[0].toUpperCase();
       let esp = clean.toLowerCase().endsWith("'s") ? (dic[clean.slice(0,-2).toLowerCase()] || reglas(clean.slice(0,-2))) + "s" : dic[clean.toLowerCase()] || reglas(clean);
       if(isCapital && esp.length>0) esp = esp[0].toUpperCase() + esp.slice(1);
       return esp + punct;

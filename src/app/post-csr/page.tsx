@@ -13,14 +13,14 @@ import TiptapEditor from "@/components/TiptapEditor";
 import { getPost } from "@/services/post";
 import AudioPractice from "@/components/shared/AudioPractice";
 
-// Sidebar simple de notas
-function NotesSidebar({ notes, currentNote, onSelect, onDelete }: any) {
+// Sidebar con nombres editables
+function NotesSidebar({ notes, currentNote, onSelect, onDelete, onRename }: any) {
   return (
     <div className="border-l bg-gray-50 dark:bg-[#0d1017] px-4 py-3 rounded flex flex-col gap-3">
       <h3 className="font-bold text-lg mb-2 text-center">📂 Daily Notes</h3>
       <ul className="space-y-2 flex-1 overflow-y-auto max-h-60">
         {notes.map((note: any) => (
-          <li key={note.id} className="flex items-center justify-between">
+          <li key={note.id} className="flex items-center gap-2">
             <button
               onClick={() => onSelect(note)}
               className={`flex-1 text-left px-2 py-1 rounded ${
@@ -29,11 +29,22 @@ function NotesSidebar({ notes, currentNote, onSelect, onDelete }: any) {
                   : "hover:bg-gray-200 dark:hover:bg-gray-800"
               }`}
             >
-              {note.date}
+              <span className="font-semibold">{note.title}</span>{" "}
+              <span className="text-xs text-gray-500">({note.date})</span>
+            </button>
+            <button
+              onClick={() => {
+                const newTitle = prompt("Nuevo nombre de la nota:", note.title);
+                if (newTitle) onRename(note.id, newTitle);
+              }}
+              className="text-yellow-600 hover:text-yellow-800"
+              title="Renombrar nota"
+            >
+              ✏️
             </button>
             <button
               onClick={() => onDelete(note.id)}
-              className="ml-2 text-red-500 hover:text-red-700"
+              className="text-red-500 hover:text-red-700"
               title="Eliminar nota"
             >
               ❌
@@ -84,6 +95,14 @@ export default function PostPage() {
     }
   };
 
+  const handleRenameNote = (id: number, newTitle: string) => {
+    setNotes((prev) =>
+      prev.map((note) =>
+        note.id === id ? { ...note, title: newTitle } : note
+      )
+    );
+  };
+
   if (!post) return null;
 
   return (
@@ -104,7 +123,7 @@ export default function PostPage() {
 
         {/* Columna derecha: Editor + Notas */}
         <div className="w-full max-w-md flex flex-col gap-4">
-          <h2 className="text-xl font-semibold mb-3 text-center">📝 Mis notas de Speaking</h2>
+          <h2 className="text-xl font-semibold mb-3 text-center">Block de Notas</h2>
 
           {/* Editor ligado a la nota actual */}
           {currentNote ? (
@@ -132,6 +151,7 @@ export default function PostPage() {
             currentNote={currentNote}
             onSelect={(note: any) => setCurrentNote(note)}
             onDelete={handleDeleteNote}
+            onRename={handleRenameNote}
           />
 
           {/* Botón para agregar nueva nota */}
@@ -141,6 +161,7 @@ export default function PostPage() {
               const newNote = {
                 id: Date.now(),
                 date: new Date().toLocaleDateString(),
+                title: `Nota ${notes.length + 1}`, // nombre inicial editable
                 content: "<p></p>",
               };
               setNotes([...notes, newNote]);

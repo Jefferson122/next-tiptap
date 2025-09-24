@@ -50,7 +50,7 @@ const AudioPractice = () => {
       formData.append("session_id", sessionIdRef.current);
 
       try {
-        const resp = await fetch("http://localhost:10000/upload-audio/", { method: "POST", body: formData });
+        const resp = await fetch("https://backend1-exyd.onrender.com/upload-audio/", { method: "POST", body: formData });
         const data = await resp.json();
         if (data.error) return alert("Error: " + data.error);
 

@@ -12,6 +12,7 @@ import TiptapRenderer from "@/components/TiptapRenderer/ClientRenderer";
 import TiptapEditor from "@/components/TiptapEditor"; 
 import { getPost } from "@/services/post";
 import AudioPractice from "@/components/shared/AudioPractice";
+import StudyMenu from "@/components/shared/StudyMenu";
 
 // Sidebar con nombres editables
 function NotesSidebar({ notes, currentNote, onSelect, onDelete, onRename }: any) {
@@ -111,6 +112,9 @@ export default function PostPage() {
       <div className="w-full max-w-3xl mb-6 p-4 bg-blue-100 text-blue-800 rounded text-center">
         🔔 Bienvenido a mi sitio de pronunciación – ¡aprende y practica todos los días!
       </div>
+      {/* Menú de estudio interactivo */}
+      <StudyMenu />
+
 
       {/* Sección Audio + Editor lado derecho */}
       <div className="w-full max-w-5xl flex flex-col lg:flex-row gap-6 my-6 items-start">

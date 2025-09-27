@@ -132,15 +132,25 @@ const AudioPractice = () => {
 
       <div>
         <h3 className="font-semibold mb-2">Results:</h3>
-        {results.map((r,i)=>(
-          <div key={i} className="border border-gray-200 p-3 mb-3 rounded">
-            <p><strong>Global Score:</strong> {r.global_score}</p>
-            <p>Content: {r.content_score}, Pronunciation: {r.pronunciation_score}, Fluency: {r.fluency_score}</p>
-            {r.url_audio && <audio controls src={r.url_audio} className="w-full mt-2 rounded" />}
-            {r.url_visual && <img src={r.url_visual} alt="Fluency Graph" className="w-full mt-2 rounded" />}
+        <div className="max-h-80 overflow-y-auto pr-2">
+          {results.map((r,i)=>(
+            <div key={i} className="border border-gray-200 p-3 mb-3 rounded bg-white shadow-sm">
+              <p><strong>Global Score:</strong> {r.global_score}</p>
+              <p>
+                Content: {r.content_score}, Pronunciation: {r.pronunciation_score}, 
+                Fluency: {r.fluency_score}
+              </p>
+              {r.url_audio && (
+                <audio controls src={r.url_audio} className="w-full mt-2 rounded" />
+              )}
+              {r.url_visual && (
+                <img src={r.url_visual} alt="Fluency Graph" className="w-full mt-2 rounded" />
+              )}
+              </div>
+            ))}
           </div>
-        ))}
       </div>
+
     </div>
   );
 };

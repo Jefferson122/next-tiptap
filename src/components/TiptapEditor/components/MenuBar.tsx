@@ -25,8 +25,8 @@ import TableButton from "@/components/TiptapEditor/components/controls/TableButt
 
 const MenuBar = () => {
   return (
-    <div className="rte-menu-bar">
-      <Toolbar dense>
+    <div className="rte-menu-bar w-full overflow-x-auto bg-white dark:bg-[#1a1a2e] shadow-sm rounded-md p-1 sm:p-2">
+      <Toolbar dense className="flex-nowrap min-w-max">
         <UndoButton />
         <RedoButton />
         {/* <ClearFormatButton /> */}

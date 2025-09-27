@@ -113,7 +113,10 @@ export default function PostPage() {
         🔔 Bienvenido a mi sitio de pronunciación – ¡aprende y practica todos los días!
       </div>
       {/* Menú de estudio interactivo */}
-      <StudyMenu />
+      <div className="w-full max-w-4xl mx-auto">
+        <StudyMenu />
+      </div>
+
 
 
       {/* Sección Audio + Editor lado derecho */}

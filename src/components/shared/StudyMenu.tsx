@@ -43,7 +43,9 @@ export default function StudyMenu() {
   );
 
   const handleChange = (key: string, value: string) => {
-    setCounts({ ...counts, [key]: parseInt(value) || 0 });
+    // Eliminamos ceros a la izquierda antes de guardar
+    const cleanValue = parseInt(value.replace(/^0+/, ""), 10) || 0;
+    setCounts({ ...counts, [key]: cleanValue });
   };
 
   const totalTime = Object.entries(counts).reduce((acc, [key, count]) => {
@@ -55,12 +57,17 @@ export default function StudyMenu() {
   }, 0);
 
   const formatTime = (secs: number) => {
-    const minutes = Math.floor(secs / 60);
+    const hours = Math.floor(secs / 3600);
+    const minutes = Math.floor((secs % 3600) / 60);
     const seconds = secs % 60;
-    return `${minutes}m ${seconds}s`;
+
+    if (hours > 0) {
+      return `${hours}h ${minutes}m${seconds > 0 ? ` ${seconds}s` : ""}`;
+    } else {
+      return `${minutes}m ${seconds}s`;
+    }
   };
 
-  // Emojis como íconos
   const icons: Record<string, JSX.Element> = {
     Speaking: <span className="inline-block mr-1">🎤</span>,
     Writing: <span className="inline-block mr-1">✍️</span>,
@@ -69,21 +76,21 @@ export default function StudyMenu() {
   };
 
   return (
-    <div className="mt-6 bg-white rounded-2xl shadow-xl p-8 max-w-7xl mx-auto border border-gray-100">
-      <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
+    <div className="mt-6 bg-white dark:bg-[#1e1e2f] rounded-2xl shadow-xl p-6 sm:p-8 max-w-full sm:max-w-7xl mx-auto border border-gray-100 dark:border-gray-700">
+      <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100">
         📊 Study Planner (PTE)
       </h2>
 
       {/* Tabs */}
-      <div className="flex justify-center gap-4 mb-8">
+      <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-6 sm:mb-8">
         {Object.keys(sections).map((sec) => (
           <button
             key={sec}
             onClick={() => setActiveSection(sec as keyof typeof sections)}
-            className={`px-5 py-2 rounded-xl font-semibold flex items-center gap-2 transition-all duration-200 ${
+            className={`px-3 sm:px-5 py-1.5 sm:py-2 rounded-xl font-semibold flex items-center gap-1 sm:gap-2 transition-all duration-200 text-sm sm:text-base ${
               activeSection === sec
                 ? "bg-blue-600 text-white shadow-md scale-105"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
             }`}
           >
             {icons[sec]} {sec}
@@ -92,24 +99,26 @@ export default function StudyMenu() {
       </div>
 
       {/* Active Section */}
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {sections[activeSection].map((task) => {
           const key = `${activeSection}-${task.name}`;
           return (
             <div
               key={key}
-              className="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition"
+              className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
             >
-              <span className="font-medium text-gray-700">{task.name}</span>
-              <div className="flex items-center gap-3">
+              <span className="font-medium text-gray-700 dark:text-gray-200 mb-1 sm:mb-0">
+                {task.name}
+              </span>
+              <div className="flex items-center gap-2 sm:gap-3">
                 <input
                   type="number"
                   min="0"
-                  className="w-20 border rounded-lg px-2 py-1 text-center shadow-sm focus:ring-2 focus:ring-blue-400 outline-none"
+                  className="w-28 sm:w-32 border rounded-lg px-2 py-1 text-center shadow-sm focus:ring-2 focus:ring-blue-400 outline-none dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"
                   value={counts[key]}
                   onChange={(e) => handleChange(key, e.target.value)}
                 />
-                <span className="text-sm text-gray-500">
+                <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-300">
                   {task.timePerQ}s / pregunta
                 </span>
               </div>
@@ -119,11 +128,11 @@ export default function StudyMenu() {
       </div>
 
       {/* Total */}
-      <div className="mt-8 p-5 bg-blue-50 rounded-xl text-center border border-blue-100">
-        <p className="text-lg font-semibold text-gray-700">
+      <div className="mt-6 sm:mt-8 p-4 sm:p-5 bg-blue-50 dark:bg-blue-900 rounded-xl text-center border border-blue-100 dark:border-blue-700">
+        <p className="text-sm sm:text-lg font-semibold text-gray-700 dark:text-gray-200">
           ⏳ Tiempo total estimado:
         </p>
-        <p className="text-3xl font-bold text-blue-700 mt-2">
+        <p className="text-2xl sm:text-3xl font-bold text-blue-700 dark:text-blue-300 mt-1 sm:mt-2">
           {formatTime(totalTime)}
         </p>
       </div>

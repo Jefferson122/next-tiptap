@@ -1,11 +1,5 @@
 "use client";
 import { useState } from "react";
-import {
-  Mic,
-  PenTool,
-  BookOpen,
-  Headphones,
-} from "lucide-react"; // íconos para los 4 pilares
 
 export default function StudyMenu() {
   const sections = {
@@ -66,11 +60,12 @@ export default function StudyMenu() {
     return `${minutes}m ${seconds}s`;
   };
 
+  // Emojis como íconos
   const icons: Record<string, JSX.Element> = {
-    Speaking: <Mic className="w-4 h-4 inline-block mr-1" />,
-    Writing: <PenTool className="w-4 h-4 inline-block mr-1" />,
-    Reading: <BookOpen className="w-4 h-4 inline-block mr-1" />,
-    Listening: <Headphones className="w-4 h-4 inline-block mr-1" />,
+    Speaking: <span className="inline-block mr-1">🎤</span>,
+    Writing: <span className="inline-block mr-1">✍️</span>,
+    Reading: <span className="inline-block mr-1">📖</span>,
+    Listening: <span className="inline-block mr-1">🎧</span>,
   };
 
   return (

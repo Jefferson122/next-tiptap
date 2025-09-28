@@ -12,6 +12,7 @@ import TiptapRenderer from "@/components/TiptapRenderer/ClientRenderer";
 import TiptapEditor from "@/components/TiptapEditor"; 
 import { getPost } from "@/services/post";
 import AudioPractice from "@/components/shared/AudioPractice";
+import WritingPractice from "@/components/shared/Writing";
 import StudyMenu from "@/components/shared/StudyMenu";
 
 // Sidebar con nombres editables
@@ -125,6 +126,11 @@ export default function PostPage() {
         <div className="flex-1 flex justify-center">
           <div className="w-full max-w-lg">
             <AudioPractice />
+          </div>
+        </div>
+        <div className="flex-1 flex justify-center">
+          <div className="w-full max-w-lg">
+            <WritingPractice />
           </div>
         </div>
 

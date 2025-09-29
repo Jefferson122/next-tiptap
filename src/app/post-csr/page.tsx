@@ -122,12 +122,6 @@ export default function PostPage() {
 
       {/* Sección Audio + Editor lado derecho */}
       <div className="w-full max-w-5xl flex flex-col lg:flex-row gap-6 my-6 items-start">
-        {/* Columna izquierda: Audio */}
-        <div className="flex-1 flex justify-center">
-          <div className="w-full max-w-lg">
-            <AudioPractice />
-          </div>
-        </div>
         <div className="flex-1 flex justify-center">
           <div className="w-full max-w-lg">
             <WritingPractice />

@@ -1,39 +1,48 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useEffect, useRef } from "react";
+import QUESTIONS from "@/components/data/questions";
+import sentences from "@/components/data/WritingDictation";
+
+interface Exercise {
+  text: string;
+  audio?: string;
+  userInput?: string;
+  score?: string;
+}
 
 export default function StudyMenu() {
   const sections = {
     Speaking: [
-      { name: "Read Aloud", timePerQ: 90 },
-      { name: "Repeat Sentence", timePerQ: 40 },
-      { name: "Describe Image", timePerQ: 60 },
-      { name: "Retell Lecture", timePerQ: 90 },
-      { name: "Answer Short Question", timePerQ: 15 },
+      { name: "Read Aloud", timePerQ: 90, instructions: "Read the text aloud clearly." },
+      { name: "Repeat Sentence", timePerQ: 40, instructions: "Listen and repeat the sentence exactly." },
+      { name: "Describe Image", timePerQ: 60, instructions: "Describe the image in detail using full sentences." },
+      { name: "Retell Lecture", timePerQ: 90, instructions: "Listen and retell the lecture in your own words." },
+      { name: "Answer Short Question", timePerQ: 15, instructions: "Answer the question briefly and clearly." },
     ],
     Writing: [
-      { name: "Summarize Written Text", timePerQ: 600 },
-      { name: "Essay", timePerQ: 1200 },
+      { name: "Summarize Written Text", timePerQ: 600, instructions: "Summarize the text in your own words within 1-2 sentences." },
+      { name: "Essay", timePerQ: 1200, instructions: "Write a well-structured essay on the given topic." },
+      { name: "Dictation", timePerQ: 60, instructions: "Listen and write exactly what you hear." },
     ],
     Reading: [
-      { name: "Fill in the Blanks (RW)", timePerQ: 120 },
-      { name: "Multiple Choice, Multiple Answer", timePerQ: 120 },
-      { name: "Re-order Paragraphs", timePerQ: 150 },
-      { name: "Fill in the Blanks", timePerQ: 120 },
-      { name: "Multiple Choice, Single Answer", timePerQ: 90 },
+      { name: "Fill in the Blanks (RW)", timePerQ: 120, instructions: "Complete the missing words in the text." },
+      { name: "Multiple Choice, Multiple Answer", timePerQ: 120, instructions: "Select all answers that apply." },
+      { name: "Re-order Paragraphs", timePerQ: 150, instructions: "Arrange the paragraphs in the correct order." },
+      { name: "Fill in the Blanks", timePerQ: 120, instructions: "Fill in the missing words." },
+      { name: "Multiple Choice, Single Answer", timePerQ: 90, instructions: "Select the correct answer." },
     ],
     Listening: [
-      { name: "Summarize Spoken Text", timePerQ: 600 },
-      { name: "Multiple Choice, Multiple Answer", timePerQ: 120 },
-      { name: "Fill in the Blanks", timePerQ: 150 },
-      { name: "Highlight Correct Summary", timePerQ: 120 },
-      { name: "Select Missing Word", timePerQ: 90 },
-      { name: "Write from Dictation", timePerQ: 60 },
+      { name: "Summarize Spoken Text", timePerQ: 600, instructions: "Summarize the spoken text in writing." },
+      { name: "Multiple Choice, Multiple Answer", timePerQ: 120, instructions: "Select all correct options." },
+      { name: "Fill in the Blanks", timePerQ: 150, instructions: "Complete the missing words from the audio." },
+      { name: "Highlight Correct Summary", timePerQ: 120, instructions: "Choose the summary that matches the audio." },
+      { name: "Select Missing Word", timePerQ: 90, instructions: "Identify the missing word in the sentence." },
+      { name: "Write from Dictation", timePerQ: 60, instructions: "Write exactly what you hear from the dictation." },
     ],
   };
 
-  const [activeSection, setActiveSection] =
-    useState<keyof typeof sections>("Speaking");
-
+  const [activeSection, setActiveSection] = useState<keyof typeof sections>("Speaking");
   const [counts, setCounts] = useState(
     Object.fromEntries(
       Object.entries(sections).flatMap(([section, tasks]) =>
@@ -42,99 +51,367 @@ export default function StudyMenu() {
     )
   );
 
+  const [questions, setQuestions] = useState<Exercise[]>([]);
+  const [instructions, setInstructions] = useState("");
+
+  // Audio / Dictation
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [allResults, setAllResults] = useState<any[][]>([]);
+  const [recording, setRecording] = useState(false);
+  const [alignmentVisible, setAlignmentVisible] = useState(false);
+  const [espVisible, setEspVisible] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [pronDetail, setPronDetail] = useState("");
+  const [pronEsp, setPronEsp] = useState("");
+  const [timer, setTimer] = useState(40);
+  const [prepareCountdown, setPrepareCountdown] = useState(3);
+  const [timeElapsed, setTimeElapsed] = useState(0);
+  const [isPreparing, setIsPreparing] = useState(true);
+
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const sessionIdRef = useRef(localStorage.getItem("sessionId") || Date.now().toString());
+  const containerRef = useRef<HTMLDivElement>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const prepRef = useRef<NodeJS.Timeout | null>(null);
+
   const handleChange = (key: string, value: string) => {
-    // Eliminamos ceros a la izquierda antes de guardar
     const cleanValue = parseInt(value.replace(/^0+/, ""), 10) || 0;
     setCounts({ ...counts, [key]: cleanValue });
   };
 
-  const totalTime = Object.entries(counts).reduce((acc, [key, count]) => {
-    const [section, taskName] = key.split("-");
-    const task = sections[section as keyof typeof sections].find(
-      (t) => t.name === taskName
-    );
-    return acc + (count as number) * (task?.timePerQ || 0);
-  }, 0);
+  // Timer
+  useEffect(() => { localStorage.setItem("sessionId", sessionIdRef.current); startTimer(); }, []);
+  useEffect(() => resetTimer(), [currentQuestion]);
+  const clearTimer = () => timerRef.current && clearInterval(timerRef.current);
+  const resetTimer = () => { stopRecording(); clearTimer(); startTimer(); setPrepareCountdown(3); setTimeElapsed(0); };
+  const startTimer = () => {
+    clearTimer();
+    setTimer(40);
+    timerRef.current = setInterval(() => {
+      setTimer(prev => {
+        if (prev <= 1) { clearTimer(); playBeep(); startRecording(); return 0; }
+        return prev-1;
+      });
+    }, 1000);
+  };
+  const playBeep = () => {
+    const context = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const osc = context.createOscillator();
+    const gainNode = context.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(1000, context.currentTime);
+    osc.connect(gainNode);
+    gainNode.connect(context.destination);
+    osc.start(); osc.stop(context.currentTime + 0.2);
+  };
+  const handleStartClick = () => { clearTimer(); setTimer(0); playBeep(); startRecording(); };
 
-  const formatTime = (secs: number) => {
-    const hours = Math.floor(secs / 3600);
-    const minutes = Math.floor((secs % 3600) / 60);
-    const seconds = secs % 60;
+  // Grabación
+  const startRecording = async () => {
+    if (recording || !questions[currentQuestion]) return;
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const recorder = new MediaRecorder(stream);
+    audioChunksRef.current = [];
 
-    if (hours > 0) {
-      return `${hours}h ${minutes}m${seconds > 0 ? ` ${seconds}s` : ""}`;
-    } else {
-      return `${minutes}m ${seconds}s`;
-    }
+    recorder.ondataavailable = e => audioChunksRef.current.push(e.data);
+    recorder.onstart = () => { setRecording(true); setTimeout(()=>{ if(recorder.state==="recording") recorder.stop(); },30000); };
+    recorder.onstop = async () => {
+      setRecording(false);
+      const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+      const formData = new FormData();
+      formData.append("file", audioBlob, "recording.webm");
+      formData.append("modelo", questions[currentQuestion].text);
+      formData.append("session_id", sessionIdRef.current);
+
+      try {
+        const resp = await fetch("https://backend1-exyd.onrender.com/upload-audio/", { method: "POST", body: formData });
+        const data = await resp.json();
+        if(data.error) return alert("Error: "+data.error);
+
+        setAllResults(prev => {
+          const copy = [...prev];
+          copy[currentQuestion] = [...copy[currentQuestion], data];
+          return copy;
+        });
+        loadResult(currentQuestion);
+      } catch(err){ console.error(err); }
+    };
+    recorder.start();
+    mediaRecorderRef.current = recorder;
+  };
+  const stopRecording = () => mediaRecorderRef.current?.state==="recording" && mediaRecorderRef.current.stop();
+
+  // Mostrar resultado
+  const loadResult = (idx:number) => {
+    const dataArray = allResults[idx];
+    if(dataArray.length>0){
+      const data = dataArray[dataArray.length-1];
+      setPronDetail(data.alignment.map((w:any)=>{
+        const color = w.status==="correct"?"green":w.status==="missing"?"red":"orange";
+        return `<span style="color:${color}; margin-right:2px">${w.said||"❌"}</span>`;
+      }).join(" "));
+    } else { setPronDetail(""); setPronEsp(""); }
   };
 
-  const icons: Record<string, JSX.Element> = {
-    Speaking: <span className="inline-block mr-1">🎤</span>,
-    Writing: <span className="inline-block mr-1">✍️</span>,
-    Reading: <span className="inline-block mr-1">📖</span>,
-    Listening: <span className="inline-block mr-1">🎧</span>,
+  // Generar preguntas e instrucciones
+  const handleGenerateInstructions = () => {
+    let result = "";
+    let qIndex = 0;
+    const q: Exercise[] = [];
+
+    Object.entries(counts).forEach(([key, count])=>{
+      const [section, taskName] = key.split("-");
+      const task = sections[section as keyof typeof sections].find(t=>t.name===taskName);
+      if(task && count>0){
+        for(let i=1;i<=count;i++){
+          result += `${task.name} - Pregunta ${i}: ${task.instructions}\n`;
+          if(taskName==="Dictation" || taskName==="Write from Dictation") {
+            q.push({
+              text: sentences[qIndex % sentences.length].text,
+              audio: sentences[qIndex % sentences.length].audio,
+              userInput: "",
+              score: "0/0"
+            });
+          } else {
+            q.push({
+              text: QUESTIONS[qIndex % QUESTIONS.length],
+            });
+          }
+          qIndex++;
+        }
+      }
+    });
+
+    setInstructions(result.trim());
+    setQuestions(q);
+    setAllResults(Array(q.length).fill([]));
+    setCurrentQuestion(0);
+    setPrepareCountdown(3);
+    setTimeElapsed(0);
+    setIsPreparing(true);
+  };
+
+  // Scoring para dictado
+  const scoreWords = (modelo: string, intento: string) => {
+    const clean = (text: string) =>
+      text.toLowerCase().replace(/[^a-z0-9]/gi, "").trim();
+
+    const modeloPal = modelo.split(/\s+/).map(clean).filter(Boolean);
+    const intentoPal = intento.split(/\s+/).map(clean).filter(Boolean);
+
+    let total = modeloPal.length;
+    if (total === 0) return "0/0";
+
+    const modeloCount: Record<string, number> = {};
+    modeloPal.forEach((w) => (modeloCount[w] = (modeloCount[w] || 0) + 1));
+
+    let correct = 0;
+    intentoPal.forEach((w) => {
+      if (modeloCount[w] > 0) {
+        correct++;
+        modeloCount[w]--;
+      }
+    });
+
+    return `${correct}/${total} (${Math.round((correct / total) * 100)}%)`;
+  };
+
+  // Controles de dictado
+  const handleInputChange = (value: string) => {
+    const updated = [...questions];
+    updated[currentQuestion].userInput = value;
+    setQuestions(updated);
+  };
+
+  const checkScore = () => {
+    const updated = [...questions];
+    updated[currentQuestion].score = scoreWords(
+      updated[currentQuestion].text,
+      updated[currentQuestion].userInput || ""
+    );
+    setQuestions(updated);
+  };
+
+  const nextQuestion = () => setCurrentQuestion(prev=>Math.min(prev+1,questions.length-1));
+  const prevQuestion = () => setCurrentQuestion(prev=>Math.max(prev-1,0));
+  const retryTest = () => { handleGenerateInstructions(); };
+
+  // Timer de dictado
+  useEffect(() => {
+    setIsPreparing(true);
+    setPrepareCountdown(3);
+    setTimeElapsed(0);
+
+    if(questions[currentQuestion]?.audio){
+      const prepInterval = setInterval(() => {
+        setPrepareCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(prepInterval);
+            setIsPreparing(false);
+            if (audioRef.current) audioRef.current.play().catch(()=>{});
+            return 0;
+          }
+          return prev-1;
+        });
+      }, 1000);
+      return () => clearInterval(prepInterval);
+    } else {
+      setIsPreparing(false);
+    }
+  }, [currentQuestion]);
+
+  useEffect(() => {
+    if (!isPreparing && questions[currentQuestion]?.userInput !== undefined) {
+      const timer = setInterval(() => setTimeElapsed(prev=>prev+1), 1000);
+      return () => clearInterval(timer);
+    }
+  }, [isPreparing, currentQuestion]);
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}m : ${s}s`;
   };
 
   return (
     <div className="mt-6 bg-white dark:bg-[#1e1e2f] rounded-2xl shadow-xl p-6 sm:p-8 max-w-full sm:max-w-7xl mx-auto border border-gray-100 dark:border-gray-700">
-      <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100">
-        📊 Study Planner (PTE)
-      </h2>
+      <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100">📊 Study Planner (PTE + Dictation)</h2>
 
       {/* Tabs */}
       <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-6 sm:mb-8">
-        {Object.keys(sections).map((sec) => (
-          <button
-            key={sec}
-            onClick={() => setActiveSection(sec as keyof typeof sections)}
+        {Object.keys(sections).map(sec=>(
+          <button key={sec} onClick={()=>setActiveSection(sec as keyof typeof sections)}
             className={`px-3 sm:px-5 py-1.5 sm:py-2 rounded-xl font-semibold flex items-center gap-1 sm:gap-2 transition-all duration-200 text-sm sm:text-base ${
-              activeSection === sec
-                ? "bg-blue-600 text-white shadow-md scale-105"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
-            }`}
-          >
-            {icons[sec]} {sec}
+              activeSection===sec?"bg-blue-600 text-white shadow-md scale-105":"bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"}`}>
+            {sec}
           </button>
         ))}
       </div>
 
-      {/* Active Section */}
+      {/* Tasks */}
       <div className="space-y-3 sm:space-y-4">
-        {sections[activeSection].map((task) => {
-          const key = `${activeSection}-${task.name}`;
+        {sections[activeSection].map(task=>{
+          const key=`${activeSection}-${task.name}`;
           return (
-            <div
-              key={key}
-              className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-            >
-              <span className="font-medium text-gray-700 dark:text-gray-200 mb-1 sm:mb-0">
-                {task.name}
-              </span>
+            <div key={key} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+              <span className="font-medium text-gray-700 dark:text-gray-200 mb-1 sm:mb-0">{task.name}</span>
               <div className="flex items-center gap-2 sm:gap-3">
-                <input
-                  type="number"
-                  min="0"
-                  className="w-28 sm:w-32 border rounded-lg px-2 py-1 text-center shadow-sm focus:ring-2 focus:ring-blue-400 outline-none dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"
-                  value={counts[key]}
-                  onChange={(e) => handleChange(key, e.target.value)}
-                />
-                <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-300">
-                  {task.timePerQ}s / pregunta
-                </span>
+                <input type="number" min="0" className="w-28 sm:w-32 border rounded-lg px-2 py-1 text-center shadow-sm focus:ring-2 focus:ring-blue-400 outline-none dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"
+                  value={counts[key]} onChange={e=>handleChange(key,e.target.value)} />
+                <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-300">{task.timePerQ}s / pregunta</span>
               </div>
             </div>
-          );
+          )
         })}
       </div>
 
-      {/* Total */}
+      {/* Total y Generate */}
       <div className="mt-6 sm:mt-8 p-4 sm:p-5 bg-blue-50 dark:bg-blue-900 rounded-xl text-center border border-blue-100 dark:border-blue-700">
-        <p className="text-sm sm:text-lg font-semibold text-gray-700 dark:text-gray-200">
-          ⏳ Tiempo total estimado:
-        </p>
-        <p className="text-2xl sm:text-3xl font-bold text-blue-700 dark:text-blue-300 mt-1 sm:mt-2">
-          {formatTime(totalTime)}
-        </p>
+        <p className="text-sm sm:text-lg font-semibold text-gray-700 dark:text-gray-200">⏳ Tiempo total estimado:</p>
+        <p className="text-2xl sm:text-3xl font-bold text-blue-700 dark:text-blue-300 mt-1 sm:mt-2">{formatTime(Object.values(counts).reduce((a,b)=>a+b*40,0))}</p>
+        <button onClick={handleGenerateInstructions} className="mt-4 px-5 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition">Generate</button>
+      </div>
+    {/* Audio / Dictation Practice */}
+      <div className="mt-8" ref={containerRef}>
+        {questions.length===0 ? (
+          <p className="text-center text-gray-500 dark:text-gray-400">
+            ⚠️ No has agregado preguntas todavía.
+          </p>
+        ) : (
+          <div>
+            <div className="mb-2 p-4 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200 break-words">
+              {questions[currentQuestion].text}
+            </div>
+
+            {questions[currentQuestion].audio && (
+              <div className="mb-2">
+                {isPreparing ? (
+                  <p className="font-bold text-red-600 mb-2 text-lg">
+                    Prepare: {prepareCountdown}...
+                  </p>
+                ) : (
+                  <p className="font-bold text-red-600 mb-2 text-lg">
+                    Time: {formatTime(timeElapsed)}
+                  </p>
+                )}
+                <audio
+                  ref={audioRef}
+                  controls
+                  src={questions[currentQuestion].audio}
+                  className="w-full mb-2"
+                />
+
+                {/* Input */}
+                <textarea
+                  value={questions[currentQuestion].userInput || ""}
+                  onChange={(e)=>handleInputChange(e.target.value)}
+                  placeholder="Write your attempt here..."
+                  className="w-full p-2 border rounded dark:bg-gray-700 dark:text-gray-200 mb-2"
+                  rows={3}
+                />
+
+                {/* Botón scoring */}
+                <div className="flex gap-2 mb-2">
+                  <button
+                    onClick={checkScore}
+                    className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                  >
+                    Check Score
+                  </button>
+                </div>
+
+                {/* Local score */}
+                {questions[currentQuestion].score && (
+                  <p className={`font-bold ${questions[currentQuestion].score.startsWith("0")?"text-red-500":"text-green-500"}`}>
+                    Score: {questions[currentQuestion].score}
+                  </p>
+                )}
+
+                {/* 🔹 Nuevo: Alignment toggler */}
+                <div className="mt-4">
+                  <button
+                    onClick={()=>setAlignmentVisible(v=>!v)}
+                    className="px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+                  >
+                    Toggle Alignment
+                  </button>
+                  {alignmentVisible && (
+                    <div
+                      className="mt-2 p-2 border rounded bg-gray-100 dark:bg-gray-900"
+                      dangerouslySetInnerHTML={{__html: pronDetail}}
+                    />
+                  )}
+                </div>
+
+                {/* 🔹 Nuevo: Resultados del backend */}
+                <div className="mt-4">
+                  <h3 className="font-semibold text-gray-800 dark:text-gray-200">Results:</h3>
+                  {(allResults[currentQuestion]||[]).slice().reverse().map((res,i)=>(
+                    <div key={i} className="mt-2 p-2 border rounded bg-white dark:bg-gray-800">
+                      <p>Global Score: {res.global_score}</p>
+                      <p>
+                        Content: {res.content_score}, Pronunciation: {res.pronunciation_score}, Fluency: {res.fluency_score}
+                      </p>
+                      {res.url_audio && <audio controls src={res.url_audio} className="mt-1 w-full" />}
+                      {res.url_visual && <img src={res.url_visual} alt="Fluency Graph" className="mt-1 max-h-40"/>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Navigation */}
+            <div className="flex flex-wrap gap-2 mb-4 mt-4">
+              <button onClick={prevQuestion} disabled={currentQuestion===0} className="flex-1 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 disabled:opacity-50">Back</button>
+              <button onClick={handleStartClick} disabled={recording} className="flex-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50">Start</button>
+              <button onClick={stopRecording} disabled={!recording} className="flex-1 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 disabled:opacity-50">Stop</button>
+              <button onClick={nextQuestion} disabled={currentQuestion===questions.length-1} className="flex-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50">Next</button>
+              <button onClick={retryTest} className="flex-1 bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700">Retry</button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

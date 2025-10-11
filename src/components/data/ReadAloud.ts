@@ -1,5 +1,5 @@
 // data/questions.ts
-const QUESTIONS: string[] = [
+const ReadAloud: string[] = [
   "Schools host parent teacher conferences four times a year and it is important for families to attend. This is your chance to meet with teachers and ask questions about your child's progress. It can be helpful to write down questions ahead of time.",
   "Cheerful sunny yellow is an attention getter. While it is considered an optimistic color, people lose their tempers more often in yellow rooms, and babies will cry more. It is the most difficult color for the eye to take in, so it can be overpowering if overused. Yellow enhances concentration, hence its use for legal pads. It also speeds metabolism.",
   "The Office of Personnel Management was the target of the attack, but data from nearly every government agency was stolen. U.S. investigators say they believe Chinese hackers were behind the breach.",
@@ -14,4 +14,4 @@ const QUESTIONS: string[] = [
   "At the beginning of each fiscal year, funds are allocated to each State account in accordance with the University's financial plan. Funds are allocated to each account by objects of expenditure. Account managers are responsible for ensuring that adequate funds are available in the appropriate object before initiating transactions to use the funds."
 ];
 
-export default QUESTIONS;
+export default ReadAloud;

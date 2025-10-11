@@ -13,7 +13,7 @@ import TiptapEditor from "@/components/TiptapEditor";
 import { getPost } from "@/services/post";
 import AudioPractice from "@/components/shared/AudioPractice";
 import WritingPractice from "@/components/shared/Writing";
-import StudyMenu from "@/components/shared/StudyMenu";
+import StudyMenu from "@/components/shared/StudyMenu1";
 
 // Sidebar con nombres editables
 function NotesSidebar({ notes, currentNote, onSelect, onDelete, onRename }: any) {

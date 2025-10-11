@@ -3,7 +3,7 @@ export interface Sentence {
   audio: string;
 }
 
-const sentences: Sentence[] = [
+const WritingDictation: Sentence[] = [
   { text: "Stock predictions can be very capricious even for professionals.", audio: "https://res.cloudinary.com/ddy824awb/video/upload/v1759093172/writingfdictationdata/wfd1.mp3" },
   { text: "The new classrooms will be put into use next month.", audio: "https://res.cloudinary.com/ddy824awb/video/upload/v1759093174/writingfdictationdata/wfd2.mp3" },
   { text: "Football is played throughout all years at the university.", audio: "https://res.cloudinary.com/ddy824awb/video/upload/v1759093176/writingfdictationdata/wfd3.mp3" },
@@ -16,4 +16,4 @@ const sentences: Sentence[] = [
   { text: "Many different conferences offer opportunities for volunteer work.", audio: "https://res.cloudinary.com/ddy824awb/video/upload/v1759093193/writingfdictationdata/wfd10.mp3" },
 ];
 
-export default sentences;
+export default WritingDictation;

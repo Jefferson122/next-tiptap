@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import ReadAloud from "@/components/data/Readaloud";
+import ReadAloud from "@/components/data/ReadAloud";
 import WritingDictation from "@/components/data/WritingDictation";
 
 
@@ -222,6 +222,43 @@ export default function StudyMenu() {
     return `${correct}/${total} (${Math.round((correct / total) * 100)}%)`;
   };
 
+  // Estado independiente para el nuevo countdown
+  const [countdown30, setCountdown30] = useState(30);
+  const countdownRef = useRef<NodeJS.Timeout | null>(null);
+  const [countdownRunning, setCountdownRunning] = useState(false);
+
+  // Iniciar countdown de 30s
+  const startCountdown30 = () => {
+    clearCountdown30(); // Asegura que no haya otro timer corriendo
+    setCountdown30(30);
+    setCountdownRunning(true);
+
+    countdownRef.current = setInterval(() => {
+      setCountdown30(prev => {
+        if (prev <= 1) {
+          clearCountdown30();
+          playBeep(); // Sonido al terminar
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  // Limpiar countdown
+  const clearCountdown30 = () => {
+    if (countdownRef.current) clearInterval(countdownRef.current);
+    setCountdownRunning(false);
+  };
+
+  // Función opcional para mostrar el tiempo en formato mm:ss
+  const formatCountdown30 = () => {
+    const m = Math.floor(countdown30 / 60);
+    const s = countdown30 % 60;
+    return `${m}:${s < 10 ? "0" : ""}${s}`;
+  };
+///////
+
   // Controles de dictado
   const handleInputChange = (value: string) => {
     const updated = [...questions];
@@ -326,7 +363,7 @@ export default function StudyMenu() {
           </p>
         ) : (
           <div>
------
+
           {/* 🔹 Render según tipo de pregunta */}
           {(() => {
             const q = questions[currentQuestion];
@@ -455,9 +492,6 @@ export default function StudyMenu() {
                 );
             }
           })()}
-
-
-----
 
             {/* Navigation */}
             <div className="flex flex-wrap gap-2 mb-4 mt-4">

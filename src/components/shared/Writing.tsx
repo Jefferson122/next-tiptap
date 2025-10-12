@@ -81,7 +81,7 @@ const WritingPractice: React.FC = () => {
     const modeloPal = modelo.split(/\s+/).map(clean).filter(Boolean);
     const intentoPal = intento.split(/\s+/).map(clean).filter(Boolean);
 
-    let total = modeloPal.length;
+    const total = modeloPal.length;
     if (total === 0) return "0/0";
 
     const modeloCount: Record<string, number> = {};

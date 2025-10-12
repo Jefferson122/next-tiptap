@@ -6,6 +6,7 @@ import { __serializeForClipboard as serializeForClipboard } from "@tiptap/pm/vie
 import Figure from "../Figure";
 import ImageCaption from "./ImageCaption";
 import Image from "../Image/Image";
+import { DOMSerializer } from "prosemirror-model";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -21,7 +22,7 @@ declare module "@tiptap/core" {
 export const ImageFigure = Figure.extend({
   name: "imageFigure",
   content: "image imageCaption?",
-  //   atom: true,
+  // atom: true,
 
   addExtensions() {
     return [ImageCaption];
@@ -29,9 +30,6 @@ export const ImageFigure = Figure.extend({
 
   addCommands() {
     return {
-      /**
-       * Insert an imageFigure node with an image and optional caption.
-       */
       setImageFigure:
         ({ src, caption }) =>
         ({ chain }) => {
@@ -47,9 +45,6 @@ export const ImageFigure = Figure.extend({
           return chain().insertContent({ type: this.name, content }).run();
         },
 
-      /**
-       * Convert a standalone image into an imageFigure node.
-       */
       imageToFigure:
         () =>
         ({ state, chain }) => {
@@ -82,9 +77,6 @@ export const ImageFigure = Figure.extend({
             .run();
         },
 
-      /**
-       * Convert an imageFigure node back to a standalone image.
-       */
       figureToImage:
         () =>
         ({ state, commands }) => {
@@ -115,9 +107,6 @@ export const ImageFigure = Figure.extend({
           return commands.insertContentAt(range, content);
         },
 
-      /**
-       * Remove an image or imageFigure node.
-       */
       removeImage:
         () =>
         ({ state, tr, dispatch }) => {
@@ -148,9 +137,6 @@ export const ImageFigure = Figure.extend({
     };
   },
 
-  /**
-   * Handle drag-and-drop behavior for imageFigure nodes.
-   */
   addProseMirrorPlugins() {
     let draggedNode: NodeSelection | null;
 
@@ -167,34 +153,40 @@ export const ImageFigure = Figure.extend({
                 return false;
               }
 
-              // Get the position of the dragged image
               const pos = view.posAtDOM(event.target, 0);
               const $pos = view.state.doc.resolve(pos);
 
-              // Check if the image is part of a `figure` node
               if ($pos.parent.type !== this.type) {
                 return false;
               }
 
-              // Set up drag data
               draggedNode = NodeSelection.create(view.state.doc, $pos.before($pos.depth));
               const draggedSlice = draggedNode.content();
-              const { dom, text, slice } = serializeForClipboard(view, draggedSlice);
+
+              // Serializar a HTML para drag-and-drop
+              const serializer = DOMSerializer.fromSchema(view.state.schema);
+              const fragmentDOM = serializer.serializeFragment(draggedSlice.content);
+              const tempDiv = document.createElement("div");
+              tempDiv.appendChild(fragmentDOM);
 
               event.dataTransfer.clearData();
-              event.dataTransfer.setData("text/html", dom.innerHTML);
-              event.dataTransfer.setData("text/plain", text);
+              event.dataTransfer.setData("text/html", tempDiv.innerHTML);
+              event.dataTransfer.setData(
+                "text/plain",
+                draggedSlice.content.textBetween(0, draggedSlice.content.size, "\n")
+              );
               event.dataTransfer.effectAllowed = "copyMove";
-              view.dragging = { slice: slice, move: event.ctrlKey };
 
               return true;
             },
+
             drop: (view) => {
               if (draggedNode) {
                 view.dispatch(view.state.tr.setSelection(draggedNode));
                 draggedNode = null;
               }
             },
+
             dragend: () => {
               draggedNode = null;
             },

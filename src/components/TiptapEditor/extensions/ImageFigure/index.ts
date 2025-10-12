@@ -1,2 +1,2 @@
-export * from "./ImageFigure";
+export * from "./ImageFigure.ts";
 export * from "./ImageCaption";

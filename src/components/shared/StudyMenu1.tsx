@@ -251,14 +251,6 @@ export default function StudyMenu() {
     setCountdownRunning(false);
   };
 
-  // Función opcional para mostrar el tiempo en formato mm:ss
-  const formatCountdown30 = () => {
-    const m = Math.floor(countdown30 / 60);
-    const s = countdown30 % 60;
-    return `${m}:${s < 10 ? "0" : ""}${s}`;
-  };
-///////
-
   // Controles de dictado
   const handleInputChange = (value: string) => {
     const updated = [...questions];

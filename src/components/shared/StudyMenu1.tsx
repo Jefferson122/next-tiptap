@@ -84,7 +84,12 @@ export default function StudyMenu() {
   };
 
   // Timer
-  useEffect(() => { localStorage.setItem("sessionId", sessionIdRef.current); startTimer(); }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { 
+    localStorage.setItem("sessionId", sessionIdRef.current); 
+    startTimer(); 
+  }, []);
+
   useEffect(() => resetTimer(), [currentQuestion]);
   const clearTimer = () => timerRef.current && clearInterval(timerRef.current);
   const resetTimer = () => { stopRecording(); clearTimer(); startTimer(); setPrepareCountdown(3); setTimeElapsed(0); };
@@ -205,7 +210,7 @@ export default function StudyMenu() {
     const modeloPal = modelo.split(/\s+/).map(clean).filter(Boolean);
     const intentoPal = intento.split(/\s+/).map(clean).filter(Boolean);
 
-    let total = modeloPal.length;
+    const total = modeloPal.length;
     if (total === 0) return "0/0";
 
     const modeloCount: Record<string, number> = {};

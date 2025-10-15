@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import sentences from "@/components/data/WritingDictation";
+import WritingDictation from "@/components/data/WritingDictation";
 
 interface Exercise {
   text: string;
@@ -21,7 +21,7 @@ const WritingPractice: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    const initial = sentences.map((s) => ({
+    const initial = WritingDictation.map((s) => ({
       text: s.text,
       audio: s.audio,
       userInput: "",
@@ -118,7 +118,7 @@ const WritingPractice: React.FC = () => {
   const back = () => setCurrent((prev) => Math.max(prev - 1, 0));
   const retry = () => {
     setExercises(
-      sentences.map((s) => ({
+      WritingDictation.map((s) => ({
         text: s.text,
         audio: s.audio,
         userInput: "",

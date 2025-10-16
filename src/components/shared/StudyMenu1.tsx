@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import ReadAloud from "@/components/data/ReadAloud";
 import WritingDictation from "@/components/data/WritingDictation";
-import repeatsentences from "../data/repeatsentences.ts";
+import repeatsentences from "../data/repeatsentences";
 
 
 

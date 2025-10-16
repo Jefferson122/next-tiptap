@@ -3,7 +3,7 @@ export interface Sentence {
   audio: string;
 }
 
-const sentences: Sentence[] = [
+const repeatsentences: Sentence[] = [
   { text: "After considering all the options she decided to take the risk.", audio: "https://res.cloudinary.com/ddy824awb/video/upload/v1760536858/repeatsentencedata/wfd1.mp3" },
   { text: "The team have already begun their preparations for the first match of the season.", audio: "https://res.cloudinary.com/ddy824awb/video/upload/v1760536862/repeatsentencedata/wfd2.mp3" },
   { text: "You can choose salad or soup to your meal.", audio: "https://res.cloudinary.com/ddy824awb/video/upload/v1760536866/repeatsentencedata/wfd3.mp3" },
@@ -33,4 +33,4 @@ const sentences: Sentence[] = [
   { text: "You can keep your bag in the back room.", audio: "https://res.cloudinary.com/ddy824awb/video/upload/v1760536953/repeatsentencedata/wfd27.mp3" },
 ];
 
-export default sentences;
+export default repeatsentences;

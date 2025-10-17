@@ -137,13 +137,20 @@ export default function StudyMenu() {
       try {
         const resp = await fetch("https://backend1-exyd.onrender.com/upload-audio/", { method: "POST", body: formData });
         const data = await resp.json();
+       
         if(data.error) return alert("Error: "+data.error);
 
         setAllResults(prev => {
           const copy = [...prev];
-          copy[currentQuestion] = [...copy[currentQuestion], data];
+          const arr = copy[currentQuestion] || [];
+          copy[currentQuestion] = [...arr, data];
+          // 🔹 Carga el resultado inmediatamente con los datos actuales:
+          setPronDetail(data.alignment.map((w:any)=>{
+            const color = w.status==="correct"?"green":w.status==="missing"?"red":"orange";
+            return `<span style="color:${color}; margin-right:2px">${w.said||"❌"}</span>`;
+          }).join(" "));
           return copy;
-        });
+        });        
         loadResult(currentQuestion);
       } catch(err){ console.error(err); }
     };
@@ -170,40 +177,42 @@ export default function StudyMenu() {
     let qIndex = 0;
     const q: Exercise[] = [];
   
-  const currentSentence = repeatsentences[qIndex % repeatsentences.length];
-
-    Object.entries(counts).forEach(([key, count])=>{
+    Object.entries(counts).forEach(([key, count]) => {
       const [section, taskName] = key.split("-");
-      const task = sections[section as keyof typeof sections].find(t=>t.name===taskName);
-      if(task && count>0){
-        for(let i=1;i<=count;i++){
+      const task = sections[section as keyof typeof sections].find(t => t.name === taskName);
+    
+      if (task && count > 0) {
+        for (let i = 1; i <= count; i++) {
           result += `${task.name} - Pregunta ${i}: ${task.instructions}\n`;
-          if(taskName==="listen" || taskName==="Write from Dictation") {
+    
+          if (taskName === "listen" || taskName === "Write from Dictation") {
+            const dict = WritingDictation[qIndex % WritingDictation.length];
             q.push({
-              text: WritingDictation[qIndex % WritingDictation.length].text,
-              audio: WritingDictation[qIndex % WritingDictation.length].audio,
+              text: dict.text,
+              audio: dict.audio,
               userInput: "",
               score: "0/0",
-              type: "WritingDictation", // <-- nuevo campo
+              type: "WritingDictation",
             });
-          } 
-          else if (section === "Speaking" && taskName === "Read Aloud"){
+          } else if (section === "Speaking" && taskName === "Read Aloud") {
             q.push({
               text: ReadAloud[qIndex % ReadAloud.length],
-              type: "ReadAloud", // <-- nuevo campo
+              type: "ReadAloud",
             });
-          }
-          else if (section === "Speaking" && taskName === "Repeat Sentence") {
+          } else if (section === "Speaking" && taskName === "Repeat Sentence") {
+            const sentence = repeatsentences[qIndex % repeatsentences.length]; // 🔹 Aquí dentro
             q.push({
-              text: currentSentence.text,
-              audio: currentSentence.audio,
+              text: sentence.text,
+              audio: sentence.audio,
               type: "repeatsentences",
             });
-          }          
+          }
+    
           qIndex++;
         }
       }
     });
+    
 
     setInstructions(result.trim());
     setQuestions(q);
@@ -476,24 +485,75 @@ export default function StudyMenu() {
                         <p className="font-bold text-red-600 mb-2 text-lg">Repeat now!</p>
                       )}
                 
-                      {/* 🎧 Reproduce el audio real */}
+                      {/* 🎧 Audio */}
                       <audio ref={audioRef} controls src={q.audio} className="w-full mb-2" />
-
+                
+                      {/* 🔹 Mostrar texto del modelo */}
                       <button
                         onClick={() => toggleShowText(currentQuestion)}
                         className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition mb-3"
                       >
                         {showTextStates[currentQuestion] ? "Hide Text" : "Show Text"}
                       </button>
-
+                
                       {showTextStates[currentQuestion] && (
                         <div className="mt-2 mb-3 p-3 border rounded-lg bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 text-lg">
                           {q.text}
                         </div>
                       )}
-
                 
-                      <div className="flex gap-2">
+                      {/* 🔹 Alignment Toggle (igual que Read Aloud) */}
+                      <div className="mt-3">
+                        <button
+                          onClick={() => setAlignmentVisible((v) => !v)}
+                          className="px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+                        >
+                          Toggle Alignment
+                        </button>
+                
+                        {alignmentVisible && (
+                          <div
+                            className="mt-2 p-2 border rounded bg-gray-100 dark:bg-gray-900"
+                            dangerouslySetInnerHTML={{ __html: pronDetail }}
+                          />
+                        )}
+                      </div>
+                
+                      {/* 🎯 Resultados */}
+                      <div className="mt-4">
+                        {(allResults[currentQuestion] || [])
+                          .slice()
+                          .reverse()
+                          .map((res, i) => (
+                            <div
+                              key={i}
+                              className="mt-2 p-2 border rounded bg-white dark:bg-gray-700"
+                            >
+                              <p>Global Score: {res.global_score}</p>
+                              <p>
+                                Content: {res.content_score}, Pronunciation: {res.pronunciation_score},
+                                Fluency: {res.fluency_score}
+                              </p>
+                
+                              {/* 🎧 Audio grabado */}
+                              {res.url_audio && (
+                                <audio controls src={res.url_audio} className="mt-1 w-full" />
+                              )}
+                
+                              {/* 📈 Gráfico de pronunciación */}
+                              {res.url_visual && (
+                                <img
+                                  src={res.url_visual}
+                                  alt="Fluency Graph"
+                                  className="mt-2 max-h-40"
+                                />
+                              )}
+                            </div>
+                          ))}
+                      </div>
+                
+                      {/* 🎙 Controles */}
+                      <div className="flex gap-2 mt-4">
                         <button
                           onClick={handleStartClick}
                           disabled={recording}
@@ -509,31 +569,9 @@ export default function StudyMenu() {
                           Stop
                         </button>
                       </div>
-                
-                      <div className="mt-4">
-                        {(allResults[currentQuestion] || [])
-                          .slice()
-                          .reverse()
-                          .map((res, i) => (
-                            <div
-                              key={i}
-                              className="mt-2 p-2 border rounded bg-white dark:bg-gray-700"
-                            >
-                              <p>Global Score: {res.global_score}</p>
-                              <p>
-                                Content: {res.content_score}, Pronunciation:{" "}
-                                {res.pronunciation_score}, Fluency: {res.fluency_score}
-                              </p>
-                              {res.url_audio && (
-                                <audio controls src={res.url_audio} className="mt-1 w-full" />
-                              )}
-                            </div>
-                          ))}
-                      </div>
                     </div>
                   );
                 
-
               case "WritingDictation":
                 return (
                   <div className="mb-4">

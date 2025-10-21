@@ -67,55 +67,19 @@ export default function StudyMenu() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [pronDetail, setPronDetail] = useState("");
   const [pronEsp, setPronEsp] = useState("");
-  const [timer, setTimer] = useState(40);
-  const [prepareCountdown, setPrepareCountdown] = useState(3);
-  const [timeElapsed, setTimeElapsed] = useState(0);
-  const [isPreparing, setIsPreparing] = useState(true);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const sessionIdRef = useRef(localStorage.getItem("sessionId") || Date.now().toString());
   const containerRef = useRef<HTMLDivElement>(null);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const prepRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleChange = (key: string, value: string) => {
     const cleanValue = parseInt(value.replace(/^0+/, ""), 10) || 0;
     setCounts({ ...counts, [key]: cleanValue });
   };
 
-  // Timer
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { 
-    localStorage.setItem("sessionId", sessionIdRef.current); 
-    startTimer(); 
-  }, []);
-
-  useEffect(() => resetTimer(), [currentQuestion]);
-  const clearTimer = () => timerRef.current && clearInterval(timerRef.current);
-  const resetTimer = () => { stopRecording(); clearTimer(); startTimer(); setPrepareCountdown(3); setTimeElapsed(0); };
-  const startTimer = () => {
-    clearTimer();
-    setTimer(40);
-    timerRef.current = setInterval(() => {
-      setTimer(prev => {
-        if (prev <= 1) { clearTimer(); playBeep(); startRecording(); return 0; }
-        return prev-1;
-      });
-    }, 1000);
-  };
-  const playBeep = () => {
-    const context = new (window.AudioContext || (window as any).webkitAudioContext)();
-    const osc = context.createOscillator();
-    const gainNode = context.createGain();
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(1000, context.currentTime);
-    osc.connect(gainNode);
-    gainNode.connect(context.destination);
-    osc.start(); osc.stop(context.currentTime + 0.2);
-  };
-  const handleStartClick = () => { clearTimer(); setTimer(0); playBeep(); startRecording(); };
+  const handleStartClick = () => { startRecording(); };
 
   // Grabación
   const startRecording = async () => {
@@ -218,9 +182,6 @@ export default function StudyMenu() {
     setQuestions(q);
     setAllResults(Array(q.length).fill([]));
     setCurrentQuestion(0);
-    setPrepareCountdown(3);
-    setTimeElapsed(0);
-    setIsPreparing(true);
   };
 
   // Scoring para dictado
@@ -253,29 +214,6 @@ export default function StudyMenu() {
   const countdownRef = useRef<NodeJS.Timeout | null>(null);
   const [countdownRunning, setCountdownRunning] = useState(false);
 
-  // Iniciar countdown de 30s
-  const startCountdown30 = () => {
-    clearCountdown30(); // Asegura que no haya otro timer corriendo
-    setCountdown30(30);
-    setCountdownRunning(true);
-
-    countdownRef.current = setInterval(() => {
-      setCountdown30(prev => {
-        if (prev <= 1) {
-          clearCountdown30();
-          playBeep(); // Sonido al terminar
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  };
-
-  // Limpiar countdown
-  const clearCountdown30 = () => {
-    if (countdownRef.current) clearInterval(countdownRef.current);
-    setCountdownRunning(false);
-  };
 
   // Controles de dictado
   const handleInputChange = (value: string) => {
@@ -297,37 +235,6 @@ export default function StudyMenu() {
   const prevQuestion = () => setCurrentQuestion(prev=>Math.max(prev-1,0));
   const retryTest = () => { handleGenerateInstructions(); };
 
-  // Timer de dictado
-  useEffect(() => {
-    setIsPreparing(true);
-    setPrepareCountdown(3);
-    setTimeElapsed(0);
-
-    if(questions[currentQuestion]?.audio){
-      const prepInterval = setInterval(() => {
-        setPrepareCountdown((prev) => {
-          if (prev <= 1) {
-            clearInterval(prepInterval);
-            setIsPreparing(false);
-            if (audioRef.current) audioRef.current.play().catch(()=>{});
-            return 0;
-          }
-          return prev-1;
-        });
-      }, 1000);
-      return () => clearInterval(prepInterval);
-    } else {
-      setIsPreparing(false);
-    }
-  }, [currentQuestion]);
-
-  useEffect(() => {
-    if (!isPreparing && questions[currentQuestion]?.userInput !== undefined) {
-      const timer = setInterval(() => setTimeElapsed(prev=>prev+1), 1000);
-      return () => clearInterval(timer);
-    }
-  }, [isPreparing, currentQuestion]);
-
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
@@ -345,7 +252,13 @@ export default function StudyMenu() {
     setShowTextStates(copy);
   };
 
-
+  useEffect(() => {
+    const ping = setInterval(() => {
+      fetch("https://backend1-exyd.onrender.com/").catch(() => {});
+    }, 300000); // cada 5 minutos
+    return () => clearInterval(ping);
+  }, []);
+  
   
   return (
     <div className="mt-6 bg-white dark:bg-[#1e1e2f] rounded-2xl shadow-xl p-6 sm:p-8 max-w-full sm:max-w-7xl mx-auto border border-gray-100 dark:border-gray-700">
@@ -402,7 +315,12 @@ export default function StudyMenu() {
               case "ReadAloud":
                 return (
                   <div className="mb-4 p-4 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200 break-words">
-                    <p className="text-lg font-semibold mb-2">{q.text}</p>
+                    <p className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                      Read aloud fluency with good pronunciation for get a good score.
+                    </p>
+                    {/* Contador debajo del texto */}
+                    
+                    <p className="text-lg mb-2">{q.text}</p>
 
                     <div className="mt-3">
                       <button
@@ -477,13 +395,10 @@ export default function StudyMenu() {
                         Listen carefully and repeat the sentence exactly.
                       </p>
                 
-                      {isPreparing ? (
-                        <p className="font-bold text-red-600 mb-2 text-lg">
-                          Prepare: {prepareCountdown}...
-                        </p>
-                      ) : (
-                        <p className="font-bold text-red-600 mb-2 text-lg">Repeat now!</p>
-                      )}
+                      <p className="text-red-600 font-semibold mb-2">
+                        🎧 Listen and repeat when ready
+                      </p>
+
                 
                       {/* 🎧 Audio */}
                       <audio ref={audioRef} controls src={q.audio} className="w-full mb-2" />
@@ -575,15 +490,10 @@ export default function StudyMenu() {
               case "WritingDictation":
                 return (
                   <div className="mb-4">
-                    {isPreparing ? (
-                      <p className="font-bold text-red-600 mb-2 text-lg">
-                        Prepare: {prepareCountdown}...
-                      </p>
-                    ) : (
-                      <p className="font-bold text-red-600 mb-2 text-lg">
-                        Time: {formatTime(timeElapsed)}
-                      </p>
-                    )}
+                    <p className="text-red-600 font-semibold mb-2">
+                      📝 Listen and write what you hear
+                    </p>
+
 
                     <audio ref={audioRef} controls src={q.audio} className="w-full mb-2" />
 

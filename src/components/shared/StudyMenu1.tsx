@@ -4,15 +4,17 @@ import { useState, useEffect, useRef } from "react";
 import ReadAloud from "@/components/data/ReadAloud";
 import WritingDictation from "@/components/data/WritingDictation";
 import repeatsentences from "@/components/data/repeatsentences";
+import describeimage from "@/components/data/describeimage";
 
 
 
 interface Exercise {
   text: string;
   audio?: string;
+  image?: string;
   userInput?: string;
   score?: string;
-  type?: "ReadAloud" | "WritingDictation" |"repeatsentences"|string; // <-- aquí
+  type?: "ReadAloud" | "WritingDictation" |"repeatsentences"|"DescribeImage" |string; // <-- aquí
 }
 
 export default function StudyMenu() {
@@ -170,7 +172,16 @@ export default function StudyMenu() {
               audio: sentence.audio,
               type: "repeatsentences",
             });
+          } else if (section === "Speaking" && taskName === "Describe Image") {
+            const img = describeimage[qIndex % describeimage.length];
+            q.push({
+              text: img.text,
+              image: img.image,       // ✅ Agregamos la URL de Cloudinary
+              type: "DescribeImage",
+            });
           }
+          
+          
     
           qIndex++;
         }
@@ -486,7 +497,65 @@ export default function StudyMenu() {
                       </div>
                     </div>
                   );
-                
+              
+              case "DescribeImage":
+                    return (
+                      <div className="text-center">
+                        <h3 className="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-100">
+                        Describe the following image as best as possible:
+                        </h3>
+                  
+                        {/* Imagen */}
+                        <img
+                          src={q.image}
+                          alt="Describe this"
+                          className="mx-auto max-h-80 rounded-lg shadow mb-4"
+                        />
+                  
+                        {/* 🔹 Botón Show/Hide Answer */}
+                        <button
+                          onClick={() => toggleShowText(currentQuestion)}
+                          className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition mb-3"
+                        >
+                          {showTextStates[currentQuestion] ? "Hide Answer" : "Show Answer"}
+                        </button>
+                  
+                        {/* 🔹 Texto descriptivo (solo si está visible) */}
+                        {showTextStates[currentQuestion] && (
+                          <div className="mt-2 mb-3 p-3 border rounded-lg bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 text-lg text-left max-w-3xl mx-auto">
+                            {q.text}
+                          </div>
+                        )}
+                  
+                        {/* 🎙 Botones de grabación */}
+                        <div className="flex justify-center gap-3">
+                          <button
+                            onClick={startRecording}
+                            disabled={recording}
+                            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                          >
+                            🎙️ Start
+                          </button>
+                          <button
+                            onClick={stopRecording}
+                            disabled={!recording}
+                            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                          >
+                            ⏹️ Stop
+                          </button>
+                        </div>
+                  
+                        {/* Resultado de pronunciación */}
+                        {pronDetail && (
+                          <div
+                            className="mt-4 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg text-left"
+                            dangerouslySetInnerHTML={{ __html: pronDetail }}
+                          />
+                        )}
+                      </div>
+                    );
+                    
+                  
               case "WritingDictation":
                 return (
                   <div className="mb-4">

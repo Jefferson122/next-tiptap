@@ -502,7 +502,7 @@ export default function StudyMenu() {
                     return (
                       <div className="text-center">
                         <h3 className="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-100">
-                        Describe the following image as best as possible:
+                          Describe the following image as best as possible:
                         </h3>
                   
                         {/* Imagen */}
@@ -520,7 +520,7 @@ export default function StudyMenu() {
                           {showTextStates[currentQuestion] ? "Hide Answer" : "Show Answer"}
                         </button>
                   
-                        {/* 🔹 Texto descriptivo (solo si está visible) */}
+                        {/* 🔹 Texto descriptivo */}
                         {showTextStates[currentQuestion] && (
                           <div className="mt-2 mb-3 p-3 border rounded-lg bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 text-lg text-left max-w-3xl mx-auto">
                             {q.text}
@@ -528,24 +528,70 @@ export default function StudyMenu() {
                         )}
                   
                         {/* 🎙 Botones de grabación */}
-                        <div className="flex justify-center gap-3">
-                          <button
-                            onClick={startRecording}
-                            disabled={recording}
-                            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-                          >
-                            🎙️ Start
-                          </button>
-                          <button
-                            onClick={stopRecording}
-                            disabled={!recording}
-                            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
-                          >
-                            ⏹️ Stop
-                          </button>
+                        <div className="flex gap-2 mt-4">
+                        <button
+                          onClick={handleStartClick}
+                          disabled={recording}
+                          className="flex-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
+                        >
+                          Start
+                        </button>
+                        <button
+                          onClick={stopRecording}
+                          disabled={!recording}
+                          className="flex-1 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 disabled:opacity-50"
+                        >
+                          Stop
+                        </button>
+                      </div>
+                  
+                        {/* 📊 Resultados (como ReadAloud y Repeat Sentence) */}
+                        <div className="mt-6">
+                          {(allResults[currentQuestion] || [])
+                            .slice()
+                            .reverse()
+                            .map((res, i) => (
+                              <div
+                                key={i}
+                                className="mt-2 p-3 border rounded bg-white dark:bg-gray-800 text-left"
+                              >
+                                <p>Global Score: {res.global_score}</p>
+                                <p>
+                                  Content: {res.content_score}, Pronunciation:{" "}
+                                  {res.pronunciation_score}, Fluency: {res.fluency_score}
+                                </p>
+
+                                {q.type === "DescribeImage" ? (
+                                  <>
+                                    <p>Cobertura: {res.content_score?.toFixed(1)}%</p>
+                                    <p>Claridad: {res.pronunciation_score?.toFixed(1)}%</p>
+                                  </>
+                                ) : (
+                                  <>
+                                    <p>Content: {res.content_score?.toFixed(1)}%</p>
+                                    <p>Pronunciation: {res.pronunciation_score?.toFixed(1)}%</p>
+                                    <p>Fluency: {res.fluency_score?.toFixed(1)}%</p>
+                                  </>
+                                )}
+                  
+                                {/* 🎧 Audio grabado */}
+                                {res.url_audio && (
+                                  <audio controls src={res.url_audio} className="mt-1 w-full" />
+                                )}
+                  
+                                {/* 📈 Imagen de pronunciación */}
+                                {res.url_visual && (
+                                  <img
+                                    src={res.url_visual}
+                                    alt="Pronunciation Graph"
+                                    className="mt-2 max-h-40"
+                                  />
+                                )}
+                              </div>
+                            ))}
                         </div>
                   
-                        {/* Resultado de pronunciación */}
+                        {/* 🔹 Detalle de pronunciación (palabra por palabra) */}
                         {pronDetail && (
                           <div
                             className="mt-4 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg text-left"
@@ -554,7 +600,7 @@ export default function StudyMenu() {
                         )}
                       </div>
                     );
-                    
+                       
                   
               case "WritingDictation":
                 return (

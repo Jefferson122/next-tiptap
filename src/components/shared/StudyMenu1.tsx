@@ -561,18 +561,7 @@ export default function StudyMenu() {
                                   {res.pronunciation_score}, Fluency: {res.fluency_score}
                                 </p>
 
-                                {q.type === "DescribeImage" ? (
-                                  <>
-                                    <p>Cobertura: {res.content_score?.toFixed(1)}%</p>
-                                    <p>Claridad: {res.pronunciation_score?.toFixed(1)}%</p>
-                                  </>
-                                ) : (
-                                  <>
-                                    <p>Content: {res.content_score?.toFixed(1)}%</p>
-                                    <p>Pronunciation: {res.pronunciation_score?.toFixed(1)}%</p>
-                                    <p>Fluency: {res.fluency_score?.toFixed(1)}%</p>
-                                  </>
-                                )}
+                                
                   
                                 {/* 🎧 Audio grabado */}
                                 {res.url_audio && (

@@ -528,22 +528,22 @@ export default function StudyMenu() {
                         )}
                   
                         {/* 🎙 Botones de grabación */}
-                        <div className="flex gap-2 mt-4">
-                        <button
-                          onClick={handleStartClick}
-                          disabled={recording}
-                          className="flex-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
-                        >
-                          Start
-                        </button>
-                        <button
-                          onClick={stopRecording}
-                          disabled={!recording}
-                          className="flex-1 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 disabled:opacity-50"
-                        >
-                          Stop
-                        </button>
-                      </div>
+                        <div className="flex justify-center gap-3">
+                          <button
+                            onClick={startRecording}
+                            disabled={recording}
+                            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                          >
+                            🎙️ Start
+                          </button>
+                          <button
+                            onClick={stopRecording}
+                            disabled={!recording}
+                            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                          >
+                            ⏹️ Stop
+                          </button>
+                        </div>
                   
                         {/* 📊 Resultados (como ReadAloud y Repeat Sentence) */}
                         <div className="mt-6">
@@ -560,8 +560,6 @@ export default function StudyMenu() {
                                   Content: {res.content_score}, Pronunciation:{" "}
                                   {res.pronunciation_score}, Fluency: {res.fluency_score}
                                 </p>
-
-                                
                   
                                 {/* 🎧 Audio grabado */}
                                 {res.url_audio && (

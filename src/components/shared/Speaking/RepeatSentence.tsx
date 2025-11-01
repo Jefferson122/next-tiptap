@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import WritingDictation from "@/components/data/repeatsentences";
+import WritingDictation from "@/components/Data1/1.Speaking/2.RepeatSentence";
 
 interface Result {
   global_score: number;

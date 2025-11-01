@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import describeimage from "@/components/data/describeimage";
+import describeimage from "@/components/Data1/1.Speaking/3.DescribeImage";
 
 interface Result {
   global_score: number;

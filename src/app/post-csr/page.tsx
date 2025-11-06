@@ -108,7 +108,7 @@ export default function PostPage() {
     <article className="py-10 px-6 flex flex-col items-center">
       {/* Mensaje inicial */}
       <div className="w-full max-w-3xl mb-6 p-4 bg-blue-100 text-blue-800 rounded text-center">
-        🔔 Bienvenido al desmadre a mi sitio de pronunciación – ¡aprende y practica todos los días!
+        🔔 Bienvenido a mi sitio de pronunciación – ¡aprende y practica todos los días!
       </div>
       {/* Menú de estudio interactivo */}
       <div className="w-full max-w-4xl mx-auto">

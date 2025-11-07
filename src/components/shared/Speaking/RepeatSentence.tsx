@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import WritingDictation from "@/components/Data1/1.Speaking/2.RepeatSentence";
-
+import repeatsentences from "@/components/Data1/1.Speaking/2.RepeatSentence";
 interface Result {
   global_score: number;
   content_score: number;
@@ -24,7 +23,7 @@ export default function RepeatSentences() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
-  const sentences = WritingDictation;
+  const sentences = repeatsentences;
 
   // 🎯 Preparar antes de reproducir audio
   useEffect(() => {

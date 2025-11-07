@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import ReadAloud from "@/components/data/ReadAloud";
-import WritingDictation from "@/components/data/WritingDictation";
-import repeatsentences from "@/components/data/repeatsentences";
-import describeimage from "@/components/data/describeimage";
+//Section Speak
+import ReadAloud from "@/components/Data1/1.Speaking/1.ReadAloud";
+import repeatsentences from "@/components/Data1/1.Speaking/2.RepeatSentence";
+import describeimage from "@/components/Data1/1.Speaking/3.DescribeImage";
 
+//Section Listening
+import WritingDictation from "@/components/Data1/4.Listening/6.WritefromDictation";
 
 
 interface Exercise {
@@ -166,13 +168,18 @@ export default function StudyMenu() {
               type: "ReadAloud",
             });
           } else if (section === "Speaking" && taskName === "Repeat Sentence") {
-            const sentence = repeatsentences[qIndex % repeatsentences.length]; // 🔹 Aquí dentro
+            // 🔹 Tomamos las últimas `count` frases, empezando por la última
+            const sentenceIndex = repeatsentences.length - i; // <-- cambia aquí
+            const sentence = repeatsentences[sentenceIndex];
+          
             q.push({
-              text: sentence.text,
+              text: `${sentence.text}`,
               audio: sentence.audio,
               type: "repeatsentences",
             });
-          } else if (section === "Speaking" && taskName === "Describe Image") {
+          }
+          
+          else if (section === "Speaking" && taskName === "Describe Image") {
             const img = describeimage[qIndex % describeimage.length];
             q.push({
               text: img.text,
@@ -409,7 +416,10 @@ export default function StudyMenu() {
                       <p className="text-red-600 font-semibold mb-2">
                         🎧 Listen and repeat when ready
                       </p>
-
+                      {/* 🔹 NUEVO: Número de pregunta justo debajo */}
+                      <p className="text-blue-700 font-semibold mb-2">
+                              Question {currentQuestion + 1}:
+                      </p>
                 
                       {/* 🎧 Audio */}
                       <audio ref={audioRef} controls src={q.audio} className="w-full mb-2" />

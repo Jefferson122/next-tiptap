@@ -19,7 +19,7 @@ const nextConfig = {
       fileLoaderRule.exclude = /\.svg$/i;
     }
     
-    // 2. Añade la regla de SVGR (tu código original, ligeramente mejorado)
+    // 2. Añade la regla de SVGR 
     config.module.rules.push({
       test: /\.svg$/i,
       // Se recomienda añadir 'issuer' para evitar conflictos con archivos CSS/imágenes
@@ -51,23 +51,25 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ['res.cloudinary.com', 'images.unsplash.com'],
-    // Las configuraciones comentadas de remotePatterns se mantienen comentadas.
-  //   remotePatterns: [
-  //     {
-  //       protocol: "https",
-  //       hostname: "images.unsplash.com",
-  //       port: "",
-  //       pathname: "**",
-  //     },
-  //
-  //     {
-  //       protocol: "http",
-  //       hostname: "res.cloudinary.com",
-  //       port: "",
-  //       pathname: "**",
-  //     },
-  //   ],
+    // 🛑 Se elimina la configuración OBSOLETA 'domains' para eliminar la advertencia.
+    // domains: ['res.cloudinary.com', 'images.unsplash.com'],
+    
+    // ✅ Se activa la configuración moderna y recomendada 'remotePatterns'.
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        port: "",
+        pathname: "**",
+      },
+      // 💡 Se recomienda usar "https" para Cloudinary por seguridad y buenas prácticas.
+      {
+        protocol: "https", 
+        hostname: "res.cloudinary.com",
+        port: "",
+        pathname: "**",
+      },
+    ],
   },
 };
 

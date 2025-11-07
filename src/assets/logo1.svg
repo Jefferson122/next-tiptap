@@ -1,40 +1,30 @@
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 900 200">
   <defs>
     
-    <linearGradient id="swooshGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+    <linearGradient id="lightSwooshGradient" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" style="stop-color:#00C6FF;stop-opacity:1" />
       <stop offset="50%" style="stop-color:#0072FF;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#384AD5;stop-opacity:1" />
     </linearGradient>
-
-    <linearGradient id="lightModeTextGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#00204A;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#000000;stop-opacity:1" />
+    
+    <linearGradient id="darkSwooshGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#345678;stop-opacity:1" /> 
+      <stop offset="50%" style="stop-color:#2A4A6A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E3E5E;stop-opacity:1" />
     </linearGradient>
 
-    <linearGradient id="darkModeTextGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#F0F8FF;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:1" />
-    </linearGradient>
-  </defs>
+    </defs>
 
   <style>
     /* 1. ESTILO POR DEFECTO (MODO CLARO) */
-    .pte-text { 
-      fill: url(#lightModeTextGradient); /* Azul Marino Profundo */
-    }
-    .pte-subtitle { 
-      fill: #444444; /* Gris más claro para subtítulo */
-    }
-
+    .pte-swoosh { fill: url(#lightSwooshGradient); }
+    .text-dark { display: none; }
+    
     /* 2. ESTILO CONDICIONAL PARA MODO OSCURO */
     @media (prefers-color-scheme: dark) {
-      .pte-text { 
-        fill: url(#darkModeTextGradient); /* Gradiente Blanco */
-      }
-      .pte-subtitle { 
-        fill: #999999; /* Gris aún más claro */
-      }
+      .pte-swoosh { fill: url(#darkSwooshGradient); }
+      .text-light { display: none; }
+      .text-dark { display: initial; }
     }
   </style>
 
@@ -42,11 +32,23 @@
     
     <path 
       d="M 0 90 C 70 30, 200 10, 310 50 L 310 30 L 360 60 L 310 90 L 310 70 Z" 
-      fill="url(#swooshGradient)"
+      class="pte-swoosh"
     />
 
-    <text x="380" y="90" font-family="Segoe UI, sans-serif" font-size="100" font-weight="900" class="pte-text">PTE</text>
-    
-    <text x="380" y="125" font-family="Segoe UI, sans-serif" font-size="30" class="pte-subtitle">Pearson Test of English</text>
+    <g class="text-light">
+      <text x="350" y="90" font-family="Segoe UI, sans-serif" font-size="100" font-weight="900" fill="url(#lightSwooshGradient)">PTE</text>
+      
+      <text x="550" y="90" font-family="Segoe UI, sans-serif" font-size="30" font-weight="900" fill="url(#lightSwooshGradient)">.jk</text>
+      
+      <text x="350" y="125" font-family="Segoe UI, sans-serif" font-size="30" font-weight="600" fill="url(#lightSwooshGradient)">Pearson Test of English</text>
+    </g>
+
+    <g class="text-dark">
+      <text x="350" y="90" font-family="Segoe UI, sans-serif" font-size="100" font-weight="900" fill="#FFFFFF">PTE</text>
+      
+      <text x="550" y="90" font-family="Segoe UI, sans-serif" font-size="30" font-weight="900" fill="#FFFFFF">.jk</text>
+      
+      <text x="350" y="125" font-family="Segoe UI, sans-serif" font-size="30" font-weight="600" fill="#FFFFFF">Pearson Test of English</text>
+    </g>
   </g>
 </svg>

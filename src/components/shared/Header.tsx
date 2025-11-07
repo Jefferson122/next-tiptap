@@ -2,7 +2,7 @@
 
 import React from "react";
 import ThemeSwitcher from "./ThemeSwitcher";
-import Logo from "../../assets/logo.svg";
+import Logo from "../../assets/logo1.svg";
 import GithubIcon from "../../assets/github.svg";
 import { usePathname } from "next/navigation";
 import Link from "next/link";

@@ -1,10 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 200" width="100%" height="auto">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 900 200">
   <defs>
     <linearGradient id="lightSwooshGradient" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#00C6FF"/>
       <stop offset="50%" stop-color="#0072FF"/>
       <stop offset="100%" stop-color="#384AD5"/>
     </linearGradient>
+
     <linearGradient id="darkSwooshGradient" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#345678"/>
       <stop offset="50%" stop-color="#2A4A6A"/>
@@ -16,28 +17,42 @@
     .pte-swoosh { fill: url(#lightSwooshGradient); }
     .text-dark { display: none; }
 
+    text.gradient {
+      fill: url(#lightSwooshGradient);
+      paint-order: fill;
+    }
+
     @media (prefers-color-scheme: dark) {
       .pte-swoosh { fill: url(#darkSwooshGradient); }
       .text-light { display: none; }
-      .text-dark { display: block; }
+      .text-dark { display: initial; }
+      text.gradient {
+        fill: url(#darkSwooshGradient);
+      }
     }
   </style>
 
-  <g transform="translate(20,15) scale(0.6)">
-    <path d="M 0 90 C 70 30, 200 10, 310 50 L 310 30 L 360 60 L 310 90 L 310 70 Z" class="pte-swoosh"/>
+  <g transform="translate(20, 15)">
+    <!-- Flecha / swoosh -->
+    <path 
+      d="M0 90 C70 30, 200 10, 310 50 L310 30 L360 60 L310 90 L310 70 Z" 
+      class="pte-swoosh"
+    />
 
+    <!-- Modo claro -->
     <g class="text-light">
-      <text x="350" y="90" font-family="Segoe UI, sans-serif" font-size="100" font-weight="900" fill="url(#lightSwooshGradient)">PTE</text>
+      <text x="350" y="90" font-family="Segoe UI, sans-serif" font-size="100" font-weight="900" class="gradient">PTE</text>
       <rect x="550" y="45" width="50" height="50" fill="url(#lightSwooshGradient)" rx="8" ry="8"/>
       <text x="555" y="85" font-family="Segoe UI, sans-serif" font-size="40" font-weight="900" fill="#FFFFFF">.jk</text>
-      <text x="350" y="125" font-family="Segoe UI, sans-serif" font-size="30" font-weight="600" fill="url(#lightSwooshGradient)">Pearson Test of English</text>
+      <text x="350" y="125" font-family="Segoe UI, sans-serif" font-size="30" font-weight="600" class="gradient">Pearson Test of English</text>
     </g>
 
+    <!-- Modo oscuro -->
     <g class="text-dark">
-      <text x="350" y="90" font-family="Segoe UI, sans-serif" font-size="100" font-weight="900" fill="#FFFFFF">PTE</text>
-      <rect x="550" y="45" width="50" height="50" fill="#FFFFFF" rx="8" ry="8"/>
-      <text x="555" y="85" font-family="Segoe UI, sans-serif" font-size="40" font-weight="900" fill="#384AD5">.jk</text>
-      <text x="350" y="125" font-family="Segoe UI, sans-serif" font-size="30" font-weight="600" fill="#FFFFFF">Pearson Test of English</text>
+      <text x="350" y="90" font-family="Segoe UI, sans-serif" font-size="100" font-weight="900" class="gradient">PTE</text>
+      <rect x="550" y="45" width="50" height="50" fill="url(#darkSwooshGradient)" rx="8" ry="8"/>
+      <text x="555" y="85" font-family="Segoe UI, sans-serif" font-size="40" font-weight="900" fill="#FFFFFF">.jk</text>
+      <text x="350" y="125" font-family="Segoe UI, sans-serif" font-size="30" font-weight="600" class="gradient">Pearson Test of English</text>
     </g>
   </g>
 </svg>

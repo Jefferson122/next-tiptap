@@ -171,13 +171,13 @@ export default function PostPage() {
       </div>
 
       <PostReadingProgress />
-      <PostHeader
-        title={post.title}
-        author={post.author}
-        createdAt={post.createdAt}
+      {/* <PostHeader
+        // title={post.title}
+        // author={post.author}
+        // createdAt={post.createdAt}
         readingTime={readingTime}
-        cover={post.cover}
-      />
+        // cover={post.cover}
+      /> */}
 
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(auto,256px)_minmax(720px,1fr)_minmax(auto,256px)] gap-6 lg:gap-8 w-full">
         <PostSharing />

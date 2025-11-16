@@ -6,6 +6,7 @@ import ReadAloud from "@/components/Data1/1.Speaking/1.ReadAloud";
 import repeatsentences from "@/components/Data1/1.Speaking/2.RepeatSentence";
 import describeimage from "@/components/Data1/1.Speaking/3.DescribeImage";
 import RetellLecture from "@/components/Data1/1.Speaking/4.RetellLecture";
+import Answershortquestion from "@/components/Data1/1.Speaking/5.AnswerShortQuestion";
 
 //Section Listening
 import WritingDictation from "@/components/Data1/4.Listening/6.WritefromDictation";
@@ -17,22 +18,21 @@ interface Exercise {
   image?: string;
   userInput?: string;
   score?: string;
-  type?: "ReadAloud" | "WritingDictation" |"repeatsentences"|"DescribeImage" | "RetellLecture"| string; // <-- aquí
+  type?: "ReadAloud" |"repeatsentences"|"DescribeImage" | "RetellLecture"|"AnswerShortQuestion"| "WritingDictation" | string; // <-- aquí
 }
 
 export default function StudyMenu() {
   const sections = {
-    Speaking: [
+    "Speaking and Writing":  [
       { name: "Read Aloud", timePerQ: 90, instructions: "Read the text aloud clearly." },
       { name: "Repeat Sentence", timePerQ: 40, instructions: "Listen and repeat the sentence exactly." },
       { name: "Describe Image", timePerQ: 60, instructions: "Describe the image in detail using full sentences." },
+      { name: "Respond to a Situation", timePerQ: 90, instructions: "Respond appropriately to the situation using full sentences." },
       { name: "Retell Lecture", timePerQ: 90, instructions: "Listen and retell the lecture in your own words." },
+      { name: "Summarize Group Discussion", timePerQ: 120, instructions: "Summarize the main points of the group discussion clearly." },
       { name: "Answer Short Question", timePerQ: 15, instructions: "Answer the question briefly and clearly." },
-    ],
-    Writing: [
       { name: "Summarize Written Text", timePerQ: 600, instructions: "Summarize the text in your own words within 1-2 sentences." },
-      { name: "Essay", timePerQ: 1200, instructions: "Write a well-structured essay on the given topic." },
-      { name: "Dictation", timePerQ: 60, instructions: "Listen and write exactly what you hear." },
+      { name: "Write Essay", timePerQ: 1200, instructions: "Write a well-structured essay on the given topic." }
     ],
     Reading: [
       { name: "Fill in the Blanks (RW)", timePerQ: 120, instructions: "Complete the missing words in the text." },
@@ -51,7 +51,7 @@ export default function StudyMenu() {
     ],
   };
 
-  const [activeSection, setActiveSection] = useState<keyof typeof sections>("Speaking");
+  const [activeSection, setActiveSection] = useState<keyof typeof sections>("Speaking and Writing");
   const [counts, setCounts] = useState(
     Object.fromEntries(
       Object.entries(sections).flatMap(([section, tasks]) =>
@@ -100,7 +100,10 @@ export default function StudyMenu() {
       const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
       const formData = new FormData();
       formData.append("file", audioBlob, "recording.webm");
-      formData.append("modelo", questions[currentQuestion].text);
+      const cleanText = (text: string) =>
+        text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+      
+      formData.append("modelo", cleanText(questions[currentQuestion].text));
       formData.append("session_id", sessionIdRef.current);
 
       try {
@@ -163,12 +166,14 @@ export default function StudyMenu() {
               score: "0/0",
               type: "WritingDictation",
             });
-          } else if (section === "Speaking" && taskName === "Read Aloud") {
+          } else if (section === "Speaking and Writing" && taskName === "Read Aloud") {
+            // Después:
             q.push({
-              text: ReadAloud[qIndex % ReadAloud.length],
+              text: ReadAloud[qIndex % ReadAloud.length].text,
               type: "ReadAloud",
             });
-          } else if (section === "Speaking" && taskName === "Repeat Sentence") {
+            
+          } else if (section === "Speaking and Writing" && taskName === "Repeat Sentence") {
             // 🔹 Tomamos las últimas `count` frases, empezando por la última
             const sentenceIndex = repeatsentences.length - i; // <-- cambia aquí
             const sentence = repeatsentences[sentenceIndex];
@@ -180,7 +185,7 @@ export default function StudyMenu() {
             });
           }
           
-          else if (section === "Speaking" && taskName === "Describe Image") {
+          else if (section === "Speaking and Writing" && taskName === "Describe Image") {
             const img = describeimage[qIndex % describeimage.length];
             q.push({
               text: img.text,
@@ -189,7 +194,7 @@ export default function StudyMenu() {
             });
           }
 
-          else if (section === "Speaking" && taskName === "Retell Lecture") {
+          else if (section === "Speaking and Writing" && taskName === "Retell Lecture") {
             // 🔹 Tomamos las últimas `count` frases, empezando por la última
             const sentenceIndex1 = RetellLecture.length - i; // <-- cambia aquí
             const sentence1 = RetellLecture[sentenceIndex1];
@@ -200,7 +205,17 @@ export default function StudyMenu() {
               type: "RetellLecture",
             });
           }
-          
+
+          else if (section === "Speaking and Writing" && taskName === "Answer Short Question") {
+            const questionData = Answershortquestion[qIndex % Answershortquestion.length];
+            q.push({
+                text: questionData.question,
+                audio: questionData.audio,
+                userInput: "",
+                type: "AnswerShortQuestion",
+                score: "",
+            });
+          }          
           
     
           qIndex++;
@@ -713,6 +728,88 @@ export default function StudyMenu() {
                     </div>
                   );
         
+              case "AnswerShortQuestion":
+                    return (
+                      <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
+                        <p className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                          Answer the question by saying the word aloud.
+                        </p>
+                  
+                        {/* Número de pregunta */}
+                        <p className="text-blue-700 font-semibold mb-2">
+                          Question {currentQuestion + 1}:
+                        </p>
+                  
+                        {/* Audio de la pregunta */}
+                        <audio ref={audioRef} controls src={q.audio} className="w-full mb-2" />
+
+                        {/* Botones para grabar la respuesta */}
+                        <div className="flex gap-2 mt-2 mb-2">
+                          <button
+                            onClick={handleStartClick}
+                            disabled={recording}
+                            className="flex-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
+                          >
+                            Start
+                          </button>
+                          <button
+                            onClick={stopRecording}
+                            disabled={!recording}
+                            className="flex-1 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 disabled:opacity-50"
+                          >
+                            Stop
+                          </button>
+                        </div>
+                  
+                        {/* Botón compacto Show/Hide para Pregunta + Respuesta */}
+                        <button
+                          onClick={() => toggleShowText(currentQuestion)}
+                          className="mb-2 px-3 py-1 bg-yellow-400 dark:bg-yellow-600 text-black dark:text-white font-semibold rounded-full hover:bg-yellow-500 dark:hover:bg-yellow-700 transition"
+                        >
+                          {showTextStates[currentQuestion] ? "Hide Q&A" : "Show Q&A"}
+                        </button>
+
+                        {/* Bloque que contiene Pregunta + Respuesta */}
+                        {showTextStates[currentQuestion] && (
+                          <div className="mt-2 p-3 border rounded bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 text-lg">
+                            {/* Pregunta */}
+                            <p className="font-semibold mb-2 text-blue-700">Question:</p>
+                            <p className="mb-4">{questions[currentQuestion].text}</p>
+
+                            {/* Respuesta */}
+                            <p className="font-semibold mb-2 text-green-700">Answer:</p>
+                            <p>{Answershortquestion[currentQuestion].answer}</p>
+                          </div>
+                        )}
+                  
+                        {/* Resultado de la evaluación de la palabra */}
+                        {pronDetail && (
+                          <div
+                            className="mt-4 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg text-left text-lg font-semibold"
+                            dangerouslySetInnerHTML={{ __html: pronDetail }}
+                          />
+                        )}
+                  
+                        {/* Mostrar resultados del backend (opcional) */}
+                        <div className="mt-4">
+                          {(allResults[currentQuestion] || [])
+                            .slice()
+                            .reverse()
+                            .map((res, i) => (
+                              <div key={i} className="mt-2 p-2 border rounded bg-white dark:bg-gray-700">
+                                <p>Global Score: {res.global_score}</p>
+                                <p>
+                                  Content: {res.content_score}, Pronunciation: {res.pronunciation_score}, Fluency: {res.fluency_score}
+                                </p>
+                                {res.url_audio && (
+                                  <audio controls src={res.url_audio} className="mt-1 w-full" />
+                                )}
+                              </div>
+                            ))}
+                        </div>
+                      </div>
+                    );
+                  
                   
               case "WritingDictation":
                 return (

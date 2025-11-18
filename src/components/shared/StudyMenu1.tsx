@@ -9,6 +9,8 @@ import RetellLecture from "@/components/Data1/1.Speaking/4.RetellLecture";
 import Answershortquestion from "@/components/Data1/1.Speaking/5.AnswerShortQuestion";
 import readings from "@/components/Data1/1.Speaking/6.SummarizeGroupdiscussion";
 import respondSituations from "@/components/Data1/1.Speaking/7.RespondtoaSituation";
+import SummarizeWrittentext from "@/components/Data1/2.Writing/1.SummarizeWrittenText";
+import Essay from "@/components/Data1/2.Writing/2.Essay";
 
 //Section Listening
 import WritingDictation from "@/components/Data1/4.Listening/6.WritefromDictation";
@@ -20,7 +22,7 @@ interface Exercise {
   image?: string;
   userInput?: string;
   score?: string;
-  type?: "ReadAloud" |"repeatsentences"|"DescribeImage" | "RetellLecture"|"AnswerShortQuestion"|"respond_to_situation"|"summarize"| "WritingDictation" |  string; // <-- aquí
+  type?: "ReadAloud" |"repeatsentences"|"DescribeImage" | "RetellLecture"|"AnswerShortQuestion"|"respond_to_situation"|"summarize"|"Essay"|"SummarizeWrittentext"|"WritingDictation" |  string; // <-- aquí
 }
 
 export default function StudyMenu() {
@@ -240,6 +242,28 @@ export default function StudyMenu() {
             q.push({
               text: RespondSituation.situation,     // texto oculto
               type: "respond_to_situation",
+            });
+          }
+
+          else if (
+            section === "Speaking and Writing" && taskName === "Summarize Written Text") {
+            const index = SummarizeWrittentext.length - i;  // Descendente
+            const SummarizeWrittentext1 = SummarizeWrittentext[index];
+          
+            q.push({
+              text: SummarizeWrittentext1.text,     // texto oculto
+              type: "SummarizeWrittentext",
+            });
+          }
+
+          else if (
+            section === "Speaking and Writing" && taskName === "Write Essay") {
+            const index = Essay.length - i;  // Descendente
+            const Essay1 = Essay[index];
+          
+            q.push({
+              text: Essay1.text,     // texto oculto
+              type: "Essay",
             });
           }
           
@@ -984,8 +1008,105 @@ export default function StudyMenu() {
                             </div>
                           </div>
                         );
-                              
+               
+              case "SummarizeWrittentext":
+                          return (
+                            <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
+                              <p className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                                {q.type === "SummarizeWrittentext"
+                                  ? "Write a Summarize on the given topic."
+                                  : "Write your answer below:"}
+                              </p>
 
+                              {/* Texto de referencia */}
+                              {q.text && (
+                                <div className="mb-3 p-3 border rounded bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+                                  {q.text}
+                                </div>
+                              )}
+
+                              {/* Área de escritura */}
+                              <textarea
+                                value={q.userInput || ""}
+                                onChange={(e) => handleInputChange(e.target.value)}
+                                className="w-full p-3 border rounded-lg bg-white dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                rows={6}
+                                placeholder="Type your answer here..."
+                              />
+
+                              {/* Contador de palabras */}
+                              <p className="mt-2 text-right text-sm text-gray-500 dark:text-gray-300">
+                                Word count: {(q.userInput?.trim().split(/\s+/).filter(Boolean).length) || 0}
+                              </p>
+
+                              {/* Botón para calcular score (opcional) */}
+                              <button
+                                onClick={checkScore}
+                                className="mt-3 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                              >
+                                Check Score
+                              </button>
+
+                              {/* Resultado */}
+                              {/* {q.score && (
+                                <p className="mt-2 font-semibold text-gray-800 dark:text-gray-100">
+                                  Score: {q.score}
+                                </p>
+                              )} */}
+                            </div>
+
+                          );
+                                            
+              case "Essay":
+                          return (
+                            <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
+                              <p className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                                {q.type === "Essay"
+                                  ? "Write a well-structured essay on the given topic."
+                                  : "Write your answer below:"}
+                              </p>
+
+                              {/* Texto de referencia */}
+                              {q.text && (
+                                <div className="mb-3 p-3 border rounded bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+                                  {q.text}
+                                </div>
+                              )}
+
+                              {/* Área de escritura */}
+                              <textarea
+                                value={q.userInput || ""}
+                                onChange={(e) => handleInputChange(e.target.value)}
+                                className="w-full p-3 border rounded-lg bg-white dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                rows={6}
+                                placeholder="Type your answer here..."
+                              />
+
+                              {/* Contador de palabras */}
+                              <p className="mt-2 text-right text-sm text-gray-500 dark:text-gray-300">
+                                Word count: {(q.userInput?.trim().split(/\s+/).filter(Boolean).length) || 0}
+                              </p>
+
+                              {/* Botón para calcular score (opcional) */}
+                              <button
+                                onClick={checkScore}
+                                className="mt-3 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                              >
+                                Check Score
+                              </button>
+
+                              {/* Resultado */}
+                              {/* {q.score && (
+                                <p className="mt-2 font-semibold text-gray-800 dark:text-gray-100">
+                                  Score: {q.score}
+                                </p>
+                              )} */}
+                            </div>
+
+                          );
+              
+                          
+                          
               case "WritingDictation":
                 return (
                   <div className="mb-4">

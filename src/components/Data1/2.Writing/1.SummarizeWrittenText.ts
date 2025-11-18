@@ -5,7 +5,7 @@ export interface SummarizeExercise {
     text: string;
   }
   
-  export const pteSummarizeExercises: SummarizeExercise[] = [
+  export const SummarizeWrittentext: SummarizeExercise[] = [
         {
           id: 23,
           title: "Education Quality vs Equity in Australia",
@@ -151,3 +151,4 @@ export interface SummarizeExercise {
     
   ];
   
+  export default SummarizeWrittentext;

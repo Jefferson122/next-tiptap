@@ -12,17 +12,28 @@ import respondSituations from "@/components/Data1/1.Speaking/7.RespondtoaSituati
 import SummarizeWrittentext from "@/components/Data1/2.Writing/1.SummarizeWrittenText";
 import Essay from "@/components/Data1/2.Writing/2.Essay";
 
+// Section Writing
+import FillInTheBlanks from "@/components/Data1/3.Reading/1.FillintheBlanks(RW)"
+
 //Section Listening
 import WritingDictation from "@/components/Data1/4.Listening/6.WritefromDictation";
 
 
+// coloca esto en la parte superior, donde defines las interfaces
+export interface BlankOption {
+  options: string[];
+  correct?: string;
+}
+
 interface Exercise {
-  text: string;
+  text: string | string[];
+  userSelections?: string[]; // <-- NECESARIO para RW
+  blanks?: BlankOption[];              // opciones por hueco
   audio?: string;
   image?: string;
   userInput?: string;
   score?: string;
-  type?: "ReadAloud" |"repeatsentences"|"DescribeImage" | "RetellLecture"|"AnswerShortQuestion"|"respond_to_situation"|"summarize"|"Essay"|"SummarizeWrittentext"|"WritingDictation" |  string; // <-- aquí
+  type?: "ReadAloud" |"repeatsentences"|"DescribeImage" | "RetellLecture"|"AnswerShortQuestion"|"respond_to_situation"|"summarize"|"Essay"|"FillInTheBlanks"|"SummarizeWrittentext"|"WritingDictation" |  string; // <-- aquí
 }
 
 export default function StudyMenu() {
@@ -107,7 +118,16 @@ export default function StudyMenu() {
       const cleanText = (text: string) =>
         text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
       
-      formData.append("modelo", cleanText(questions[currentQuestion].text));
+      // formData.append("modelo", cleanText(questions[currentQuestion].text));
+      formData.append(
+        "modelo",
+        cleanText(
+          Array.isArray(questions[currentQuestion].text)
+            ? questions[currentQuestion].text.join(" ")
+            : questions[currentQuestion].text
+        )
+      );
+      
       formData.append("session_id", sessionIdRef.current);
 
       try {
@@ -266,6 +286,20 @@ export default function StudyMenu() {
               type: "Essay",
             });
           }
+
+                    // --- dentro de handleGenerateInstructions, junto a los otros else if ---
+          else if (section === "Reading" && taskName === "Fill in the Blanks (RW)") {
+            const index = FillInTheBlanks.length - 1 - i; // descendente seguro
+            const item = FillInTheBlanks[index];
+
+            q.push({
+              text: item.text,            // aquí item.text debe ser string[] (segmentos)
+              blanks: item.blanks,        // array de opciones para cada hueco
+              userSelections: Array(item.blanks?.length || 0).fill(""), // inicializa vacíos
+              type: "FillInTheBlanks",
+            } as Exercise);
+          }
+
           
           
           
@@ -280,6 +314,18 @@ export default function StudyMenu() {
     setQuestions(q);
     setAllResults(Array(q.length).fill([]));
     setCurrentQuestion(0);
+  };
+
+  // función para actualizar la selección de un blank
+  const handleBlankChange = (qIdx: number, blankIdx: number, value: string) => {
+    setQuestions(prev => {
+      const copy = [...prev];
+      const question = { ...copy[qIdx] } as any;
+      question.userSelections = question.userSelections ? [...question.userSelections] : [];
+      question.userSelections[blankIdx] = value;
+      copy[qIdx] = question;
+      return copy;
+    });
   };
 
   // Scoring para dictado
@@ -320,14 +366,76 @@ export default function StudyMenu() {
     setQuestions(updated);
   };
 
+  // const checkScore = () => {
+  //   const updated = [...questions];
+  //   updated[currentQuestion].score = scoreWords(
+  //     // updated[currentQuestion].text,
+  //     updated[currentQuestion].userInput || ""
+  //   );
+  //   setQuestions(updated);
+  // };
+  // const checkScore = () => {
+  //   const updated = [...questions];
+  
+  //   // Convertir el texto a string si viene como array (solo si quisieras usarlo)
+  //   const modelo = Array.isArray(updated[currentQuestion].text)
+  //     ? updated[currentQuestion].text.join(" ")
+  //     : updated[currentQuestion].text;
+  
+  //   updated[currentQuestion].score = scoreWords(updated[currentQuestion].userInput || "");
+  
+  //   setQuestions(updated);
+  // };
+  
   const checkScore = () => {
     const updated = [...questions];
-    updated[currentQuestion].score = scoreWords(
-      updated[currentQuestion].text,
-      updated[currentQuestion].userInput || ""
-    );
+  
+    // seguridad: existe la pregunta actual
+    if (currentQuestion < 0 || currentQuestion >= updated.length) return;
+  
+    // casteo local con las propiedades que necesitamos
+    const qCurr = { ...(updated[currentQuestion] as Exercise) } as Exercise & {
+      userSelections?: string[];
+      blanks?: BlankOption[];
+      text?: string | string[];
+      userInput?: string;
+    };
+  
+    // Si es FillInTheBlanks -> comparamos userSelections con blanks[].correct
+    if (qCurr.type === "FillInTheBlanks") {
+      const blanks = qCurr.blanks || [];
+      const selections = qCurr.userSelections || [];
+  
+      const total = blanks.length;
+      let correct = 0;
+  
+      for (let i = 0; i < total; i++) {
+        const correctAns = (blanks[i]?.correct || "").toString().trim().toLowerCase();
+        const userAns = (selections[i] || "").toString().trim().toLowerCase();
+        if (correctAns && userAns && userAns === correctAns) correct++;
+      }
+  
+      const percent = total === 0 ? 0 : Math.round((correct / total) * 100);
+      qCurr.score = `${correct}/${total} (${percent}%)`;
+  
+      // guarda los cambios de vuelta
+      updated[currentQuestion] = qCurr;
+      setQuestions(updated);
+      return;
+    }
+  
+    // Resto de tipos: tratamos texto que puede ser string | string[]
+    const modelo = Array.isArray(qCurr.text) ? qCurr.text.join(" ") : (qCurr.text || "");
+    const intento = (qCurr.userInput || "").toString();
+  
+    // usa scoreWords(modelo, intento)
+    qCurr.score = scoreWords(modelo, intento);
+  
+    updated[currentQuestion] = qCurr;
     setQuestions(updated);
   };
+
+  
 
   const nextQuestion = () => setCurrentQuestion(prev=>Math.min(prev+1,questions.length-1));
   const prevQuestion = () => setCurrentQuestion(prev=>Math.max(prev-1,0));
@@ -1104,9 +1212,7 @@ export default function StudyMenu() {
                             </div>
 
                           );
-              
-                          
-                          
+                                  
               case "WritingDictation":
                 return (
                   <div className="mb-4">
@@ -1145,6 +1251,126 @@ export default function StudyMenu() {
                     )}
                   </div>
                 );
+
+              case "FillInTheBlanks":
+                  return (
+                    <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
+                      <p className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                        Fill in the blanks — selecciona la opción correcta en cada hueco.
+                      </p>
+                
+                      {/* Texto con selects intercalados */}
+                      <div className="mb-3 p-3 border rounded bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 text-lg">
+                        {Array.isArray(q.text) ? (
+                          q.text.map((segment, idx) => {
+                            // Los select aparecen entre segmentos: el número de selects = blanks.length
+                            // Cada segment se muestra y si existe un blank después de él, renderizamos select
+                            const blank = q.blanks && q.blanks[idx];
+                            return (
+                              <span key={idx} className="inline">
+                                <span>{segment}</span>
+                                {blank ? (
+                                  <span className="mx-1 inline-block align-middle">
+                                    <select
+                                      value={(q.userSelections && q.userSelections[idx]) || ""}
+                                      onChange={(e) => handleBlankChange(currentQuestion, idx, e.target.value)}
+                                      className="blank border rounded px-2 py-1 text-sm"
+                                    >
+                                      <option value="">—</option>
+                                      {blank.options.map((opt, oi) => (
+                                        <option key={oi} value={opt}>{opt}</option>
+                                      ))}
+                                    </select>
+                                  </span>
+                                ) : null}
+                              </span>
+                            );
+                          })
+                        ) : (
+                          // fallback si text es string (no lo normal para este tipo)
+                          <p>{q.text}</p>
+                        )}
+                      </div>
+                
+                      {/* Botones: verificar / mostrar respuestas */}
+                      <div className="flex items-center gap-2 mt-2">
+                        <button
+                          onClick={() => {
+                            // calculamos score rápido: cuantos correctos
+                            const blanks = q.blanks || [];
+                            const selections = q.userSelections || [];
+                            let correct = 0;
+                            blanks.forEach((b, bi) => {
+                              if (selections[bi] && b.correct && selections[bi] === b.correct) correct++;
+                            });
+                            const total = blanks.length;
+                            const score = `${correct}/${total} (${total ? Math.round((correct/total)*100) : 0}%)`;
+                            // guardamos el score en questions
+                            setQuestions(prev => {
+                              const copy = [...prev];
+                              copy[currentQuestion] = { ...copy[currentQuestion], score, userSelections: selections };
+                              return copy;
+                            });
+                          }}
+                          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                        >
+                          Check Score
+                        </button>
+                
+                        {/* <button
+                          onClick={() => {
+                            // mostrar respuestas correctas
+                            setQuestions(prev => {
+                              const copy = [...prev];
+                              const qCopy = { ...copy[currentQuestion] } as any;
+                              qCopy.userSelections = (qCopy.blanks || []).map(b => b.correct || "");
+                              copy[currentQuestion] = qCopy;
+                              return copy;
+                            });
+                          }}
+                          className="px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-600"
+                        >
+                          Show Answers
+                        </button>
+                 */}
+
+                        <button
+                          onClick={() => {
+                            setQuestions(prev =>
+                              prev.map((item, idx) =>
+                                idx !== currentQuestion
+                                  ? item
+                                  : {
+                                      ...item,
+                                      // userSelections es un arreglo con las respuestas correctas (o "" si no hay)
+                                      userSelections: (item.blanks ?? []).map(b => b.correct ?? ""),
+                                    }
+                              )
+                            );
+                          }}
+                          className="px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-600"
+                        >
+                          Show Answers
+                        </button>
+
+                        {/* Mostrar score actual si existe */}
+                        {q.score && (
+                          <div className="ml-auto font-semibold text-gray-800 dark:text-gray-200">
+                            Score: {q.score}
+                          </div>
+                        )}
+                      </div>
+                
+                      {/* Historial / info */}
+                      <div className="mt-4">
+                        {/* opcional: mostrar selección actual */}
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          Selecciones: {(q.userSelections || []).join(" | ")}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                  
 
               default:
                 return (

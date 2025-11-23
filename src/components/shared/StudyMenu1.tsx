@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
+import React, { Fragment } from "react";
 
 
 //Section Speak
@@ -19,7 +20,7 @@ import Essay from "@/components/Data1/2.Writing/2.Essay";
 import FillInTheBlanks from "@/components/Data1/3.Reading/1.FillintheBlanks(RW)";
 import MultipleChoiceExercises from "@/components/Data1/3.Reading/2.MCMultipleAnswer";
 import {ReorderParagraphExercises} from "@/components/Data1/3.Reading/3.ReorderParagraphs";
-import FillInTheBlanksDrag from "@/components/Data1/3.Reading/4.FillintheBlanks";
+import { BlankOptionDrag, FillInTheBlanksDrag } from "@/components/Data1/3.Reading/4.FillintheBlanks";
 
 //Section Listening
 import WritingDictation from "@/components/Data1/4.Listening/6.WritefromDictation";
@@ -47,7 +48,8 @@ export interface MultipleChoiceExercise {
 interface Exercise {
   text: string | string[];
   userSelections?: string[] | string[][]; 
-  blanks?: BlankOption[];              // opciones por hueco
+  blanks?: BlankOption[] | BlankOptionDrag[]; // <-- acepta ambos tipos
+  draggableOptions?: string[]; // <-- AGREGA ESTO
   audio?: string;
   image?: string;
   userInput?: string;
@@ -416,7 +418,19 @@ export default function StudyMenu() {
                   userOrder: rpItem.paragraphs.map((_, idx) => idx),
                 });
               }
-            }  
+            } else if (taskName === "Fill in the Blanks") {
+              const index = FillInTheBlanksDrag.length - i; // o i, según orden
+              const item = FillInTheBlanksDrag[index];
+
+              q.push({
+                text: item.text,           // array
+                blanks: item.blanks,       // blanks [{correct:""}]
+                draggableOptions: item.draggableOptions,
+                userSelections: Array(item.blanks.length).fill(""),
+                type: "FillInTheBlanksDrag",
+              });
+  
+            }            
           
           }
   
@@ -571,6 +585,9 @@ export default function StudyMenu() {
     copy[idx] = !copy[idx];
     setShowTextStates(copy);
   };
+
+  const [showAnswers, setShowAnswers] = useState(false);
+
 
   useEffect(() => {
     const ping = setInterval(() => {
@@ -1391,9 +1408,10 @@ export default function StudyMenu() {
                                       className="blank border rounded px-2 py-1 text-sm"
                                     >
                                       <option value="">—</option>
-                                      {blank.options.map((opt, oi) => (
+                                      {('options' in blank ? blank.options : []).map((opt, oi) => (
                                         <option key={oi} value={opt}>{opt}</option>
                                       ))}
+
                                     </select>
                                   </span>
                                 ) : null}
@@ -1485,6 +1503,142 @@ export default function StudyMenu() {
                     </div>
                   );
               
+              case "FillInTheBlanksDrag": {
+                    if (!questions[currentQuestion]) return null;
+                  
+                    const qCurr = questions[currentQuestion] as Exercise;
+                    const blanks = (qCurr.blanks as BlankOptionDrag[]) || [];
+                    const options = qCurr.draggableOptions || [];
+                    const userSelections = qCurr.userSelections || Array(blanks.length).fill("");
+                  
+                    const textChunks: string[] = Array.isArray(qCurr.text)
+                      ? (qCurr.text as string[])
+                      : [qCurr.text as string];
+                  
+                    const handleDragToBlank = (blankIdx: number, option: string) => {
+                      const updatedSelections = [...userSelections];
+                      updatedSelections[blankIdx] = option;
+                  
+                      setQuestions((prev: Exercise[]) => {
+                        const copy = [...prev];
+                        copy[currentQuestion] = { ...qCurr, userSelections: updatedSelections };
+                        return copy;
+                      });
+                    };
+                  
+                    const gradeFillInTheBlanksDrag = () => {
+                      const correctCount = blanks.reduce((acc, blank, i) => {
+                        const userAns = (userSelections[i] || "").toLowerCase().trim();
+                        const correctAns = (blank.correct || "").toLowerCase().trim();
+                        return acc + (userAns === correctAns ? 1 : 0);
+                      }, 0);
+                  
+                      const total = blanks.length;
+                  
+                      setQuestions((prev: Exercise[]) => {
+                        const copy = [...prev];
+                        copy[currentQuestion] = {
+                          ...qCurr,
+                          score: `${correctCount}/${total} (${Math.round(
+                            (correctCount / total) * 100
+                          )}%)`,
+                        };
+                        return copy;
+                      });
+                    };
+                  
+                    return (
+                      <DragDropContext
+                        onDragEnd={(result: DropResult) => {
+                          const { destination, draggableId } = result;
+                          if (!destination) return;
+                          if (destination.droppableId.startsWith("blank-")) {
+                            const blankIdx = parseInt(destination.droppableId.split("-")[1], 10);
+                            handleDragToBlank(blankIdx, draggableId);
+                          }
+                        }}
+                      >
+                        <div className="fill-blanks-drag-wrapper space-y-6">
+                  
+                          {/* TEXTO CON BLANKS */}
+                          <p className="drag-text text-lg leading-relaxed text-gray-800 dark:text-gray-200">
+                            {textChunks.map((chunk: string, idx: number) => (
+                              <React.Fragment key={idx}>
+                                <span>{chunk} </span>
+                                {idx < blanks.length && (
+                                  <Droppable droppableId={`blank-${idx}`}>
+                                    {(provided) => (
+                                      <span
+                                        ref={provided.innerRef}
+                                        {...provided.droppableProps}
+                                        className="blank-box inline-block w-28 h-10 border-2 border-dashed border-blue-400 dark:border-blue-300 rounded-md text-center align-middle mx-1 px-2 py-1 bg-blue-50 dark:bg-blue-900 text-blue-800 dark:text-blue-200 font-semibold cursor-pointer"
+                                      >
+                                        {userSelections[idx] || "____"}
+                                        {provided.placeholder}
+                                      </span>
+                                    )}
+                                  </Droppable>
+                                )}
+                              </React.Fragment>
+                            ))}
+                          </p>
+                  
+                          {/* OPCIONES ARRIBA / HORIZONTAL */}
+                          <Droppable droppableId="options" direction="horizontal">
+                            {(provided) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.droppableProps}
+                                className="options-container flex flex-wrap gap-3 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg border border-gray-300 dark:border-gray-600 shadow-inner"
+                              >
+                                {options.map((option: string, idx: number) => (
+                                  <Draggable key={option} draggableId={option} index={idx}>
+                                    {(provided) => (
+                                      <div
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                        className="option-item bg-white dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-800 border border-gray-300 dark:border-gray-500 rounded-md px-4 py-2 font-medium shadow-sm cursor-grab select-none transition duration-200"
+                                      >
+                                        {option}
+                                      </div>
+                                    )}
+                                  </Draggable>
+                                ))}
+                                {provided.placeholder}
+                              </div>
+                            )}
+                          </Droppable>
+                  
+                          {/* BOTÓN */}
+                          <button
+                            className="btn-grade bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-transform transform hover:-translate-y-1"
+                            onClick={gradeFillInTheBlanksDrag}
+                          >
+                            Check Answers
+                          </button>
+
+                          <button
+                            className="btn-show bg-gradient-to-r from-purple-400 to-pink-500 hover:from-purple-500 hover:to-pink-600 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-transform transform hover:-translate-y-1"
+                            onClick={() => setShowAnswers(true)}
+                          >
+                            Show Answers
+                          </button>
+
+                  
+                          {/* SCORE */}
+                          {qCurr.score && (
+                            <div className="score-box text-lg font-semibold text-gray-700 dark:text-gray-200">
+                              Score: {qCurr.score}
+                            </div>
+                          )}
+                        </div>
+                      </DragDropContext>
+                    );
+                  }
+                  
+                     
+
               case "MultipleChoice":
                     return (
                       <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
@@ -1595,6 +1749,7 @@ export default function StudyMenu() {
                           return copy;
                         });
                       };
+                      
                     
                       return (
                         <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
@@ -1685,6 +1840,8 @@ export default function StudyMenu() {
                         </div>
                       );
                     }
+
+                
                          
               default:
                 return (

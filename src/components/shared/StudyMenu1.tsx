@@ -175,100 +175,102 @@ export default function StudyMenu() {
 
   const [instructions, setInstructions] = useState("");
 
-  // Audio / Dictation
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [allResults, setAllResults] = useState<any[][]>([]);
-  const [recording, setRecording] = useState(false);
-  const [alignmentVisible, setAlignmentVisible] = useState(false);
-  const [espVisible, setEspVisible] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [pronDetail, setPronDetail] = useState("");
-  const [pronEsp, setPronEsp] = useState("");
-
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const sessionIdRef = useRef(localStorage.getItem("sessionId") || Date.now().toString());
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const handleChange = (key: string, value: string) => {
-    const cleanValue = parseInt(value.replace(/^0+/, ""), 10) || 0;
-    setCounts({ ...counts, [key]: cleanValue });
+  const checkReorder = (qIdx: number) => {
+    setQuestions(prev => {
+      const copy = [...prev];
+      const q = copy[qIdx];
+      const correct = q.correctOrder ?? [];
+      const user = q.userOrder ?? [];
+  
+      const feedback = correct.map((c, i) => (c === user[i] ? 1 : -1)); // 1 verde, -1 rojo
+      setReorderFeedback(feedback);
+  
+      const total = correct.length;
+      const scoreCount = feedback.filter(f => f === 1).length;
+      q.score = `${scoreCount}/${total} (${Math.round((scoreCount/total)*100)}%)`;
+      copy[qIdx] = q;
+      return copy;
+    });
+  };
+  
+  const showCorrectOrder = (qIdx: number) => {
+    setQuestions(prev => {
+      const copy = [...prev];
+      const q = copy[qIdx];
+      q.userOrder = [...(q.correctOrder ?? [])]; // reordena al orden correcto
+      copy[qIdx] = q;
+  
+      setReorderFeedback((q.correctOrder ?? []).map(() => 1)); // todos verdes
+      return copy;
+    });
   };
 
-  const handleStartClick = () => { startRecording(); };
+  // función para actualizar la selección de un blank
+  const handleBlankChange = (qIdx: number, blankIdx: number, value: string) => {
+    setQuestions((prev: Exercise[]) => {
+      const copy = [...prev];
+      const question = { ...copy[qIdx] } as any;
+      question.userSelections = question.userSelections ? [...question.userSelections] : [];
+      question.userSelections[blankIdx] = value;
+      copy[qIdx] = question;
+      return copy;
+    });
+  };
 
-  // Grabación
-  const startRecording = async () => {
-    if (recording || !questions[currentQuestion]) return;
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const recorder = new MediaRecorder(stream);
-    audioChunksRef.current = [];
-
-    recorder.ondataavailable = e => audioChunksRef.current.push(e.data);
-    recorder.onstart = () => { setRecording(true); setTimeout(()=>{ if(recorder.state==="recording") recorder.stop(); },30000); };
-    recorder.onstop = async () => {
-      setRecording(false);
-      const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
-      const formData = new FormData();
-      formData.append("file", audioBlob, "recording.webm");
-      const cleanText = (text: string) =>
-        text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
-      
-      // formData.append("modelo", cleanText(questions[currentQuestion].text));
-      formData.append(
-        "modelo",
-        cleanText(
-          Array.isArray(questions[currentQuestion].text)
-            ? questions[currentQuestion].text.join(" ")
-            : questions[currentQuestion].text
-        )
-      );
-      
-      formData.append("session_id", sessionIdRef.current);
-
-      try {
-        const resp = await fetch("https://backend1-exyd.onrender.com/upload-audio/", { method: "POST", body: formData });
-        const data = await resp.json();
-       
-        if(data.error) return alert("Error: "+data.error);
-
-        setAllResults(prev => {
-          const copy = [...prev];
-          const arr = copy[currentQuestion] || [];
-          copy[currentQuestion] = [...arr, data];
-          // 🔹 Carga el resultado inmediatamente con los datos actuales:
-          setPronDetail(data.alignment.map((w:any)=>{
-            const color = w.status==="correct"?"green":w.status==="missing"?"red":"orange";
-            return `<span style="color:${color}; margin-right:2px">${w.said||"❌"}</span>`;
-          }).join(" "));
-          return copy;
-        });        
-        loadResult(currentQuestion);
-      } catch(err){ console.error(err); }
+  const checkScore = () => {
+    const updated = [...questions];
+  
+    // seguridad: existe la pregunta actual
+    if (currentQuestion < 0 || currentQuestion >= updated.length) return;
+  
+    // casteo local con las propiedades que necesitamos
+    const qCurr = { ...(updated[currentQuestion] as Exercise) } as Exercise & {
+      userSelections?: string[];
+      blanks?: BlankOption[];
+      text?: string | string[];
+      userInput?: string;
     };
-    recorder.start();
-    mediaRecorderRef.current = recorder;
+  
+    // Si es FillInTheBlanks -> comparamos userSelections con blanks[].correct
+    if (qCurr.type === "FillInTheBlanks") {
+      const blanks = qCurr.blanks || [];
+      const selections = qCurr.userSelections || [];
+  
+      const total = blanks.length;
+      let correct = 0;
+  
+      for (let i = 0; i < total; i++) {
+        const correctAns = (blanks[i]?.correct ?? "").toString().trim().toLowerCase();
+        const userAns = (selections[i] || "").toString().trim().toLowerCase();
+        if (correctAns && userAns && userAns === correctAns) correct++;
+      }
+  
+      const percent = total === 0 ? 0 : Math.round((correct / total) * 100);
+      qCurr.score = `${correct}/${total} (${percent}%)`;
+  
+      // guarda los cambios de vuelta
+      updated[currentQuestion] = qCurr;
+      setQuestions(updated);
+      return;
+    }
+  
+    // Resto de tipos: tratamos texto que puede ser string | string[]
+    const modelo =
+      Array.isArray(qCurr.text)
+        ? qCurr.text.join(" ")
+        : qCurr.text ?? "";
+
+    const intento = (qCurr.userInput || "").toString();
+  
+    // usa scoreWords(modelo, intento)
+    qCurr.score = scoreWords(modelo, intento);
+  
+    updated[currentQuestion] = qCurr;
+    setQuestions(updated);
   };
-  const stopRecording = () => mediaRecorderRef.current?.state==="recording" && mediaRecorderRef.current.stop();
 
-
-  // Mostrar resultado de read aloud / repeat sentence
-  const loadResult = (idx:number) => {
-    const dataArray = allResults[idx];
-    if(dataArray.length>0){
-      const data = dataArray[dataArray.length-1];
-      setPronDetail(data.alignment.map((w:any)=>{
-        const color = w.status==="correct"?"green":w.status==="missing"?"red":"orange";
-        return `<span style="color:${color}; margin-right:2px">${w.said||"❌"}</span>`;
-      }).join(" "));
-    } else { setPronDetail(""); setPronEsp(""); }
-  };
-
-  const [reorderFeedback, setReorderFeedback] = useState<number[]>([]);
-
-  // Generar preguntas e instrucciones
-  const handleGenerateInstructions = () => {
+   // Generar preguntas e instrucciones
+   const handleGenerateInstructions = () => {
     let result = "";
     let qIndex = 0;
     const q: Exercise[] = [];
@@ -424,20 +426,99 @@ export default function StudyMenu() {
     setAllResults(Array(q.length).fill([]));
     setCurrentQuestion(0);
   };
-  
+/////////////////////////////////////////////////////////////////
 
+  // Audio / Dictation
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [allResults, setAllResults] = useState<any[][]>([]);
+  const [recording, setRecording] = useState(false);
+  const [alignmentVisible, setAlignmentVisible] = useState(false);
+  const [espVisible, setEspVisible] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [pronDetail, setPronDetail] = useState("");
+  const [pronEsp, setPronEsp] = useState("");
 
-  // función para actualizar la selección de un blank
-  const handleBlankChange = (qIdx: number, blankIdx: number, value: string) => {
-    setQuestions((prev: Exercise[]) => {
-      const copy = [...prev];
-      const question = { ...copy[qIdx] } as any;
-      question.userSelections = question.userSelections ? [...question.userSelections] : [];
-      question.userSelections[blankIdx] = value;
-      copy[qIdx] = question;
-      return copy;
-    });
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const sessionIdRef = useRef(localStorage.getItem("sessionId") || Date.now().toString());
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleChange = (key: string, value: string) => {
+    const cleanValue = parseInt(value.replace(/^0+/, ""), 10) || 0;
+    setCounts({ ...counts, [key]: cleanValue });
   };
+
+  const handleStartClick = () => { startRecording(); };
+
+  // Grabación
+  const startRecording = async () => {
+    if (recording || !questions[currentQuestion]) return;
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const recorder = new MediaRecorder(stream);
+    audioChunksRef.current = [];
+
+    recorder.ondataavailable = e => audioChunksRef.current.push(e.data);
+    recorder.onstart = () => { setRecording(true); setTimeout(()=>{ if(recorder.state==="recording") recorder.stop(); },30000); };
+    recorder.onstop = async () => {
+      setRecording(false);
+      const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+      const formData = new FormData();
+      formData.append("file", audioBlob, "recording.webm");
+      const cleanText = (text: string) =>
+        text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+      
+      // formData.append("modelo", cleanText(questions[currentQuestion].text));
+      formData.append(
+        "modelo",
+        cleanText(
+          Array.isArray(questions[currentQuestion].text)
+            ? questions[currentQuestion].text.join(" ")
+            : questions[currentQuestion].text
+        )
+      );
+      
+      formData.append("session_id", sessionIdRef.current);
+
+      try {
+        const resp = await fetch("https://backend1-exyd.onrender.com/upload-audio/", { method: "POST", body: formData });
+        const data = await resp.json();
+       
+        if(data.error) return alert("Error: "+data.error);
+
+        setAllResults(prev => {
+          const copy = [...prev];
+          const arr = copy[currentQuestion] || [];
+          copy[currentQuestion] = [...arr, data];
+          // 🔹 Carga el resultado inmediatamente con los datos actuales:
+          setPronDetail(data.alignment.map((w:any)=>{
+            const color = w.status==="correct"?"green":w.status==="missing"?"red":"orange";
+            return `<span style="color:${color}; margin-right:2px">${w.said||"❌"}</span>`;
+          }).join(" "));
+          return copy;
+        });        
+        loadResult(currentQuestion);
+      } catch(err){ console.error(err); }
+    };
+    recorder.start();
+    mediaRecorderRef.current = recorder;
+  };
+  const stopRecording = () => mediaRecorderRef.current?.state==="recording" && mediaRecorderRef.current.stop();
+
+
+  // Mostrar resultado de read aloud / repeat sentence
+  const loadResult = (idx:number) => {
+    const dataArray = allResults[idx];
+    if(dataArray.length>0){
+      const data = dataArray[dataArray.length-1];
+      setPronDetail(data.alignment.map((w:any)=>{
+        const color = w.status==="correct"?"green":w.status==="missing"?"red":"orange";
+        return `<span style="color:${color}; margin-right:2px">${w.said||"❌"}</span>`;
+      }).join(" "));
+    } else { setPronDetail(""); setPronEsp(""); }
+  };
+
+  const [reorderFeedback, setReorderFeedback] = useState<number[]>([]);
 
   // Scoring para dictado
   const scoreWords = (modelo: string, intento: string) => {
@@ -477,60 +558,7 @@ export default function StudyMenu() {
     setQuestions(updated);
   };
   
-  const checkScore = () => {
-    const updated = [...questions];
   
-    // seguridad: existe la pregunta actual
-    if (currentQuestion < 0 || currentQuestion >= updated.length) return;
-  
-    // casteo local con las propiedades que necesitamos
-    const qCurr = { ...(updated[currentQuestion] as Exercise) } as Exercise & {
-      userSelections?: string[];
-      blanks?: BlankOption[];
-      text?: string | string[];
-      userInput?: string;
-    };
-  
-    // Si es FillInTheBlanks -> comparamos userSelections con blanks[].correct
-    if (qCurr.type === "FillInTheBlanks") {
-      const blanks = qCurr.blanks || [];
-      const selections = qCurr.userSelections || [];
-  
-      const total = blanks.length;
-      let correct = 0;
-  
-      for (let i = 0; i < total; i++) {
-        const correctAns = (blanks[i]?.correct ?? "").toString().trim().toLowerCase();
-        const userAns = (selections[i] || "").toString().trim().toLowerCase();
-        if (correctAns && userAns && userAns === correctAns) correct++;
-      }
-  
-      const percent = total === 0 ? 0 : Math.round((correct / total) * 100);
-      qCurr.score = `${correct}/${total} (${percent}%)`;
-  
-      // guarda los cambios de vuelta
-      updated[currentQuestion] = qCurr;
-      setQuestions(updated);
-      return;
-    }
-  
-    // Resto de tipos: tratamos texto que puede ser string | string[]
-    const modelo =
-      Array.isArray(qCurr.text)
-        ? qCurr.text.join(" ")
-        : qCurr.text ?? "";
-
-    const intento = (qCurr.userInput || "").toString();
-  
-    // usa scoreWords(modelo, intento)
-    qCurr.score = scoreWords(modelo, intento);
-  
-    updated[currentQuestion] = qCurr;
-    setQuestions(updated);
-  };
-
-  
-
   const nextQuestion = () => setCurrentQuestion(prev=>Math.min(prev+1,questions.length-1));
   const prevQuestion = () => setCurrentQuestion(prev=>Math.max(prev-1,0));
   const retryTest = () => { handleGenerateInstructions(); };
@@ -1531,15 +1559,23 @@ export default function StudyMenu() {
                             {textChunks.map((chunk: string, idx: number) => (
                               <React.Fragment key={idx}>
                                 <span>{chunk} </span>
+                  
                                 {idx < blanks.length && (
                                   <Droppable droppableId={`blank-${idx}`}>
                                     {(provided) => (
                                       <span
                                         ref={provided.innerRef}
                                         {...provided.droppableProps}
-                                        className="blank-box inline-block w-28 h-10 border-2 border-dashed border-blue-400 dark:border-blue-300 rounded-md text-center align-middle mx-1 px-2 py-1 bg-blue-50 dark:bg-blue-900 text-blue-800 dark:text-blue-200 font-semibold cursor-pointer"
+                                        className={`blank-box inline-block w-28 h-10 border-2 border-dashed border-blue-400 
+                                          dark:border-blue-300 rounded-md text-center align-middle mx-1 px-2 py-1 
+                                          bg-blue-50 dark:bg-blue-900 text-blue-800 dark:text-blue-200 font-semibold cursor-pointer
+                                          transition-all duration-300
+                                          ${showAnswers ? "bg-green-200 border-green-500 text-green-900" : ""}
+                                        `}
                                       >
-                                        {userSelections[idx] || "____"}
+                                        {showAnswers
+                                          ? blanks[idx].correct
+                                          : userSelections[idx] || "____"}
                                         {provided.placeholder}
                                       </span>
                                     )}
@@ -1550,47 +1586,54 @@ export default function StudyMenu() {
                           </p>
                   
                           {/* OPCIONES ARRIBA / HORIZONTAL */}
-                          <Droppable droppableId="options" direction="horizontal">
-                            {(provided) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.droppableProps}
-                                className="options-container flex flex-wrap gap-3 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg border border-gray-300 dark:border-gray-600 shadow-inner"
-                              >
-                                {options.map((option: string, idx: number) => (
-                                  <Draggable key={option} draggableId={option} index={idx}>
-                                    {(provided) => (
-                                      <div
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}
-                                        className="option-item bg-white dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-800 border border-gray-300 dark:border-gray-500 rounded-md px-4 py-2 font-medium shadow-sm cursor-grab select-none transition duration-200"
-                                      >
-                                        {option}
-                                      </div>
-                                    )}
-                                  </Draggable>
-                                ))}
-                                {provided.placeholder}
-                              </div>
-                            )}
-                          </Droppable>
+                          {!showAnswers && (
+                            <Droppable droppableId="options" direction="horizontal">
+                              {(provided) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.droppableProps}
+                                  className="options-container flex flex-wrap gap-3 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg border border-gray-300 dark:border-gray-600 shadow-inner"
+                                >
+                                  {options.map((option: string, idx: number) => (
+                                    <Draggable key={option} draggableId={option} index={idx}>
+                                      {(provided) => (
+                                        <div
+                                          ref={provided.innerRef}
+                                          {...provided.draggableProps}
+                                          {...provided.dragHandleProps}
+                                          className="option-item bg-white dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-800 
+                                            border border-gray-300 dark:border-gray-500 rounded-md px-4 py-2 font-medium 
+                                            shadow-sm cursor-grab select-none transition duration-200"
+                                        >
+                                          {option}
+                                        </div>
+                                      )}
+                                    </Draggable>
+                                  ))}
+                                  {provided.placeholder}
+                                </div>
+                              )}
+                            </Droppable>
+                          )}
                   
-                          {/* BOTÓN */}
-                          <button
-                            className="btn-grade bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-transform transform hover:-translate-y-1"
-                            onClick={gradeFillInTheBlanksDrag}
-                          >
-                            Check Answers
-                          </button>
-
-                          <button
-                            className="btn-show bg-gradient-to-r from-purple-400 to-pink-500 hover:from-purple-500 hover:to-pink-600 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-transform transform hover:-translate-y-1"
-                            onClick={() => setShowAnswers(true)}
-                          >
-                            Show Answers
-                          </button>
-
+                          {/* BOTONES */}
+                          <div className="flex gap-4">
+                            <button
+                              className="btn-grade bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 
+                                text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-transform transform hover:-translate-y-1"
+                              onClick={gradeFillInTheBlanksDrag}
+                            >
+                              Check Answers
+                            </button>
+                  
+                            <button
+                              className="btn-show bg-gradient-to-r from-purple-400 to-pink-500 hover:from-purple-500 hover:to-pink-600 
+                                text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-transform transform hover:-translate-y-1"
+                              onClick={() => setShowAnswers(!showAnswers)}
+                            >
+                              {showAnswers ? "Hide Answers" : "Show Answers"}
+                            </button>
+                          </div>
                   
                           {/* SCORE */}
                           {qCurr.score && (
@@ -1602,6 +1645,7 @@ export default function StudyMenu() {
                       </DragDropContext>
                     );
                   }
+                  
                   
                      
 

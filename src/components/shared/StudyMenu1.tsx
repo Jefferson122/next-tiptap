@@ -61,6 +61,8 @@ export interface OneChoiceExercise {
 
 interface Exercise {
   id?: string| number;
+   // 🔹 Aquí agregamos la propiedad explanation
+  explanation?: string | string[];
   text: string | string[];
   userSelections?: string | string[] | string[][];
   blanks?: BlankOption[] | BlankOptionDrag[]; // <-- acepta ambos tipos
@@ -314,6 +316,20 @@ export default function StudyMenu() {
     setQuestions(updated);
   };
 
+  ////// Inicializar con false para cada pregunta
+  const [showExplanation, setShowExplanation] = useState<boolean[]>(
+    () => questions.map(() => false)
+  );
+
+  const toggleExplanation = (idx: number) => {
+    setShowExplanation(prev => {
+      const copy = [...prev];
+      copy[idx] = !copy[idx];
+      return copy;
+    });
+  };
+
+
 // COMPONENETES DE SINGLE ANSWER
   const handleOCSelection = (qIndex: number, questionIndex: number, option: string) => {
     setQuestions(prev =>
@@ -438,6 +454,7 @@ export default function StudyMenu() {
                 blanks: item.blanks,
                 userSelections: Array(item.blanks?.length || 0).fill(""),
                 type: "FillInTheBlanks",
+                explanation: item.explanation ?? [], // <-- aquí agregamos la explicación
               });
             } else if (taskName === "Multiple Choice, Multiple Answer") {
               const mcItem = MultipleChoiceExercises[qIndex % MultipleChoiceExercises.length];
@@ -1505,7 +1522,7 @@ export default function StudyMenu() {
                                           handleBlankChange(currentQuestion, idx, e.target.value)
                                         }
                                         className={`border rounded px-2 py-1 text-sm ${bgColor} text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                                        disabled={q.showAnswer} // bloquear si se muestra la respuesta
+                                        disabled={q.showAnswer}
                                       >
                                         <option value="">—</option>
                                         {("options" in blank ? blank.options : []).map((opt, oi) => (
@@ -1515,7 +1532,6 @@ export default function StudyMenu() {
                                         ))}
                                       </select>
                 
-                                      {/* Iconos SVG */}
                                       {feedback === 1 && (
                                         <svg
                                           className="ml-1 w-4 h-4 text-green-600"
@@ -1543,12 +1559,10 @@ export default function StudyMenu() {
                                 </span>
                               );
                             })
-                          : (
-                            <p>{q.text}</p>
-                          )}
+                          : <p>{q.text}</p>}
                       </div>
                 
-                      {/* Botones: verificar / mostrar respuestas */}
+                      {/* Botones: verificar / mostrar respuestas / explanation */}
                       <div className="flex items-center gap-2 mt-2">
                         <button
                           onClick={() => {
@@ -1573,11 +1587,11 @@ export default function StudyMenu() {
                             const total = blanks.length;
                             const score = `${correct}/${total} (${total ? Math.round((correct / total) * 100) : 0}%)`;
                 
-                            setQuestions((prev) => {
+                            setQuestions(prev => {
                               const copy = [...prev];
-                              copy[currentQuestion] = { 
-                                ...copy[currentQuestion], 
-                                score, 
+                              copy[currentQuestion] = {
+                                ...copy[currentQuestion],
+                                score,
                                 userSelections: selections,
                                 blankFeedback: feedback
                               };
@@ -1591,7 +1605,7 @@ export default function StudyMenu() {
                 
                         <button
                           onClick={() => {
-                            setQuestions((prev) =>
+                            setQuestions(prev =>
                               prev.map((item, idx) =>
                                 idx !== currentQuestion
                                   ? item
@@ -1608,12 +1622,31 @@ export default function StudyMenu() {
                           Show Answers
                         </button>
                 
+                        {q.explanation && (
+                          <button
+                            onClick={() => toggleExplanation(currentQuestion)}
+                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                          >
+                            {showExplanation[currentQuestion] ? "Hide Explanation" : "Show Explanation"}
+                          </button>
+                        )}
+                
                         {q.score && (
                           <div className="ml-auto font-semibold text-gray-800 dark:text-gray-200">
                             Score: {q.score}
                           </div>
                         )}
                       </div>
+                
+                      {/* Mostrar explicación */}
+                      {showExplanation[currentQuestion] && q.explanation && (
+                        <div className="mt-4 p-3 border-l-4 border-blue-500 bg-blue-50 dark:bg-blue-900 text-gray-800 dark:text-gray-200">
+                          <p className="font-semibold mb-2">Explanation:</p>
+                          {Array.isArray(q.explanation)
+                            ? q.explanation.map((exp, i) => <p key={i}>• {exp}</p>)
+                            : <p>{q.explanation}</p>}
+                        </div>
+                      )}
                 
                       {/* Historial / info */}
                       <div className="mt-4">
@@ -1626,7 +1659,7 @@ export default function StudyMenu() {
                       </div>
                     </div>
                   );
-                  
+                    
               case "FillInTheBlanksDrag": {
                     if (!questions[currentQuestion]) return null;
                   

@@ -580,15 +580,14 @@ export interface BlankOption {
     "`criteria` refers to considerations beyond career goals."
   ]
 },
-
 {
   id: 22,
   text: [
     "After locating research that is ",
     " to your topic of interest, the next step is to actually ",
-    " the findings of that research. This section aims to show you how to critically evaluate the studies you ",
-    " and how to ensure that the ",
-    " is trustworthy and accurately represented. Unfortunately, this also involves discussing the ways research results might be misinterpreted."
+    " the findings of that research. This involves carefully reading through articles, noting the methodology, data, and conclusions presented by the authors. The section aims to show you how to critically evaluate the studies you ",
+    ", identify strengths and weaknesses in the research design, and how to ensure that the ",
+    " is trustworthy, well-supported, and accurately represented in your own analysis. Furthermore, it is essential to recognize potential biases, limitations, and areas where data might be misinterpreted, providing a balanced perspective on the topic."
   ],
   blanks: [
     { options: ["relevant", "important", "useful", "referred"], correct: "relevant" },
@@ -597,24 +596,21 @@ export interface BlankOption {
     { options: ["support", "invention", "statement", "evidence"], correct: "evidence" }
   ],
   explanation: [
-    "`relevant` indica que la investigación se relaciona directamente con el tema de interés.",
-    "`make sense` significa resumir o interpretar los hallazgos para que sean comprensibles.",
-    "`are reviewing` refleja que estás evaluando críticamente los estudios.",
-    "`evidence` se refiere a que lo que se revisa debe ser evidencia confiable."
+    "`relevant` indicates that the research is directly related to your topic of interest.",
+    "`make sense` means to summarize or interpret the findings so that they are understandable.",
+    "`are reviewing` reflects that you are critically evaluating the studies.",
+    "`evidence` refers to the research being reliable and well-supported."
   ]
 },
 
-// -------------------------
-// EJERCICIO 23
-// -------------------------
 {
   id: 23,
   text: [
     "The Nature Conservation Amendment Act of 1996 allows the Minister of Environment and Tourism to register a conservancy if it has a ",
-    " committee, a legally recognized constitution, which ensures sustainable ",
+    " committee that represents the community, a legally recognized constitution which ensures sustainable ",
     " and utilization of wildlife in the conservancy, the capacity to ",
-    " the funds, an approved procedure for the ",
-    " distribution of benefits to local community members, and well-defined boundaries."
+    " funds efficiently and transparently, an approved procedure for the ",
+    " distribution of benefits to local community members, and well-defined boundaries that prevent encroachment and ensure long-term management."
   ],
   blanks: [
     { options: ["powerful", "patient", "representative", "significant"], correct: "representative" },
@@ -623,24 +619,21 @@ export interface BlankOption {
     { options: ["same", "equal", "proportionate", "equitable"], correct: "equitable" }
   ],
   explanation: [
-    "`representative` indica que el comité refleja a la comunidad y sus intereses.",
-    "`management` se refiere a la gestión sostenible de la vida silvestre.",
-    "`manage` significa administrar correctamente los fondos.",
-    "`equitable` asegura que la distribución de beneficios sea justa."
+    "`representative` indicates that the committee reflects the community and its interests.",
+    "`management` refers to sustainable management of wildlife.",
+    "`manage` means to properly handle funds.",
+    "`equitable` ensures that benefit distribution is fair."
   ]
 },
 
-// -------------------------
-// EJERCICIO 24
-// -------------------------
 {
   id: 24,
   text: [
     "Of the more than 1,000 bat species worldwide, 22 are ",
     " to North America. Even though there are no pollinator bats locally, gardeners should ",
-    " those that are present, since they feed on insects. These bats ",
-    " moths, beetles, and mosquitoes, and can consume up to 500 mosquito-sized insects in an hour. They also safeguard gardens and crops from such ",
-    " as cucumber beetles, cutworms, and leafhoppers."
+    " those that are present, since they feed on harmful insects that damage plants. These bats ",
+    " moths, beetles, and mosquitoes, and can consume up to 500 mosquito-sized insects in an hour, effectively controlling pest populations. They also safeguard gardens and crops from such ",
+    " as cucumber beetles, cutworms, leafhoppers, and other agricultural pests, contributing to ecological balance and reducing the need for chemical pesticides."
   ],
   blanks: [
     { options: ["local", "national", "native", "residential"], correct: "native" },
@@ -649,16 +642,13 @@ export interface BlankOption {
     { options: ["species", "pests", "objects", "animals"], correct: "pests" }
   ],
   explanation: [
-    "`native` indica que son originarios de Norteamérica.",
-    "`champion` significa apoyar o proteger activamente a los murciélagos.",
-    "`consume` refleja que se alimentan de los insectos.",
-    "`pests` se refiere a los insectos perjudiciales para los cultivos."
+    "`native` indicates they are indigenous to North America.",
+    "`champion` means actively support or protect the bats.",
+    "`consume` reflects that they feed on harmful insects.",
+    "`pests` refers to insects that harm crops and gardens."
   ]
 },
 
-// -------------------------
-// EJERCICIO 25
-// -------------------------
 {
   id: 25,
   text: [
@@ -666,8 +656,8 @@ export interface BlankOption {
     ". And for many of our movements, there is an ",
     ": we plan to move, and then we move. A study published in the May 8th issue of Science suggests that the sense of movement is largely in your mind. The brain region that activates when intending to move is the same that allows you to feel the movement. Two separate regions are involved: one generates intention, the other executes motion. But it was unclear which region makes you aware of actual movement. In the study, scientists worked with patients ",
     " surgery to remove a brain tumor. Surgeons often electrically ",
-    " the area around the tumor while the patient is awake, so they can provide feedback and avoid harming critical tissue. The researchers found that stimulating one ",
-    " part of the brain made patients feel the desire to move arms, lips, or tongue. Increasing stimulation made them feel they had moved. But stimulating the region responsible for motion left patients unaware of the movement—a fascinating finding."
+    " the area around the tumor while the patient is awake, providing real-time feedback to avoid harming critical brain tissue. The researchers found that stimulating one ",
+    " part of the brain made patients feel the desire to move arms, lips, or tongue. Increasing stimulation made them feel they had moved. But stimulating the region responsible for motion left patients unaware of the movement—a fascinating finding that sheds light on the neural basis of consciousness and voluntary action."
   ],
   blanks: [
     { options: ["contraption", "burden", "transaction", "reaction"], correct: "reaction" },
@@ -677,26 +667,23 @@ export interface BlankOption {
     { options: ["particular", "calligrapher", "regular", "simpler"], correct: "particular" }
   ],
   explanation: [
-    "`reaction` se refiere a la consecuencia o efecto de una acción.",
-    "`intention` indica la intención de mover antes de hacerlo.",
-    "`undergoing` significa que los pacientes estaban sometidos a la cirugía.",
-    "`stimulate` refleja la estimulación eléctrica del cerebro.",
-    "`particular` indica la zona específica responsable de la sensación de movimiento."
+    "`reaction` refers to the consequence or effect of an action.",
+    "`intention` indicates the plan to move before actually moving.",
+    "`undergoing` shows that patients were in the process of surgery.",
+    "`stimulate` reflects electrical stimulation of the brain.",
+    "`particular` identifies the specific brain region responsible for movement awareness."
   ]
 },
 
-// -------------------------
-// EJERCICIO 26
-// -------------------------
 {
   id: 26,
   text: [
     "In The Origin of Species, Darwin provided extensive evidence that life on Earth has evolved over time, proposing natural selection as the main mechanism. He observed that individuals ",
     " in their inherited traits and that selection acts on these variations, leading to ",
-    " change. Although Darwin knew that variation is essential for ",
+    " change over generations. Although Darwin knew that variation is essential for ",
     ", he did not understand how traits are passed to offspring. A few years later, Gregor Mendel published a paper on pea plant inheritance. ",
     " that work, Mendel proposed a model where organisms pass discrete heritable units (genes) to their offspring. While Darwin didn't know about genes, Mendel's study laid the groundwork ",
-    " understanding the genetic basis of evolution."
+    " understanding the genetic basis of evolution, linking heredity with evolutionary change in a way that would influence all future biological research."
   ],
   blanks: [
     { options: ["differed", "difference", "different", "same"], correct: "differed" },
@@ -706,473 +693,466 @@ export interface BlankOption {
     { options: ["for", "as", "in", "at"], correct: "for" }
   ],
   explanation: [
-    "`differed` indica que los individuos mostraban variación en sus rasgos heredados.",
-    "`evolutionary` refleja el cambio a través del tiempo impulsado por la selección natural.",
-    "`evolution` significa que la variación es necesaria para la evolución.",
-    "`In` refiere a la continuación del trabajo de Mendel tras el de Darwin.",
-    "`for` indica el propósito de entender la base genética de la evolución."
+    "`differed` indicates that individuals showed variation in inherited traits.",
+    "`evolutionary` reflects change over time driven by natural selection.",
+    "`evolution` shows that variation is necessary for evolution to occur.",
+    "`In` refers to Mendel continuing the work initiated by Darwin.",
+    "`for` shows the purpose of understanding the genetic basis of evolution."
   ]
 },
 // -------------------------
-// EJERCICIO 27
-// -------------------------
-{
-  id: 27,
-  text: [
-    "The global textile industry has a major environmental impact. One-third of water used worldwide goes into making fabrics. For every ton of cloth ",
-    ", 200 tons of water are polluted with chemicals and heavy metals. An estimated 1 trillion kilowatt-hours of electricity run factories that card, spin, weave, and sew materials into garments, ",
-    " mountains of solid waste and a large carbon footprint. 'The industry today is not sustainable for the long term,' says Shreyas Chaudhary, CEO of Pratibha Syntax, India. With a vision of 'if you build it, they will come,' he has positioned Pratibha ",
-    " the forefront of eco-friendly textile production. Initially, the company struggled to find enough organic cotton farms in central India ",
-    " its factories. To meet demand, farmers were trained in sustainable methods, and Pratibha guaranteed fair-trade prices for ",
-    " crops. Today, the company has a network of 28,000 organic cotton farmers across central India."
-  ],
-  blanks: [
-    { options: ["produced", "has produced", "producing", "is produced"], correct: "produced" },
-    { options: ["moving", "leaving", "processing", "looking into"], correct: "leaving" },
-    { options: ["against", "onto", "toward", "behind"], correct: "toward" },
-    { options: ["have supplied", "supply", "to supply", "is supplied"], correct: "to supply" },
-    { options: ["their", "some", "mine", "them"], correct: "their" }
-  ],
-  explanation: [
-    "`produced` indica por cada tonelada de tela producida.",
-    "`leaving` se refiere a que genera montañas de desechos.",
-    "`toward` indica que la empresa se dirige al liderazgo en producción eco-amigable.",
-    "`to supply` refleja el abastecimiento de las fábricas con algodón orgánico.",
-    "`their` indica que los agricultores recibían precios justos por sus propios cultivos."
-  ]
-}
-,
-// -------------------------
-// EJERCICIO 28
-// -------------------------
-{
-  id: 28,
-  text: [
-    "Great engineers have a passion for improving life; a strong conviction that they can make life better for everyone. Engineers need creativity for invention and innovation, but what ",
-    " them is the belief that they can find better ways of doing things; cheaper, more efficient solutions to problems on this planet with ",
-    " resources. Many of us ",
-    " time complaining about life’s difficulties. Engineers see challenges as opportunities. How can this be made to work better? How can that process be more efficient? How can ",
-    " be made more cheaply, accurately, and fit-for-purpose? Great engineers are convinced that everything can be ",
-    ". Instead of complaining, they seek solutions."
-  ],
-  blanks: [
-    { options: ["drives", "makes", "motivate", "activate"], correct: "drives" },
-    { options: ["limited", "unlimited", "numerous", "mysterious"], correct: "limited" },
-    { options: ["take", "spend", "cost", "save"], correct: "spend" },
-    { options: ["parts", "elements", "units", "components"], correct: "components" },
-    { options: ["improved", "created", "performed", "changed"], correct: "improved" }
-  ],
-  explanation: [
-    "`drives` indica lo que motiva a los ingenieros.",
-    "`limited` se refiere a los recursos finitos de la Tierra.",
-    "`spend` refleja cómo las personas gastan tiempo en quejarse.",
-    "`components` son los elementos que pueden ser optimizados.",
-    "`improved` significa que todo se puede mejorar."
-  ]
-},
+  // EJERCICIO 27
+  // -------------------------
+  {
+    id: 27,
+    text: [
+      "The global textile industry has a major environmental impact. One-third of water used worldwide goes into making fabrics. For every ton of cloth ",
+      ", 200 tons of water are polluted with chemicals and heavy metals. An estimated 1 trillion kilowatt-hours of electricity run factories that card, spin, weave, and sew materials into garments, ",
+      " mountains of solid waste and a large carbon footprint. 'The industry today is not sustainable for the long term,' says Shreyas Chaudhary, CEO of Pratibha Syntax, India. With a vision of 'if you build it, they will come,' he has positioned Pratibha ",
+      " the forefront of eco-friendly textile production. Initially, the company struggled to find enough organic cotton farms in central India ",
+      " its factories. To meet demand, farmers were trained in sustainable methods, and Pratibha guaranteed fair-trade prices for ",
+      " crops. Today, the company has a network of 28,000 organic cotton farmers across central India."
+    ],
+    blanks: [
+      { options: ["produced", "has produced", "producing", "is produced"], correct: "produced" },
+      { options: ["moving", "leaving", "processing", "looking into"], correct: "leaving" },
+      { options: ["against", "onto", "toward", "behind"], correct: "toward" },
+      { options: ["have supplied", "supply", "to supply", "is supplied"], correct: "to supply" },
+      { options: ["their", "some", "mine", "them"], correct: "their" }
+    ],
+    explanation: [
+      "`produced` indicates 'for every ton of cloth produced'.",
+      "`leaving` refers to generating mountains of waste.",
+      "`toward` shows the company is moving toward eco-friendly leadership.",
+      "`to supply` refers to supplying the factories with organic cotton.",
+      "`their` indicates that farmers received fair-trade prices for their own crops."
+    ]
+  },
 
-// -------------------------
-// EJERCICIO 29
-// -------------------------
-{
-  id: 29,
-  text: [
-    "With the increase in women's ",
-    " in the labor force, many mothers have less ",
-    " time for domestic tasks. At the same time, there is growing ",
-    " that the father’s role and ",
-    " with children is significant. Fathers can have many roles, from provider to teacher, carer, playmate, and role model. Balancing paid work and family duties is important for both parents."
-  ],
-  blanks: [
-    { options: ["anticipation", "substitution", "participation", "definition"], correct: "participation" },
-    { options: ["available", "related", "consumable", "useful"], correct: "available" },
-    { options: ["recognition", "discrimination", "resolution", "recreation"], correct: "recognition" },
-    { options: ["scholarship", "relationship", "worship", "employment"], correct: "relationship" }
-  ],
-  explanation: [
-    "`participation` se refiere a la participación de mujeres en el trabajo remunerado.",
-    "`available` indica el tiempo que les queda para tareas domésticas.",
-    "`recognition` refleja la apreciación del rol del padre.",
-    "`relationship` indica la interacción significativa con los hijos."
-  ]
-},
+  // -------------------------
+  // EJERCICIO 28
+  // -------------------------
+  {
+    id: 28,
+    text: [
+      "Great engineers have a passion for improving life; a strong conviction that they can make life better for everyone. Engineers need creativity for invention and innovation, but what ",
+      " them is the belief that they can find better ways of doing things; cheaper, more efficient solutions to problems on this planet with ",
+      " resources. Many of us ",
+      " time complaining about life’s difficulties. Engineers see challenges as opportunities. How can this be made to work better? How can that process be more efficient? How can ",
+      " be made more cheaply, accurately, and fit-for-purpose? Great engineers are convinced that everything can be ",
+      ". Instead of complaining, they seek solutions."
+    ],
+    blanks: [
+      { options: ["drives", "makes", "motivate", "activate"], correct: "drives" },
+      { options: ["limited", "unlimited", "numerous", "mysterious"], correct: "limited" },
+      { options: ["take", "spend", "cost", "save"], correct: "spend" },
+      { options: ["parts", "elements", "units", "components"], correct: "components" },
+      { options: ["improved", "created", "performed", "changed"], correct: "improved" }
+    ],
+    explanation: [
+      "`drives` indicates what motivates engineers.",
+      "`limited` refers to the finite resources of the Earth.",
+      "`spend` shows how people spend time complaining.",
+      "`components` are the parts that can be optimized.",
+      "`improved` indicates that everything can be improved."
+    ]
+  },
 
-// -------------------------
-// EJERCICIO 30
-// -------------------------
-{
-  id: 30,
-  text: [
-    "In reality, the ",
-    " of truancy and non-attendance are complex. Each child has a ",
-    " story, and although algunos factores pueden ser comunes, cada niño requiere una respuesta que ",
-    " individualmente a sus necesidades. Esto aplica ",
-    " al adolescente de 14 años que falta por enfermedad de un progenitor, al de 11 años que se siente ",
-    " por cambiarse para la clase de educación física, al de 15 años aburrido en clase, y a la niña de 7 años acosada por ropa de marca."
-  ],
-  blanks: [
-    { options: ["initiations", "supervisions", "triggers", "unifications"], correct: "triggers" },
-    { options: ["untold", "moving", "unique", "weepy"], correct: "unique" },
-    { options: ["dictates", "deters", "monopolies", "deserves"], correct: "deserves" },
-    { options: ["mutually", "equitably", "equality", "equally"], correct: "equally" },
-    { options: ["hyperbolic", "arrogant", "embarrassed", "reticent"], correct: "embarrassed" }
-  ],
-  explanation: [
-    "`triggers` se refiere a los factores que provocan el ausentismo.",
-    "`unique` indica que cada historia es única.",
-    "`deserves` significa que cada niño merece atención individual.",
-    "`equally` indica que la respuesta se aplica por igual a todos los casos.",
-    "`embarrassed` describe la emoción del niño avergonzado al cambiarse."
-  ]
-},
+  // -------------------------
+  // EJERCICIO 29
+  // -------------------------
+  {
+    id: 29,
+    text: [
+      "With the increase in women's ",
+      " in the labor force, many mothers have less ",
+      " time for domestic tasks. At the same time, there is growing ",
+      " that the father’s role and ",
+      " with children is significant. Fathers can have many roles, from provider to teacher, carer, playmate, and role model. Balancing paid work and family duties is important for both parents."
+    ],
+    blanks: [
+      { options: ["anticipation", "substitution", "participation", "definition"], correct: "participation" },
+      { options: ["available", "related", "consumable", "useful"], correct: "available" },
+      { options: ["recognition", "discrimination", "resolution", "recreation"], correct: "recognition" },
+      { options: ["scholarship", "relationship", "worship", "employment"], correct: "relationship" }
+    ],
+    explanation: [
+      "`participation` refers to women's involvement in paid work.",
+      "`available` indicates the time left for domestic tasks.",
+      "`recognition` reflects appreciation for the father’s role.",
+      "`relationship` refers to meaningful interaction with children."
+    ]
+  },
 
-// -------------------------
-// EJERCICIO 31
-// -------------------------
-{
-  id: 31,
-  text: [
-    "If you want to estimate the number of jelly beans in a jar, ask friends and average their guesses. A group guess often outperforms individuals, provided they don't see each other's answers. A new study shows social influence can sway estimates and make the crowd ",
-    ". Published in the Proceedings of the National Academy of Sciences, crowd wisdom is a statistical phenomenon: wild guesses cancel out, yielding closer results. Yet psychology and statistics don't always ",
-    ". Seeing peers’ estimates caused more second-guessing, which ",
-    " the spread of responses and misled the group. Even ",
-    ", knowing others agreed increased confidence in answers. So numbers have wisdom—if kept quiet until counted."
-  ],
-  blanks: [
-    { options: ["eminence", "insolence", "estimate", "imminence"], correct: "estimate" },
-    { options: ["correct", "entrenched", "incorrect", "divided"], correct: "incorrect" },
-    { options: ["differ", "mix", "agree", "tell"], correct: "mix" },
-    { options: ["added", "weakened", "narrowed", "widened"], correct: "narrowed" },
-    { options: ["exception", "direction", "recollection", "inception"], correct: "direction" },
-    { options: ["better", "worse", "though", "than"], correct: "worse" }
-  ],
-  explanation: [
-    "`estimate` se refiere a la predicción de la cantidad de caramelos.",
-    "`incorrect` refleja que la influencia social puede llevar a errores.",
-    "`mix` indica que los valores se combinan, no siempre coinciden.",
-    "`narrowed` significa que la gama de respuestas se estrechó.",
-    "`direction` indica que el grupo se orientó incorrectamente.",
-    "`worse` señala que la confianza aumentó aunque el resultado empeoró."
-  ]
-},
+  // -------------------------
+  // EJERCICIO 30
+  // -------------------------
+  {
+    id: 30,
+    text: [
+      "In reality, the ",
+      " of truancy and non-attendance are complex. Each child has a ",
+      " story, and although algunos factores pueden ser comunes, cada niño requiere una respuesta que ",
+      " individualmente a sus necesidades. Esto aplica ",
+      " al adolescente de 14 años que falta por enfermedad de un progenitor, al de 11 años que se siente ",
+      " por cambiarse para la clase de educación física, al de 15 años aburrido en clase, y a la niña de 7 años acosada por ropa de marca."
+    ],
+    blanks: [
+      { options: ["initiations", "supervisions", "triggers", "unifications"], correct: "triggers" },
+      { options: ["untold", "moving", "unique", "weepy"], correct: "unique" },
+      { options: ["dictates", "deters", "monopolies", "deserves"], correct: "deserves" },
+      { options: ["mutually", "equitably", "equality", "equally"], correct: "equally" },
+      { options: ["hyperbolic", "arrogant", "embarrassed", "reticent"], correct: "embarrassed" }
+    ],
+    explanation: [
+      "`triggers` refers to the factors causing absenteeism.",
+      "`unique` indicates that each child's story is unique.",
+      "`deserves` shows that every child deserves individual attention.",
+      "`equally` indicates the response applies equally to all cases.",
+      "`embarrassed` describes the child’s emotion while changing."
+    ]
+  },
 
-// -------------------------
-// EJERCICIO 32
-// -------------------------
-{
-  id: 32,
-  text: [
-    "Sometimes it seems there's only so much we can learn about ",
-    ". We can't observe coloration or behavior. Only remains allow extrapolation. Scientists now infer dinosaur movement from ostriches. Flightless birds retain feathered forelimbs. But ",
-    " from Germany and Belgium carefully ",
-    " ",
-    " ostriches, modeling their movements in air streams. They found wings aid in braking, turning, and zig-zagging. Findings were presented at the Society for ",
-    " Biology conference in Prague. Ostrich movement may reflect bipedal dinosaurs, aiding in speed, ",
-    " and agility."
-  ],
-  blanks: [
-    { options: ["phones", "warts", "moulds", "dinosaurs"], correct: "dinosaurs" },
-    { options: ["receivables", "grievances", "priestesses", "researchers"], correct: "researchers" },
-    { options: ["starred", "trussed", "hurt", "observed"], correct: "observed" },
-    { options: ["plagued", "motivate", "hand-raised", "grape"], correct: "hand-raised" },
-    { options: ["findings", "sermonizes", "portraitists", "temporizes"], correct: "findings" },
-    { options: ["Ventricle", "Accidental", "Experimental", "Civil"], correct: "Experimental" },
-    { options: ["impermeability", "wickedly", "stability", "impenetrability"], correct: "stability" }
-  ],
-  explanation: [
-    "`dinosaurs` se refiere a los animales estudiados.",
-    "`researchers` son quienes realizaron las observaciones.",
-    "`observed` indica la acción de analizar a los avestruces.",
-    "`hand-raised` refleja aves criadas a mano para estudio controlado.",
-    "`findings` son los resultados de la investigación.",
-    "`Experimental` se refiere a la naturaleza del estudio.",
-    "`stability` indica cómo las extremidades contribuyen al equilibrio y agilidad."
-  ]
-},
-
-// -------------------------
-// EJERCICIO 33
-// -------------------------
-{
-  id: 33,
-  text: [
-    "Children are often ",
-    " by various musical experiences. Opportunities for active music-making are declining. They are surrounded by music from an ",
-    " of devices, toys, and computers offering a ",
-    " array of musical selections. Yet much music is 'unchosen,' making them ",
-    " listeners. They encounter music in games, TV, films, iPads, radios, and ringtones, influenced by parents or schools. Studies are being ",
-    " on how ubiquitous pre-recorded music ",
-    " on their desire to create and interact musically."
-  ],
-  blanks: [
-    { options: ["surrounded", "deterred", "deferred", "characterized"], correct: "surrounded" },
-    { options: ["array", "appointment", "access", "arrangement"], correct: "array" },
-    { options: ["limitless", "plunging", "excessive", "spacious"], correct: "limitless" },
-    { options: ["dormant", "bilateral", "active", "passive"], correct: "passive" },
-    { options: ["abandoned", "culminated", "confided", "conducted"], correct: "conducted" },
-    { options: ["can have intruded", "would have intruded", "could have intruded", "is intruding"], correct: "is intruding" }
-  ],
-  explanation: [
-    "`surrounded` indica exposición constante a la música.",
-    "`array` refleja la variedad de dispositivos y fuentes.",
-    "`limitless` significa selección prácticamente infinita.",
-    "`passive` indica que son receptores pasivos, no activos.",
-    "`conducted` se refiere a estudios realizados sobre este efecto.",
-    "`is intruding` significa que la música afecta su deseo de interactuar."
-  ]
-},
-
-// -------------------------
-// EJERCICIO 34
-// -------------------------
-{
-  id: 34,
-  text: [
-    "Cultural studies is a new approach to studying culture. Traditionally, disciplines like anthropology, history, literary studies, human geography, and sociology examined culture from their own perspectives. ",
-    ", in recent decades there has been a ",
-    " interest in studying culture across disciplinary ",
-    ". The ",
-    " activities and cultural studies have become an exciting intellectual field, shedding new light on human cultures and promising to continue doing so. While there is little doubt that cultural studies will ",
-    " as a distinctive field, it covers a potentially enormous area. 'Culture' has a complex history and provides a legitimate ",
-    " of inquiry across disciplines."
-  ],
-  blanks: [
-    { options: ["However", "Then", "Subsequently", "Consistently"], correct: "However" },
-    { options: ["renewed", "refunded", "renowned", "irresistible"], correct: "renewed" },
-    { options: ["discriminations", "similarities", "boundaries", "differentiations"], correct: "boundaries" },
-    { options: ["simultaneous", "spontaneous", "resulting", "derivative"], correct: "resulting" },
-    { options: ["have promised", "promising", "promises", "would have promised"], correct: "promises" },
-    { options: ["phase out", "pull together", "be widely recognized", "be narrowly reduced"], correct: "be widely recognized" },
-    { options: ["dispersion", "focus", "heart", "centre"], correct: "focus" }
-  ],
-  explanation: [
-    "`However` introduce contraste con el pasado.",
-    "`renewed` refleja un interés reciente renovado.",
-    "`boundaries` indica cruces de límites disciplinarios.",
-    "`resulting` se refiere a actividades que surgieron de este enfoque.",
-    "`promises` indica que el campo continuará desarrollándose.",
-    "`be widely recognized` significa que se consolidará como campo distintivo.",
-    "`focus` indica el centro de investigación y estudio."
-  ]
-},
-
-// -------------------------
-// EJERCICIO 35
-// -------------------------
-{
-  id: 35,
-  text: [
-    "Since biological systems with signs of ",
-    " engineering are unlikely to have arisen by chance, their ",
-    " must result from natural selection and therefore should have ",
-    " useful for survival and reproduction in human evolutionary environments."
-  ],
-  blanks: [
-    { options: ["complimentary", "complex", "compensatory", "compendious"], correct: "complex" },
-    { options: ["compilation", "organization", "eccentricity", "metabolism"], correct: "organization" },
-    { options: ["evaluations", "functions", "intentions", "attentions"], correct: "functions" }
-  ],
-  explanation: [
-    "`complex` indica que los sistemas biológicos son complejos.",
-    "`organization` refleja la estructura interna adaptativa.",
-    "`functions` indica que poseen funciones útiles para sobrevivir."
-  ]
-},
-
-// -------------------------
-// EJERCICIO 36
-// -------------------------
-{
-  id: 36,
-  text: [
-    "The International Journal of Design is a peer-reviewed, open-access journal publishing research across all design fields: industrial, visual communication, interface, animation, game, architectural, urban, and related areas. It aims to provide an international forum for the ",
-    " of ideas and findings across cultures and encourages research on cultural impacts ",
-    " design theory and practice. It also promotes ",
-    " of knowledge between academia and industry by emphasizing research whose ",
-    " results are relevant to design practices."
-  ],
-  blanks: [
-    { options: ["infliction", "change", "ocurrence", "exchange"], correct: "exchange" },
-    { options: ["without", "on", "inside", "at"], correct: "on" },
-    { options: ["overlap", "transplant", "transfer", "estimation"], correct: "transfer" },
-    { options: ["the", "which", "that", "what"], correct: "which" }
-  ],
-  explanation: [
-    "`exchange` se refiere al intercambio de ideas.",
-    "`on` indica el impacto sobre la teoría y práctica.",
-    "`transfer` refleja la transferencia de conocimiento.",
-    "`which` introduce la condición de relevancia para diseño."
-  ]
-},
-
-// -------------------------
-// EJERCICIO 37
-// -------------------------
-{
-  id: 37,
-  text: [
-    "Coastal fish farms seem less harmful to local plants and animals than ",
-    " thought, a new study ",
-    ". Marine ecosystems can ",
-    " from such damage ",
-    ". But analysis of a trout farm in Faroe Islands over nearly a year shows careful management is needed and there's a limit to operations before biodiversity suffers. In coastal farms, fish live in cages on the water. Feces and uneaten food sink, affecting seabed ecosystems. ",
-    " managed farms can also impact surrounding waters."
-  ],
-  blanks: [
-    { options: ["collectively", "individually", "previously", "pretentiously"], correct: "previously" },
-    { options: ["introduces", "deceives", "reveals", "conceives"], correct: "reveals" },
-    { options: ["derive", "segregate", "recover", "prevent"], correct: "recover" },
-    { options: ["visually", "commonly", "surprisingly", "spiritually"], correct: "surprisingly" },
-    { options: ["dislocated", "estimated", "placed", "dismounted"], correct: "placed" },
-    { options: ["Well", "Badly", "Expectedly", "Attentively"], correct: "Badly" }
-  ],
-  explanation: [
-    "`previously` indica la creencia anterior sobre impacto.",
-    "`reveals` señala lo que el estudio muestra.",
-    "`recover` significa que el ecosistema puede recuperarse.",
-    "`surprisingly` indica rapidez inesperada de recuperación.",
-    "`placed` significa ubicadas cuidadosamente las granjas.",
-    "`Badly` refleja que mal gestionadas afectan el entorno."
-  ]
-},
-
-// -------------------------
-// EJERCICIO 38
-// -------------------------
-{
-  id: 38,
-  text: [
-    "Forty years ago, Donald Johanson discovered arguably the most famous early human fossil in Ethiopia: Lucy. At a ScienceWriters2014 meeting, he described seeing Lucy. A year earlier, during the ",
-    ", a geologist had left footprints nearby while searching for rocks. Johanson found a small elbow piece, a ",
-    " allowing arm flexion. Looking uphill, he saw other ",
-    " eroding. The species was named Australopithecus afarensis in 1978."
-  ],
-  blanks: [
-    { options: ["ancestor", "dulcimer", "mantissa", "cullender"], correct: "ancestor" },
-    { options: ["discovery", "confession", "concealment", "interpolation"], correct: "discovery" },
-    { options: ["skeleton", "singleton", "insulin", "chairperson"], correct: "skeleton" },
-    { options: ["hinge", "axis", "pulley", "knot"], correct: "hinge" },
-    { options: ["malice", "deterrence", "fragments", "ballots"], correct: "fragments" },
-    { options: ["published", "object", "encampment", "eructed"], correct: "published" }
-  ],
-  explanation: [
-    "`ancestor` indica que Lucy es un ancestro humano.",
-    "`discovery` se refiere al hallazgo fósil.",
-    "`skeleton` indica que se trata de restos óseos.",
-    "`hinge` describe la articulación del codo.",
-    "`fragments` se refiere a fragmentos fósiles adicionales.",
-    "`published` indica la formalización del nombre científico."
-  ]
-},
-
-// -------------------------
-// EJERCICIO 39
-// -------------------------
-{
-  id: 39,
-  text: [
-    "Invasive species can ",
-    " biodiversity and push native species toward extinction. Prevention, early detection, and rapid response are critical. Control strategies include physical, chemical, and biological methods. Public awareness and legislation also play a key role in ",
-    " invasions. Climate change may exacerbate invasions by creating favorable conditions. Managing invasions requires international cooperation and consistent monitoring to prevent long-term ecological and economic impacts."
-  ],
-  blanks: [
-    { options: ["threaten", "support", "neglect", "analyze"], correct: "threaten" },
-    { options: ["facilitating", "mitigating", "preventing", "ignoring"], correct: "preventing" }
-  ],
-  explanation: [
-    "`threaten` indica que las especies invasoras ponen en riesgo la biodiversidad.",
-    "`preventing` se refiere a impedir la propagación de invasoras."
-  ]
-}
-,
-// -------------------------
-// EJERCICIO 40
-// -------------------------
-{
-  id: 40,
-  text: [
-    "The discovery of a set of what look like ancient hominin footprints on the island of Crete could throw our understanding of human evolution into disarray. Received wisdom is that after ",
-    " from the chimp lineage, our hominin ancestors were confined to Africa until around 1.5 million years ago. The prints found in Crete, however, ",
-    " to a creature that appears to have lived 5.7 million years ago ... More research is needed ... the prints seem to have been ",
-    " by a creature that walked upright, on the soles of clawless feet ..."
-  ],
-  blanks: [
-    { options: ["degrading", "splitting", "converging", "escaping"], correct: "splitting" },
-    { options: ["stuck", "flanked", "clung", "belonged"], correct: "belonged" },
-    { options: ["faked", "made", "filled", "taken"], correct: "made" },
-    { options: ["previously", "respectively", "surprisingly", "relatively"], correct: "previously" }
-  ],
-  explanation: [
-    "`splitting` se refiere a la separación del linaje de los chimpancés.",
-    "`belonged` indica que las huellas pertenecían a un homínido.",
-    "`made` significa que la criatura caminó dejando las huellas.",
-    "`previously` indica que ya caminaba erguido, según lo observado."
-  ]
-},
-
-// -------------------------
-// EJERCICIO 41
-// -------------------------
-{
-  id: 41,
-  text: [
-    "The iPhone ... The first-generation iPhone was ",
-    " by Apple co-founder Steve Jobs ... The iPhone's user interface is built around a multi-touch screen with a ",
-    " keyboard. ... further features have been added ... ",
-    " accessibility support. ... gesture ",
-    " ."
-  ],
-  blanks: [
-    { options: ["announced", "seen", "got", "taken"], correct: "announced" },
-    { options: ["solid", "visible", "virtual", "broad"], correct: "virtual" },
-    { options: ["more than", "in spite of", "as well as", "except"], correct: "as well as" },
-    { options: ["estimation", "establishment", "production", "recognition"], correct: "recognition" }
-  ],
-  explanation: [
-    "`announced` significa que Steve Jobs presentó el iPhone.",
-    "`virtual` describe el teclado en pantalla táctil.",
-    "`as well as` indica la adición de soporte de accesibilidad junto con otras funciones.",
-    "`recognition` se refiere al reconocimiento de gestos en el dispositivo."
-  ]
-},
-
-// -------------------------
-// EJERCICIO 42
-// -------------------------
-{
-  id: 42,
-  text: [
-    "The stock of Australia's dwellings is ",
-    ", with current homes having more bedrooms on average than homes ten years ago. At the same time, households are getting smaller on average with decreasing ",
-    " of couple families with children and ",
-    " couple only and lone person households. This ",
-    " examines the changes in household size and number of bedrooms from 1994-95 to 2003-04."
-  ],
-  blanks: [
-    { options: ["evanescent", "eternal", "erupting", "evolving"], correct: "evolving" },
-    { options: ["interests", "proportions", "appearances", "durations"], correct: "proportions" },
-    { options: ["flopping", "increasing", "fluctuating", "declining"], correct: "increasing" },
-    { options: ["statistic", "suggestion", "article", "index"], correct: "article" }
-  ],
-  explanation: [
-    "`evolving` indica que las viviendas están cambiando con el tiempo.",
-    "`proportions` se refiere a la proporción de familias con hijos.",
-    "`increasing` muestra el aumento de hogares de pareja y personas solas.",
-    "`article` señala que se trata de un estudio o publicación que analiza estos cambios."
-  ]
-},
-
+  // -------------------------
+  // EJERCICIO 31
+  // -------------------------
+  {
+    id: 31,
+    text: [
+      "If you want to estimate the number of jelly beans in a jar, ask friends and average their guesses. A group guess often outperforms individuals, provided they don't see each other's answers. A new study shows social influence can sway estimates and make the crowd ",
+      ". Published in the Proceedings of the National Academy of Sciences, crowd wisdom is a statistical phenomenon: wild guesses cancel out, yielding closer results. Yet psychology and statistics don't always ",
+      ". Seeing peers’ estimates caused more second-guessing, which ",
+      " the spread of responses and misled the group. Even ",
+      ", knowing others agreed increased confidence in answers. So numbers have wisdom—if kept quiet until counted."
+    ],
+    blanks: [
+      { options: ["eminence", "insolence", "estimate", "imminence"], correct: "estimate" },
+      { options: ["correct", "entrenched", "incorrect", "divided"], correct: "incorrect" },
+      { options: ["differ", "mix", "agree", "tell"], correct: "mix" },
+      { options: ["added", "weakened", "narrowed", "widened"], correct: "narrowed" },
+      { options: ["exception", "direction", "recollection", "inception"], correct: "direction" },
+      { options: ["better", "worse", "though", "than"], correct: "worse" }
+    ],
+    explanation: [
+      "`estimate` refers to the prediction of jelly beans.",
+      "`incorrect` shows social influence can lead to errors.",
+      "`mix` means values combine and may not match exactly.",
+      "`narrowed` indicates the range of responses decreased.",
+      "`direction` shows the group was guided incorrectly.",
+      "`worse` indicates confidence increased despite poorer results."
+    ]
+  },
+  {
+    id: 32,
+    text: [
+      "Sometimes it seems there is only so much we can learn about ",
+      ". We cannot observe coloration or behavior. Only remains allow extrapolations. Scientists now infer dinosaur movement from ostriches. Flightless birds retain forelimbs with feathers. But ",
+      " from Germany and Belgium carefully ",
+      " ",
+      " ostriches, modeling their movements in air currents. The ",
+      " were presented at the Experimental Biology ",
+      " conference in Prague. Ostrich movement may reflect that of bipedal dinosaurs, aiding speed, ",
+      " and agility."
+    ],
+    blanks: [
+      { options: ["phones", "warts", "mold", "dinosaurs"], correct: "dinosaurs" },
+      { options: ["accounts receivable", "researchers", "priestesses", "grievances"], correct: "researchers" },
+      { options: ["starred", "tied", "observed", "injured"], correct: "observed" },
+      { options: ["hand-raised", "grape", "motivated", "tormented"], correct: "hand-raised" },
+      { options: ["findings", "portraits", "sermons", "temporal"], correct: "findings" },
+      { options: ["Ventricle", "Accidental", "Experimental", "Civil"], correct: "Experimental" },
+      { options: ["impermeability", "stability", "impenetrability", "maliciously"], correct: "stability" }
+    ],
+    explanation: [
+      "`dinosaurs` refers to the animals being studied.",
+      "`researchers` are the people conducting the observations.",
+      "`observed` indicates the action of analyzing the ostriches.",
+      "`hand-raised` reflects birds raised in controlled conditions for study.",
+      "`findings` are the results of the research.",
+      "`Experimental` refers to the nature of the study.",
+      "`stability` indicates how the limbs contribute to balance and agility."
+    ]
+  },
+  
+  // -------------------------
+  // EXERCISE 33
+  // -------------------------
+  {
+    id: 33,
+    text: [
+      "Children are often ",
+      " by various musical experiences. Opportunities to actively create music are decreasing. They are surrounded by music from an ",
+      " of devices, toys, and computers offering a ",
+      " variety of musical selections. However, much music is 'non-chosen,' making them ",
+      " listeners. They find music in games, TV, movies, iPads, radios, and ringtones, influenced by parents or schools. Research is being ",
+      " on how ubiquitous prerecorded music ",
+      " in their desire to create and interact musically."
+    ],
+    blanks: [
+      { options: ["surrounded", "dissuaded", "delayed", "characterized"], correct: "surrounded" },
+      { options: ["array", "access", "quote", "arrangement"], correct: "array" },
+      { options: ["unlimited", "deep", "excessive", "spacious"], correct: "unlimited" },
+      { options: ["active", "bilateral", "passive", "asleep"], correct: "passive" },
+      { options: ["abandoned", "completed", "conducted", "confessed"], correct: "conducted" },
+      { options: ["may have interfered", "is interfering", "would have interfered", "could have interfered"], correct: "is interfering" }
+    ],
+    explanation: [
+      "`surrounded` indicates constant exposure to music.",
+      "`array` reflects the variety of devices and sources.",
+      "`unlimited` means virtually infinite selection.",
+      "`passive` indicates they are passive receivers, not active.",
+      "`conducted` refers to studies carried out on this effect.",
+      "`is interfering` means the music is affecting their desire to interact."
+    ]
+  },
+  
+  // -------------------------
+  // EXERCISE 34
+  // -------------------------
+  {
+    id: 34,
+    text: [
+      "Cultural studies are a new approach to studying culture. Traditionally, disciplines such as anthropology, history, literary studies, human geography, and sociology examined culture from their own perspectives. ",
+      ", in recent decades there has been a ",
+      " interest in studying culture across disciplinary boundaries. Cross-disciplinary activities and cultural studies have become an exciting intellectual field, shedding new light on human cultures and promising to continue doing so. Although there is little doubt that cultural studies ",
+      " as a distinctive field, they cover a potentially huge area. 'Culture' has a complex history and provides a legitimate ",
+      " of investigation across disciplines."
+    ],
+    blanks: [
+      { options: ["However", "Then", "Subsequently", "Consistently"], correct: "However" },
+      { options: ["renewed", "reimbursed", "renamed", "irresistible"], correct: "renewed" },
+      { options: ["boundaries", "discriminations", "similarities", "differentiations"], correct: "boundaries" },
+      { options: ["resulting", "spontaneous", "derived", "simultaneous"], correct: "resulting" },
+      { options: ["promises", "has promised", "promising", "would promise"], correct: "promises" },
+      { options: ["be widely recognized", "gather", "be largely acknowledged", "be reduced"], correct: "be widely recognized" },
+      { options: ["focus", "heart", "core", "dispersion"], correct: "focus" }
+    ],
+    explanation: [
+      "`However` introduces a contrast with the past.",
+      "`renewed` reflects recent renewed interest.",
+      "`boundaries` indicates crossing disciplinary limits.",
+      "`resulting` refers to activities that emerged from this approach.",
+      "`promises` indicates the field will continue developing.",
+      "`be widely recognized` means it will establish itself as a distinctive field.",
+      "`focus` indicates the center of research and study."
+    ]
+  },
+  
+  // -------------------------
+  // EXERCISE 35
+  // -------------------------
+  {
+    id: 35,
+    text: [
+      "Since biological systems with signs of ",
+      " engineering are unlikely to have arisen by chance, their ",
+      " must result from natural selection and therefore should have ",
+      " useful for survival and reproduction in human evolutionary environments."
+    ],
+    blanks: [
+      { options: ["complementary", "complex", "compensatory", "compendious"], correct: "complex" },
+      { options: ["compilation", "organization", "eccentricity", "metabolism"], correct: "organization" },
+      { options: ["evaluations", "functions", "intentions", "attentions"], correct: "functions" }
+    ],
+    explanation: [
+      "`complex` indicates biological systems are complex.",
+      "`organization` reflects adaptive internal structure.",
+      "`functions` indicates they have useful functions for survival."
+    ]
+  },
+  
+  // -------------------------
+  // EXERCISE 36
+  // -------------------------
+  {
+    id: 36,
+    text: [
+      "The International Journal of Design is a peer-reviewed, open-access journal publishing research in all design fields: industrial, visual communication, interface, animation, gaming, architectural, urban, and related areas. Its aim is to provide an international forum for the ",
+      " of ideas and findings across cultures and to encourage research on cultural impacts ",
+      " design theory and practice. It also promotes the ",
+      " of knowledge between academia and industry by emphasizing research whose ",
+      " results are relevant to design practices."
+    ],
+    blanks: [
+      { options: ["infliction", "exchange", "occurrence", "change"], correct: "exchange" },
+      { options: ["on", "within", "over", "without"], correct: "on" },
+      { options: ["transfer", "overlap", "transplant", "estimation"], correct: "transfer" },
+      { options: ["that", "which", "what", "those"], correct: "that" }
+    ],
+    explanation: [
+      "`exchange` refers to exchanging ideas.",
+      "`on` indicates impact on theory and practice.",
+      "`transfer` reflects knowledge transfer.",
+      "`that` introduces condition of relevance to design."
+    ]
+  },
+  
+  // -------------------------
+  // EXERCISE 37
+  // -------------------------
+  {
+    id: 37,
+    text: [
+      "Coastal fish farms appear less harmful to local plants and animals than previously ",
+      " thought, a new study ",
+      ". Marine ecosystems can ",
+      " from such damage ",
+      ". But analysis of a trout farm in the Faroe Islands over nearly a year shows careful management is needed, and there is a limit before biodiversity suffers. In coastal farms, fish live in cages above water. Waste and uneaten food fall to the seabed, affecting marine ecosystems. Poorly ",
+      " farms can also impact surrounding waters."
+    ],
+    blanks: [
+      { options: ["collectively", "previously", "individually", "pretentiously"], correct: "previously" },
+      { options: ["introduces", "deceives", "reveals", "conceives"], correct: "reveals" },
+      { options: ["recover", "derive", "segregate", "prevent"], correct: "recover" },
+      { options: ["visibly", "surprisingly", "commonly", "spiritually"], correct: "surprisingly" },
+      { options: ["located", "unlocated", "estimated", "disassembled"], correct: "located" },
+      { options: ["well", "poorly", "expectedly", "carefully"], correct: "poorly" }
+    ],
+    explanation: [
+      "`previously` indicates prior beliefs about impact.",
+      "`reveals` shows what the study demonstrates.",
+      "`recover` means the ecosystem can bounce back.",
+      "`surprisingly` indicates unexpected speed of recovery.",
+      "`located` means the farms are carefully placed.",
+      "`poorly` shows that mismanaged farms harm the environment."
+    ]
+  },
+  
+  // -------------------------
+  // EXERCISE 38
+  // -------------------------
+  {
+    id: 38,
+    text: [
+      "Forty years ago, Donald Johanson discovered possibly the most famous early human fossil in Ethiopia: Lucy. At a ScienceWriters2014 meeting, he described seeing Lucy. A year earlier, during an ",
+      ", a geologist had left nearby footprints while searching for rocks. Johanson found a small piece of elbow, a ",
+      " allowing arm flexion. Looking uphill, he saw other ",
+      " eroding. The species was named Australopithecus afarensis in 1978."
+    ],
+    blanks: [
+      { options: ["ancestral site", "dulcimer", "mantis", "strainer"], correct: "ancestral site" },
+      { options: ["discovery", "confession", "concealment", "interpolation"], correct: "discovery" },
+      { options: ["skeleton", "singular", "insulin", "president"], correct: "skeleton" },
+      { options: ["hinge", "axis", "pulley", "knot"], correct: "hinge" },
+      { options: ["fragments", "evil", "ballots", "deterrents"], correct: "fragments" },
+      { options: ["published", "object", "camp", "eructed"], correct: "published" }
+    ],
+    explanation: [
+      "`ancestral site` indicates Lucy is an early human ancestor.",
+      "`discovery` refers to the fossil find.",
+      "`skeleton` indicates the remains were bones.",
+      "`hinge` describes the elbow joint.",
+      "`fragments` refers to additional fossil fragments.",
+      "`published` indicates formal naming in 1978."
+    ]
+  },
+  
+  // -------------------------
+  // EXERCISE 39
+  // -------------------------
+  {
+    id: 39,
+    text: [
+      "Invasive species can ",
+      " biodiversity and push native species toward extinction. Prevention, early detection, and rapid response are critical. Control strategies include physical, chemical, and biological methods. Public awareness and legislation also play a key role in ",
+      " invasions. Climate change can exacerbate invasions by creating favorable conditions. Managing invasions requires international cooperation and constant monitoring to prevent long-term ecological and economic impacts."
+    ],
+    blanks: [
+      { options: ["threaten", "support", "neglect", "analyze"], correct: "threaten" },
+      { options: ["preventing", "mitigating", "facilitating", "ignoring"], correct: "preventing" }
+    ],
+    explanation: [
+      "`threaten` indicates invasive species put biodiversity at risk.",
+      "`preventing` refers to stopping the spread of invasives."
+    ]
+  },
+  
+  // -------------------------
+  // EXERCISE 40
+  // -------------------------
+  {
+    id: 40,
+    text: [
+      "The discovery of a set of ancient hominid footprints on Crete could upend our understanding of human evolution. It was believed that after ",
+      " from the chimpanzee line, our hominid ancestors were confined to Africa until about 1.5 million years ago. However, the footprints found on Crete ",
+      " a creature that seems to have lived 5.7 million years ago ... More research is needed ... the footprints appear to have been ",
+      " by a creature walking upright, on the soles of its feet without claws ..."
+    ],
+    blanks: [
+      { options: ["splitting", "degrading", "converging", "escaping"], correct: "splitting" },
+      { options: ["belonged", "flanked", "adhered", "belong"], correct: "belonged" },
+      { options: ["made", "falsified", "filled", "taken"], correct: "made" },
+      { options: ["previously", "relatively", "respectively", "surprisingly"], correct: "previously" }
+    ],
+    explanation: [
+      "`splitting` refers to divergence from chimpanzee lineage.",
+      "`belonged` indicates the footprints belonged to a hominid.",
+      "`made` means the creature left the footprints.",
+      "`previously` indicates it already walked upright as observed."
+    ]
+  },
+  
+  // -------------------------
+  // EXERCISE 41
+  // -------------------------
+  {
+    id: 41,
+    text: [
+      "The iPhone revolutionized mobile technology. The first-generation iPhone was ",
+      " by Apple co-founder Steve Jobs at a high-profile event in 2007, generating massive media attention. The iPhone interface is built around a multitouch screen with a ",
+      " keyboard that allows users to type directly on the display without any physical keys. Over the years, additional features have been added, including improved cameras, internet connectivity, and application support, ",
+      " accessibility support for users with disabilities, as well as other innovative tools that enhance usability. The device also supports gesture ",
+      ", enabling users to perform complex commands through swipes, pinches, and taps."
+    ],
+    blanks: [
+      { options: ["announced", "seen", "obtained", "taken"], correct: "announced" },
+      { options: ["virtual", "solid", "visible", "wide"], correct: "virtual" },
+      { options: ["as well as", "except", "despite", "more than"], correct: "as well as" },
+      { options: ["recognition", "production", "establishment", "estimation"], correct: "recognition" }
+    ],
+    explanation: [
+      "`announced` means Steve Jobs officially presented the iPhone.",
+      "`virtual` describes the touchscreen keyboard without physical keys.",
+      "`as well as` shows accessibility was added in addition to other features.",
+      "`recognition` refers to gesture recognition, allowing touch-based commands."
+    ]
+  },  
+  
+  // -------------------------
+  // EXERCISE 42
+  // -------------------------
+  {
+    id: 42,
+    text: [
+      "Housing stock in Australia is ",
+      ", with current houses having more rooms on average than ten years ago. At the same time, households are becoming smaller on average, with a decrease in the ",
+      " of couple families with children and an ",
+      " of single-couple and single-person households. This ",
+      " examines changes in household size and number of rooms from 1994-95 to 2003-04."
+    ],
+    blanks: [
+      { options: ["evolving", "erupting", "eternal", "ephemeral"], correct: "evolving" },
+      { options: ["proportions", "appearances", "durations", "interests"], correct: "proportions" },
+      { options: ["increase", "falling", "fluctuating", "decreasing"], correct: "increase" },
+      { options: ["article", "statistic", "index", "suggestion"], correct: "article" }
+    ],
+    explanation: [
+      "`evolving` indicates changes in housing stock over time.",
+      "`proportions` reflects the ratio of family types.",
+      "`increase` shows more single-couple and single-person households.",
+      "`article` indicates the study documenting these changes."
+    ]
+  },
 // -------------------------
 // EJERCICIO 43
 // -------------------------
 {
   id: 43,
   text: [
-    "The Elder Academy scheme ... was ",
-    " in early 2007 ... The activities provide ",
-    " to learning opportunities ... optimizes the use of existing ",
-    " facilities and has been successful ... helping to maintain ",
-    " and mental wellbeing."
+    "The Elder Academy scheme was ",
+    " in early 2007 to encourage older adults to engage in lifelong learning. The activities provide ",
+    " to workshops, lectures, and cultural events. It optimizes the use of existing ",
+    " facilities such as community centers and libraries and has been successful in helping to maintain both physical and mental wellbeing."
   ],
   blanks: [
     { options: ["portioned", "relegated", "launched", "provisioned"], correct: "launched" },
@@ -1181,10 +1161,10 @@ export interface BlankOption {
     { options: ["tangible", "stoical", "physical", "solid"], correct: "physical" }
   ],
   explanation: [
-    "`launched` indica que el programa se inició oficialmente.",
-    "`access` significa que proporciona acceso a oportunidades de aprendizaje.",
-    "`educational` se refiere a la naturaleza educativa de las actividades.",
-    "`physical` describe el uso de instalaciones físicas existentes."
+    "`launched` indicates the program was officially started.",
+    "`access` means it provides access to learning opportunities.",
+    "`educational` refers to the educational nature of the activities.",
+    "`physical` describes the use of physical facilities."
   ]
 },
 
@@ -1194,11 +1174,11 @@ export interface BlankOption {
 {
   id: 44,
   text: [
-    "Children who skip school are increasingly on family holidays ... ",
-    " children played truant this spring term ... But a ",
-    " group of truants ... same ",
-    " last year. ... not ",
-    " by their school last term ..."
+    "Children who skip school are increasingly going on family holidays. This term, ",
+    " children played truant during the spring semester. But a ",
+    " group of truants remained consistent over the same ",
+    " last year, and these students were not ",
+    " by their school during the term."
   ],
   blanks: [
     { options: ["Same", "More", "Fewer", "Less"], correct: "Fewer" },
@@ -1207,10 +1187,10 @@ export interface BlankOption {
     { options: ["consent", "recommended", "agreed", "contradicted"], correct: "agreed" }
   ],
   explanation: [
-    "`Fewer` indica que hubo menos niños haciendo novillos.",
-    "`hardcore` se refiere a un grupo constante o dedicado de alumnos faltistas.",
-    "`period` describe el período de tiempo comparable al año anterior.",
-    "`agreed` señala que no fueron aprobados o supervisados por la escuela."
+    "`Fewer` indicates there were fewer children skipping school.",
+    "`hardcore` refers to a consistent, dedicated group of truants.",
+    "`period` describes the comparable time frame from last year.",
+    "`agreed` indicates they were not approved or supervised by the school."
   ]
 },
 
@@ -1220,12 +1200,12 @@ export interface BlankOption {
 {
   id: 45,
   text: [
-    "Scientists have discovered the cause of a mass extinction ... which also provides insight into how climate change can impact ",
-    " deep ocean biota. In a new study ",
-    " in the journal Nature Communications ... cause ... was ",
+    "Scientists have discovered the cause of a mass extinction, which also provides insight into how climate change can impact ",
+    " deep ocean ecosystems. In a new study ",
+    " in the journal Nature Communications, the cause of the extinction was ",
     " unknown. Scientists tested various possible ",
-    " for the mass extinction ... ",
-    ", they discovered that the extinction was caused by a global change in plankton at the surface of the ocean."
+    " for the mass extinction. ",
+    ", they discovered that the extinction was caused by a global shift in plankton populations at the ocean surface."
   ],
   blanks: [
     { options: ["in", "of", "on", "off"], correct: "on" },
@@ -1235,11 +1215,11 @@ export interface BlankOption {
     { options: ["However", "Thus", "So", "Instead"], correct: "Instead" }
   ],
   explanation: [
-    "`on` indica que el cambio climático afecta la biota del océano profundo.",
-    "`published` señala que el estudio se publicó en la revista.",
-    "`previously` indica que la causa era previamente desconocida.",
-    "`causes` se refiere a factores probables de la extinción.",
-    "`Instead` introduce el hallazgo real que reemplaza la hipótesis anterior."
+    "`on` indicates climate change affects deep ocean biota.",
+    "`published` shows the study was published in the journal.",
+    "`previously` indicates the cause was unknown before.",
+    "`causes` refers to possible factors tested for the extinction.",
+    "`Instead` introduces the actual finding that replaced previous assumptions."
   ]
 },
 
@@ -1249,13 +1229,13 @@ export interface BlankOption {
 {
   id: 46,
   text: [
-    "Psychology as a subject of study has largely developed in the West since the late nineteenth century. During this period there has been an ",
-    " on scientific thinking. Because of this, there have been many scientific studies in psychology which ",
-    " different aspects of human nature. These include studies into how biology (physical factors) influences human experience, how people use their ",
-    " (touch, taste, smell, sight and hearing) to get to know the world, how people develop, why people behave in certain ways, how memory works, how people develop language, how people understand and think about the world, what motivates people, why people have emotions and how personality develops. These scientific ",
-    " all contribute to an understanding of human nature. What do we mean by the practical applications of these studies? An ",
-    " of psychology is useful in many different areas in life, such as education, the workplace, social services and medicine. This means that people who have knowledge of psychology can ",
-    " or apply that knowledge in areas such as the ones listed above."
+    "Psychology as a subject has largely developed in the West since the late nineteenth century. During this period there has been an ",
+    " on scientific thinking. Because of this, many scientific studies in psychology ",
+    " different aspects of human nature. These include studies into how biology influences human experience, how people use their ",
+    " to perceive the world, how people develop, why people behave in certain ways, how memory works, how language develops, what motivates people, why emotions arise, and how personality forms. These scientific ",
+    " all contribute to understanding human nature. Practical applications of these studies mean that an ",
+    " of psychology is useful in education, the workplace, social services, and medicine. People with knowledge of psychology can ",
+    " or apply that knowledge in many areas."
   ],
   blanks: [
     { options: ["emphasis", "attention", "example", "extension"], correct: "emphasis" },
@@ -1266,12 +1246,12 @@ export interface BlankOption {
     { options: ["register", "classify", "use", "prepare"], correct: "use" }
   ],
   explanation: [
-    "`emphasis` indica la importancia en el pensamiento científico.",
-    "`explore` significa estudiar diferentes aspectos de la naturaleza humana.",
-    "`senses` se refiere a los sentidos utilizados para percibir el mundo.",
-    "`investigations` son los estudios científicos que contribuyen al conocimiento.",
-    "`understanding` indica la aplicación práctica del conocimiento psicológico.",
-    "`use` significa emplear ese conocimiento en contextos prácticos."
+    "`emphasis` highlights importance in scientific thinking.",
+    "`explore` means to study different aspects of human nature.",
+    "`senses` refers to the human senses used to perceive the world.",
+    "`investigations` are the scientific studies contributing to knowledge.",
+    "`understanding` indicates practical application of psychology.",
+    "`use` means to apply this knowledge in real-life contexts."
   ]
 },
 
@@ -1281,11 +1261,11 @@ export interface BlankOption {
 {
   id: 47,
   text: [
-    "The study of objects constitutes a relatively new field of academic enquiry, commonly referred to as material culture studies. Students of material culture seek to understand societies, both past and present, through careful study and ",
-    " of the physical or material objects generated by those societies. The source material for study is exceptionally wide, ",
-    " not just human-made artefacts but also natural objects and even preserved body parts ... Some specialists in the field of material culture have made bold claims for its pre-eminence. In certain disciplines, it reigns ",
-    " . ...",
-    " , objects are all scholars have to rely on in forming an understanding of ancient peoples. ... {as in} the case of medieval and post-medieval archaeology."
+    "The study of objects constitutes a relatively new field of academic inquiry, known as material culture studies. Students seek to understand societies through careful study and ",
+    " of physical or material objects produced by those societies. The source material is exceptionally wide, ",
+    " not only human-made artifacts but also natural objects and preserved body parts. Some specialists in material culture claim its central importance in understanding past societies. In certain disciplines, it reigns ",
+    " . In such cases, objects are all scholars have to rely on when reconstructing ancient peoples' lives, ",
+    " the case of medieval and post-medieval archaeology."
   ],
   blanks: [
     { options: ["experiment", "modification", "consumption", "observation"], correct: "observation" },
@@ -1295,11 +1275,11 @@ export interface BlankOption {
     { options: ["as long as", "as if", "as a result of", "as in"], correct: "as in" }
   ],
   explanation: [
-    "`observation` significa examinar los objetos cuidadosamente.",
-    "`including` indica que se consideran también objetos naturales y restos humanos.",
-    "`supreme` refleja la importancia central del estudio en ciertas disciplinas.",
-    "`In such cases` señala que en esos casos los objetos son la única fuente.",
-    "`as in` introduce un ejemplo concreto de arqueología medieval."
+    "`observation` means examining objects carefully.",
+    "`including` indicates natural objects and human remains are considered.",
+    "`supreme` shows the central importance in some disciplines.",
+    "`In such cases` points out that objects are the only source.",
+    "`as in` introduces a specific example from archaeology."
   ]
 },
 
@@ -1309,11 +1289,11 @@ export interface BlankOption {
 {
   id: 48,
   text: [
-    "Away from the rumble of Shanghai's highways and the cacophony of the shopping districts, stroll down side streets filled with rows of tall brick ",
-    ". In the early evening or on a weekend morning, you'll hear the ",
-    " of classical music drifting from a piano ... Wander down another alley toward concrete ",
-    " and you'll hear Beethoven or Mozart flowing from a violin, or perhaps a cello, accordion or flute. In China, classical music is ",
-    " as mightily as the 1812 Overture. ..."
+    "Away from the noise of Shanghai's highways and shopping districts, stroll down side streets lined with tall brick ",
+    ". In the early evening or on weekend mornings, you'll hear the ",
+    " of classical music drifting from a piano. Wander down another alley toward concrete ",
+    " and you'll hear Beethoven, Mozart, or other classical pieces from violins, cellos, accordions, or flutes. In China, classical music is ",
+    " as powerfully as the 1812 Overture."
   ],
   blanks: [
     { options: ["rooms", "piles", "huts", "houses"], correct: "houses" },
@@ -1322,10 +1302,10 @@ export interface BlankOption {
     { options: ["looming", "bluffing", "changing", "booming"], correct: "booming" }
   ],
   explanation: [
-    "`houses` se refiere a las casas de ladrillo en las calles laterales.",
-    "`sound` indica el sonido de la música clásica.",
-    "`skyscrapers` describe los altos edificios hacia los que se dirige la música.",
-    "`booming` significa que la música suena con fuerza y resonancia."
+    "`houses` refers to brick houses on side streets.",
+    "`sound` indicates the music heard.",
+    "`skyscrapers` describes the buildings toward which the music flows.",
+    "`booming` means the music plays loudly and powerfully."
   ]
 },
 
@@ -1335,11 +1315,11 @@ export interface BlankOption {
 {
   id: 49,
   text: [
-    "Paraphrasing is often defined as putting a passage from an author into your own words. However, what are your own words? How different must your paraphrase be from the original? The answer is it should be ",
-    " different. The whole point of paraphrasing is to show you have read and understood another person's ideas, and can summarize them in your own writing style rather than borrowing their phrases. If you just change a few words, or add some bits ",
-    " your own to an otherwise reproduced passage, you will probably ",
-    " for plagiarism. ...",
-    " also important to credit the original writer by referencing."
+    "Paraphrasing means putting an author's passage into your own words. But how different should it be? It should be ",
+    " different. The purpose is to show comprehension and the ability to summarize ideas in your own style. Simply changing a few words or adding bits ",
+    " your own to a copied passage may lead you to ",
+    " for plagiarism. ",
+    " important to credit the original writer through proper referencing."
   ],
   blanks: [
     { options: ["considerable", "considerate", "considering", "considerably"], correct: "considerably" },
@@ -1348,10 +1328,10 @@ export interface BlankOption {
     { options: ["That has", "It is", "There is", "That is"], correct: "It is" }
   ],
   explanation: [
-    "`considerably` significa que la paráfrasis debe ser significativamente diferente.",
-    "`of` indica añadir elementos propios a la reproducción del texto.",
-    "`be penalized` advierte que puedes ser sancionado por plagio.",
-    "`It is` introduce la importancia de citar al autor original."
+    "`considerably` indicates the paraphrase must be significantly different.",
+    "`of` shows addition of your own elements.",
+    "`be penalized` warns about plagiarism consequences.",
+    "`It is` introduces the importance of crediting the original author."
   ]
 },
 
@@ -1361,12 +1341,12 @@ export interface BlankOption {
 {
   id: 50,
   text: [
-    "It is an original work, not an excerpted passage. An abstract must be fully self-contained and ",
-    " sense by itself, without further reference to outside sources or to the actual paper. It highlights key ",
-    " areas, your research purpose, the relevance or importance of your work, and the main outcomes. ... of approximately 250 words ",
-    ", which is indented and single spaced. ... Although ",
-    " at the beginning of your paper ... the abstract should be the last thing that you write, ",
-    " you are sure of the conclusions you will reach."
+    "An abstract must be an original work, not a copied excerpt. It must ",
+    " sense by itself without referencing other sources. It highlights key ",
+    " areas, your research purpose, the significance of your work, and main outcomes. It should be around 250 words ",
+    ", indented and single-spaced. ",
+    " at the start of your paper, the abstract should be the last thing you write ",
+    " you are certain of your conclusions."
   ],
   blanks: [
     { options: ["get", "give", "take", "make"], correct: "make" },
@@ -1376,11 +1356,11 @@ export interface BlankOption {
     { options: ["once", "then", "before", "and"], correct: "once" }
   ],
   explanation: [
-    "`make` significa que el resumen debe tener sentido por sí mismo.",
-    "`content` se refiere a las áreas clave del contenido del trabajo.",
-    "`in` indica la ubicación del resumen dentro del documento.",
-    "`it is placed` señala cómo se posiciona al inicio del trabajo.",
-    "`once` indica que debe escribirse cuando las conclusiones estén claras."
+    "`make` means the abstract must make sense alone.",
+    "`content` refers to key areas of your work.",
+    "`in` indicates the location of the abstract.",
+    "`it is placed` shows how it is positioned at the beginning.",
+    "`once` signals it should be written after conclusions are clear."
   ]
 }
 

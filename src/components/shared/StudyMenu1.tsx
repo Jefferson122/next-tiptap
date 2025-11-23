@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
+
+
 //Section Speak
 import ReadAloud from "@/components/Data1/1.Speaking/1.ReadAloud";
 import repeatsentences from "@/components/Data1/1.Speaking/2.RepeatSentence";
@@ -13,11 +16,13 @@ import SummarizeWrittentext from "@/components/Data1/2.Writing/1.SummarizeWritte
 import Essay from "@/components/Data1/2.Writing/2.Essay";
 
 // Section Writing
-import FillInTheBlanks from "@/components/Data1/3.Reading/1.FillintheBlanks(RW)"
+import FillInTheBlanks from "@/components/Data1/3.Reading/1.FillintheBlanks(RW)";
+import MultipleChoiceExercises from "@/components/Data1/3.Reading/2.MCMultipleAnswer";
+import {ReorderParagraphExercises} from "@/components/Data1/3.Reading/3.ReorderParagraphs";
+import FillInTheBlanksDrag from "@/components/Data1/3.Reading/4.FillintheBlanks";
 
 //Section Listening
 import WritingDictation from "@/components/Data1/4.Listening/6.WritefromDictation";
-
 
 // coloca esto en la parte superior, donde defines las interfaces
 export interface BlankOption {
@@ -25,15 +30,35 @@ export interface BlankOption {
   correct?: string;
 }
 
+// Colócalo al inicio del archivo, antes de usarlo
+export interface MultipleChoiceQuestion {
+  question: string;
+  options: string[];
+  correctAnswers: string[];
+}
+
+export interface MultipleChoiceExercise {
+  id: number;
+  text: string;
+  questions: MultipleChoiceQuestion[];
+}
+
+
 interface Exercise {
   text: string | string[];
-  userSelections?: string[]; // <-- NECESARIO para RW
+  userSelections?: string[] | string[][]; 
   blanks?: BlankOption[];              // opciones por hueco
   audio?: string;
   image?: string;
   userInput?: string;
   score?: string;
-  type?: "ReadAloud" |"repeatsentences"|"DescribeImage" | "RetellLecture"|"AnswerShortQuestion"|"respond_to_situation"|"summarize"|"Essay"|"FillInTheBlanks"|"SummarizeWrittentext"|"WritingDictation" |  string; // <-- aquí
+  questions?: MultipleChoiceQuestion[]; // <-- añadir aquí
+  // 🔥 NUEVAS PROPIEDADES PARA REORDER
+  paragraphs?: string[];
+  correctOrder?: number[];
+  userOrder?: number[];
+  reorderFeedback?: number[]; // <-- agrega esto
+  type?: "FillInTheBlanksDrag" |"ReorderParagraph"|"MultipleChoice"|"ReadAloud" |"repeatsentences"|"DescribeImage" | "RetellLecture"|"AnswerShortQuestion"|"respond_to_situation"|"summarize"|"Essay"|"FillInTheBlanks"|"SummarizeWrittentext"|"WritingDictation" |  string; // <-- aquí
 }
 
 export default function StudyMenu() {
@@ -52,7 +77,7 @@ export default function StudyMenu() {
     Reading: [
       { name: "Fill in the Blanks (RW)", timePerQ: 120, instructions: "Complete the missing words in the text." },
       { name: "Multiple Choice, Multiple Answer", timePerQ: 120, instructions: "Select all answers that apply." },
-      { name: "Re-order Paragraphs", timePerQ: 150, instructions: "Arrange the paragraphs in the correct order." },
+      { name: "Re order Paragraphs", timePerQ: 150, instructions: "Arrange the paragraphs in the correct order." },
       { name: "Fill in the Blanks", timePerQ: 120, instructions: "Fill in the missing words." },
       { name: "Multiple Choice, Single Answer", timePerQ: 90, instructions: "Select the correct answer." },
     ],
@@ -66,6 +91,26 @@ export default function StudyMenu() {
     ],
   };
 
+  const handleDragEnd = (result: DropResult) => {
+    const { destination, source } = result;
+    if (!destination) return;
+  
+    setQuestions(prev => {
+      const copy = [...prev];
+      const q = copy[currentQuestion];
+      if (q.type !== "ReorderParagraph" || !q.paragraphs) return prev;
+  
+      const newOrder = Array.from(q.userOrder ?? q.paragraphs.map((_, idx) => idx));
+      const [moved] = newOrder.splice(source.index, 1);
+      newOrder.splice(destination.index, 0, moved);
+  
+      q.userOrder = newOrder;
+      copy[currentQuestion] = q;
+      return copy;
+    });
+  };
+  
+
   const [activeSection, setActiveSection] = useState<keyof typeof sections>("Speaking and Writing");
   const [counts, setCounts] = useState(
     Object.fromEntries(
@@ -76,6 +121,56 @@ export default function StudyMenu() {
   );
 
   const [questions, setQuestions] = useState<Exercise[]>([]);
+
+  const handleMCSelection = (qIdx: number, blankIdx: number, option: string) => {
+    setQuestions((prev: Exercise[]) => {
+      const copy = [...prev];
+      const question = { ...copy[qIdx] };
+  
+      if (!Array.isArray(question.userSelections)) {
+        question.userSelections = [];
+      }
+  
+      const arr = new Set(question.userSelections[blankIdx] || []);
+  
+      if (arr.has(option)) arr.delete(option);
+      else arr.add(option);
+  
+      question.userSelections[blankIdx] = Array.from(arr);
+      copy[qIdx] = question;
+      return copy;
+    });
+  };
+  
+
+  const gradeMCQuestion = (qIdx: number) => {
+    setQuestions((prev: Exercise[]) => {
+      const copy = [...prev];
+      const q = copy[qIdx];
+  
+      if (!q || !q.blanks || !q.userSelections) return prev;
+  
+      let total = q.blanks.length;
+      let correct = 0;
+  
+      q.blanks.forEach((blank, i) => {
+        const correctAns = (blank.correct ?? "").split(";;").map(s => s.trim().toLowerCase());
+        const userAns: string[] = Array.isArray(q.userSelections?.[i]) ? (q.userSelections[i] as string[]).map(s => s.trim().toLowerCase()) : [];
+
+        if (correctAns.length === userAns.length && correctAns.every(a => userAns.includes(a))) {
+          correct++;
+        }
+      });
+  
+      q.score = `${correct}/${total} (${Math.round((correct / total) * 100)}%)`;
+      copy[qIdx] = q;
+  
+      return copy;
+    });
+  };
+  
+
+
   const [instructions, setInstructions] = useState("");
 
   // Audio / Dictation
@@ -155,6 +250,7 @@ export default function StudyMenu() {
   };
   const stopRecording = () => mediaRecorderRef.current?.state==="recording" && mediaRecorderRef.current.stop();
 
+
   // Mostrar resultado de read aloud / repeat sentence
   const loadResult = (idx:number) => {
     const dataArray = allResults[idx];
@@ -167,6 +263,42 @@ export default function StudyMenu() {
     } else { setPronDetail(""); setPronEsp(""); }
   };
 
+  const [reorderFeedback, setReorderFeedback] = useState<number[]>([]);
+
+  //NUEVOOOOOOOOOOOOOOO
+  const checkReorder = (qIdx: number) => {
+    setQuestions(prev => {
+      const copy = [...prev];
+      const q = copy[qIdx];
+      const correct = q.correctOrder ?? [];
+      const user = q.userOrder ?? [];
+  
+      const feedback = correct.map((c, i) => (c === user[i] ? 1 : -1)); // 1 verde, -1 rojo
+      setReorderFeedback(feedback);
+  
+      const total = correct.length;
+      const scoreCount = feedback.filter(f => f === 1).length;
+      q.score = `${scoreCount}/${total} (${Math.round((scoreCount/total)*100)}%)`;
+      copy[qIdx] = q;
+      return copy;
+    });
+  };
+  
+  const showCorrectOrder = (qIdx: number) => {
+    setQuestions(prev => {
+      const copy = [...prev];
+      const q = copy[qIdx];
+      q.userOrder = [...(q.correctOrder ?? [])]; // reordena al orden correcto
+      copy[qIdx] = q;
+  
+      setReorderFeedback((q.correctOrder ?? []).map(() => 1)); // todos verdes
+      return copy;
+    });
+  };
+  
+  
+
+
   // Generar preguntas e instrucciones
   const handleGenerateInstructions = () => {
     let result = "";
@@ -176,149 +308,148 @@ export default function StudyMenu() {
     Object.entries(counts).forEach(([key, count]) => {
       const [section, taskName] = key.split("-");
       const task = sections[section as keyof typeof sections].find(t => t.name === taskName);
-    
+  
       if (task && count > 0) {
         for (let i = 1; i <= count; i++) {
           result += `${task.name} - Pregunta ${i}: ${task.instructions}\n`;
-    
-          if (taskName === "listen" || taskName === "Write from Dictation") {
-            const dict = WritingDictation[qIndex % WritingDictation.length];
-            q.push({
-              text: dict.text,
-              audio: dict.audio,
-              userInput: "",
-              score: "0/0",
-              type: "WritingDictation",
-            });
-          } else if (section === "Speaking and Writing" && taskName === "Read Aloud") {
-            // Después:
-            q.push({
-              text: ReadAloud[qIndex % ReadAloud.length].text,
-              type: "ReadAloud",
-            });
-            
-          } 
-          else if (section === "Speaking and Writing" && taskName === "Repeat Sentence") {
-            // 🔹 Tomamos las últimas `count` frases, empezando por la última
-            const sentenceIndex = repeatsentences.length - i; // <-- cambia aquí
-            const sentence = repeatsentences[sentenceIndex];
-          
-            q.push({
-              text: `${sentence.text}`,
-              audio: sentence.audio,
-              type: "repeatsentences",
-            });
-          }
-          
-          else if (section === "Speaking and Writing" && taskName === "Describe Image") {
-            const img = describeimage[qIndex % describeimage.length];
-            q.push({
-              text: img.text,
-              image: img.image,       // ✅ Agregamos la URL de Cloudinary
-              type: "DescribeImage",
-            });
-          }
-
-          else if (section === "Speaking and Writing" && taskName === "Retell Lecture") {
-            // 🔹 Tomamos las últimas `count` frases, empezando por la última
-            const sentenceIndex1 = RetellLecture.length - i; // <-- cambia aquí
-            const sentence1 = RetellLecture[sentenceIndex1];
-          
-            q.push({
-              text: `${sentence1.text}`,
-              audio: sentence1.audio,
-              type: "RetellLecture",
-            });
-          }
-
-          else if (section === "Speaking and Writing" && taskName === "Answer Short Question") {
-            const questionData = Answershortquestion[qIndex % Answershortquestion.length];
-            q.push({
+  
+          // --- Speaking & Writing ---
+          if (section === "Speaking and Writing") {
+            if (taskName === "Read Aloud") {
+              q.push({
+                text: ReadAloud[qIndex % ReadAloud.length].text,
+                type: "ReadAloud",
+              });
+            } else if (taskName === "Repeat Sentence") {
+              const sentenceIndex = repeatsentences.length - i;
+              const sentence = repeatsentences[sentenceIndex];
+              q.push({
+                text: sentence.text,
+                audio: sentence.audio,
+                type: "repeatsentences",
+              });
+            } else if (taskName === "Describe Image") {
+              const img = describeimage[qIndex % describeimage.length];
+              q.push({
+                text: img.text,
+                image: img.image,
+                type: "DescribeImage",
+              });
+            } else if (taskName === "Retell Lecture") {
+              const sentenceIndex = RetellLecture.length - i;
+              const sentence = RetellLecture[sentenceIndex];
+              q.push({
+                text: sentence.text,
+                audio: sentence.audio,
+                type: "RetellLecture",
+              });
+            } else if (taskName === "Answer Short Question") {
+              const questionData = Answershortquestion[qIndex % Answershortquestion.length];
+              q.push({
                 text: questionData.question,
                 audio: questionData.audio,
                 userInput: "",
                 type: "AnswerShortQuestion",
                 score: "",
-            });
+              });
+            } else if (taskName === "Summarize Group Discussion") {
+              const sentence = readings[readings.length - i];
+              q.push({
+                text: sentence.text,
+                audio: sentence.audio[0],
+                type: "summarize",
+              });
+            } else if (taskName === "Respond to a Situation") {
+              const rs = respondSituations[respondSituations.length - i];
+              q.push({
+                text: rs.situation,
+                type: "respond_to_situation",
+              });
+            } else if (taskName === "Summarize Written Text") {
+              const swt = SummarizeWrittentext[SummarizeWrittentext.length - i];
+              q.push({
+                text: swt.text,
+                type: "SummarizeWrittentext",
+              });
+            } else if (taskName === "Write Essay") {
+              const essay = Essay[Essay.length - i];
+              q.push({
+                text: essay.text,
+                type: "Essay",
+              });
+            }
           }
+  
+          // --- Reading ---
+          else if (section === "Reading") {
+            if (taskName === "Fill in the Blanks (RW)") {
+              const item = FillInTheBlanks[FillInTheBlanks.length - 1 - i];
+              q.push({
+                text: item.text,
+                blanks: item.blanks,
+                userSelections: Array(item.blanks?.length || 0).fill(""),
+                type: "FillInTheBlanks",
+              });
+            } else if (taskName === "Multiple Choice, Multiple Answer") {
+              const mcItem = MultipleChoiceExercises[qIndex % MultipleChoiceExercises.length];
+            
+              q.push({
+                text: mcItem.text,
+                blanks: mcItem.questions.map(q => ({
+                  options: q.options,
+                  correct: q.correctAnswers.join(";;") // asegura que correct tenga los datos
+                })),
+                userSelections: mcItem.questions.map(() => []), // <-- importante
+                type: "MultipleChoice",
+                questions: mcItem.questions, // <-- importante
+              });
+            } else if (taskName === "Re order Paragraphs") {
+              const rpIdx = (i - 1) % ReorderParagraphExercises.length; // índice seguro
+              const rpItem = ReorderParagraphExercises[rpIdx];
+            
+              if (rpItem?.paragraphs) {
+                q.push({
+                  text: "", 
+                  type: "ReorderParagraph",
+                  paragraphs: rpItem.paragraphs.map(p => p.text),
+                  correctOrder: rpItem.paragraphs.map(p => p.correctOrder - 1), 
+                  userOrder: rpItem.paragraphs.map((_, idx) => idx),
+                });
+              }
+            }  
           
-          else if (
-            section === "Speaking and Writing" && taskName === "Summarize Group Discussion") {
-            const index = readings.length - i;  // Descendente
-            const sentence = readings[index];
-          
-            q.push({
-              text: sentence.text,     // texto oculto
-              audio: sentence.audio[0],     // monólogo combinado
-              type: "summarize",
-            });
           }
-
-          else if (
-            section === "Speaking and Writing" && taskName === "Respond to a Situation") {
-            const index = respondSituations.length - i;  // Descendente
-            const RespondSituation = respondSituations[index];
-          
-            q.push({
-              text: RespondSituation.situation,     // texto oculto
-              type: "respond_to_situation",
-            });
+  
+          // --- Listening ---
+          else if (section === "Listening") {
+            if (taskName === "Write from Dictation") {
+              const dict = WritingDictation[qIndex % WritingDictation.length];
+              q.push({
+                text: dict.text,
+                audio: dict.audio,
+                userInput: "",
+                score: "0/0",
+                type: "WritingDictation",
+              });
+            }
           }
-
-          else if (
-            section === "Speaking and Writing" && taskName === "Summarize Written Text") {
-            const index = SummarizeWrittentext.length - i;  // Descendente
-            const SummarizeWrittentext1 = SummarizeWrittentext[index];
-          
-            q.push({
-              text: SummarizeWrittentext1.text,     // texto oculto
-              type: "SummarizeWrittentext",
-            });
-          }
-
-          else if (
-            section === "Speaking and Writing" && taskName === "Write Essay") {
-            const index = Essay.length - i;  // Descendente
-            const Essay1 = Essay[index];
-          
-            q.push({
-              text: Essay1.text,     // texto oculto
-              type: "Essay",
-            });
-          }
-
-                    // --- dentro de handleGenerateInstructions, junto a los otros else if ---
-          else if (section === "Reading" && taskName === "Fill in the Blanks (RW)") {
-            const index = FillInTheBlanks.length - 1 - i; // descendente seguro
-            const item = FillInTheBlanks[index];
-
-            q.push({
-              text: item.text,            // aquí item.text debe ser string[] (segmentos)
-              blanks: item.blanks,        // array de opciones para cada hueco
-              userSelections: Array(item.blanks?.length || 0).fill(""), // inicializa vacíos
-              type: "FillInTheBlanks",
-            } as Exercise);
-          }
-
-          
-          
-          
-    
+  
           qIndex++;
         }
       }
     });
-    
-
+  
     setInstructions(result.trim());
     setQuestions(q);
     setAllResults(Array(q.length).fill([]));
     setCurrentQuestion(0);
   };
+  
+
 
   // función para actualizar la selección de un blank
   const handleBlankChange = (qIdx: number, blankIdx: number, value: string) => {
-    setQuestions(prev => {
+    setQuestions((prev: Exercise[]) => {
       const copy = [...prev];
       const question = { ...copy[qIdx] } as any;
       question.userSelections = question.userSelections ? [...question.userSelections] : [];
@@ -365,27 +496,6 @@ export default function StudyMenu() {
     updated[currentQuestion].userInput = value;
     setQuestions(updated);
   };
-
-  // const checkScore = () => {
-  //   const updated = [...questions];
-  //   updated[currentQuestion].score = scoreWords(
-  //     // updated[currentQuestion].text,
-  //     updated[currentQuestion].userInput || ""
-  //   );
-  //   setQuestions(updated);
-  // };
-  // const checkScore = () => {
-  //   const updated = [...questions];
-  
-  //   // Convertir el texto a string si viene como array (solo si quisieras usarlo)
-  //   const modelo = Array.isArray(updated[currentQuestion].text)
-  //     ? updated[currentQuestion].text.join(" ")
-  //     : updated[currentQuestion].text;
-  
-  //   updated[currentQuestion].score = scoreWords(updated[currentQuestion].userInput || "");
-  
-  //   setQuestions(updated);
-  // };
   
   const checkScore = () => {
     const updated = [...questions];
@@ -410,7 +520,7 @@ export default function StudyMenu() {
       let correct = 0;
   
       for (let i = 0; i < total; i++) {
-        const correctAns = (blanks[i]?.correct || "").toString().trim().toLowerCase();
+        const correctAns = (blanks[i]?.correct ?? "").toString().trim().toLowerCase();
         const userAns = (selections[i] || "").toString().trim().toLowerCase();
         if (correctAns && userAns && userAns === correctAns) correct++;
       }
@@ -425,7 +535,11 @@ export default function StudyMenu() {
     }
   
     // Resto de tipos: tratamos texto que puede ser string | string[]
-    const modelo = Array.isArray(qCurr.text) ? qCurr.text.join(" ") : (qCurr.text || "");
+    const modelo =
+      Array.isArray(qCurr.text)
+        ? qCurr.text.join(" ")
+        : qCurr.text ?? "";
+
     const intento = (qCurr.userInput || "").toString();
   
     // usa scoreWords(modelo, intento)
@@ -516,7 +630,7 @@ export default function StudyMenu() {
           {/* 🔹 Render según tipo de pregunta */}
           {(() => {
             const q = questions[currentQuestion];
-
+            
             switch (q.type) {
               case "ReadAloud":
                 return (
@@ -1370,8 +1484,208 @@ export default function StudyMenu() {
                       </div>
                     </div>
                   );
+              
+              case "MultipleChoice":
+                    return (
+                      <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
+                        <p className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                          Multiple Choice, Multiple Answer — selecciona todas las opciones correctas.
+                        </p>
                   
-
+                        {/* Texto principal */}
+                        <div className="mb-3 p-3 border rounded bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 text-lg">
+                          {q.text}
+                        </div>
+                  
+                        {/* Preguntas y Opciones */}
+                        {q.questions?.map((questionItem, idx) => (
+                          <div key={idx} className="mb-2 p-3 border rounded bg-gray-100 dark:bg-gray-800">
+                            <p className="font-medium mb-2">{questionItem.question}</p>
+                            {questionItem.options.map((opt, oi) => (
+                              <label key={oi} className="block cursor-pointer mb-1">
+                                <input
+                                  type="checkbox"
+                                  checked={q.userSelections?.[idx]?.includes(opt) || false}
+                                  onChange={() => handleMCSelection(currentQuestion, idx, opt)}
+                                  className="mr-2"
+                                />
+                                {opt}
+                              </label>
+                            ))}
+                          </div>
+                        ))}
+                  
+                        {/* Botones */}
+                        <div className="flex items-center gap-2 mt-3">
+                          <button
+                            onClick={() => gradeMCQuestion(currentQuestion)}
+                            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                          >
+                            Check Score
+                          </button>
+                  
+                          <button
+                            onClick={() => {
+                              setQuestions(prev =>
+                                prev.map((item, idx) =>
+                                  idx !== currentQuestion
+                                    ? item
+                                    : {
+                                        ...item,
+                                        userSelections: (item.questions ?? []).map(q => [...q.correctAnswers])
+                                      }
+                                )
+                              );
+                            }}
+                            className="px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-600"
+                          >
+                            Show Answers
+                          </button>
+                  
+                          {q.score && (
+                            <div className="ml-auto font-semibold text-gray-800 dark:text-gray-200">
+                              Score: {q.score}
+                            </div>
+                          )}
+                        </div>
+                  
+                        {/* Historial */}
+                        <div className="mt-4">
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            Selecciones: {(q.userSelections || []).map(sel => Array.isArray(sel) ? sel.join(", ") : sel).join(" | ")}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  
+              case "ReorderParagraph": {
+                      const q = questions[currentQuestion];
+                      const paragraphs: string[] = q?.paragraphs ?? [];
+                      const correctOrder: number[] = q?.correctOrder ?? [];
+                      const userOrder: number[] = q?.userOrder ?? paragraphs.map((_, i) => i);
+                    
+                      // Inicializar feedback: 0 = sin check, 1 = correcto, -1 = incorrecto
+                      if (!q.reorderFeedback) {
+                        q.reorderFeedback = userOrder.map(() => 0);
+                      }
+                    
+                      const checkReorder = () => {
+                        setQuestions(prev => {
+                          const copy = [...prev];
+                          const question = { ...copy[currentQuestion] };
+                          const feedback = (question.userOrder ?? userOrder).map((u, idx) =>
+                            u === (question.correctOrder?.[idx] ?? idx) ? 1 : -1
+                          );
+                          question.reorderFeedback = feedback;
+                          const scoreCount = feedback.filter(f => f === 1).length;
+                          const total = feedback.length;
+                          question.score = `${scoreCount}/${total} (${Math.round((scoreCount / total) * 100)}%)`;
+                          copy[currentQuestion] = question;
+                          return copy;
+                        });
+                      };
+                    
+                      const showCorrectOrder = () => {
+                        setQuestions(prev => {
+                          const copy = [...prev];
+                          const question = { ...copy[currentQuestion] };
+                          question.userOrder = [...(question.correctOrder ?? userOrder)];
+                          question.reorderFeedback = question.userOrder.map(() => 1);
+                          copy[currentQuestion] = question;
+                          return copy;
+                        });
+                      };
+                    
+                      return (
+                        <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
+                          <p className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                            Reorder the paragraphs into the correct sequence.
+                          </p>
+                    
+                          <p className="mb-3 text-gray-600 dark:text-gray-400">
+                            Drag and drop the paragraphs to reorder them correctly.
+                          </p>
+                    
+                          <DragDropContext
+                            onDragEnd={result => {
+                              const { source, destination } = result;
+                              if (!destination) return;
+                    
+                              setQuestions(prev => {
+                                const copy = [...prev];
+                                const question = { ...copy[currentQuestion] };
+                                const order = [...(question.userOrder ?? userOrder)];
+                                const [moved] = order.splice(source.index, 1);
+                                order.splice(destination.index, 0, moved);
+                                question.userOrder = order;
+                                copy[currentQuestion] = question;
+                                return copy;
+                              });
+                            }}
+                          >
+                            <Droppable droppableId="paragraphs">
+                              {provided => (
+                                <div
+                                  {...provided.droppableProps}
+                                  ref={provided.innerRef}
+                                  className="mb-3 p-3 border rounded bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200"
+                                >
+                                  {paragraphs.map((para: string, idx: number) => {
+                                    const userIdx = userOrder[idx] ?? idx;
+                                    const status = q.reorderFeedback?.[idx] ?? 0;
+                                    const bgColor =
+                                      status === 1
+                                        ? "bg-green-200 dark:bg-green-700"
+                                        : status === -1
+                                        ? "bg-red-200 dark:bg-red-700"
+                                        : "bg-gray-100 dark:bg-gray-800";
+                    
+                                    return (
+                                      <Draggable key={idx} draggableId={idx.toString()} index={idx}>
+                                        {provided => (
+                                          <div
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                            className={`mb-2 p-2 border rounded ${bgColor} cursor-move`}
+                                          >
+                                            {paragraphs[userIdx]}
+                                          </div>
+                                        )}
+                                      </Draggable>
+                                    );
+                                  })}
+                                  {provided.placeholder}
+                                </div>
+                              )}
+                            </Droppable>
+                          </DragDropContext>
+                    
+                          <div className="flex items-center gap-2 mt-3">
+                            <button
+                              onClick={checkReorder}
+                              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                            >
+                              Check Order
+                            </button>
+                    
+                            <button
+                              onClick={showCorrectOrder}
+                              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                            >
+                              Show Answer
+                            </button>
+                    
+                            {q.score && (
+                              <div className="ml-auto font-semibold text-gray-800 dark:text-gray-200">
+                                Score: {q.score}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    }
+                         
               default:
                 return (
                   <div className="p-4 border rounded bg-yellow-50 text-gray-800 dark:bg-gray-800">

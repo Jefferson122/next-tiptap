@@ -1,106 +1,823 @@
-// ============================
-// Interfaces
-// ============================
-
 export interface ReorderParagraphItem {
-    text: string;
-    correctOrder: number;
-  }
-  
-  export interface ReorderParagraphExercise {
-    id: number;
-    instructions: string;
-    paragraphs: ReorderParagraphItem[];
-  }
-  
-  // ============================
-  // DATASET
-  // ============================
-  
-  export const ReorderParagraphExercises: ReorderParagraphExercise[] = [
-    {
-      id: 1,
-      instructions: "Reorder the sentences to form a coherent paragraph about learning styles.",
-      paragraphs: [
-        {
-          text: "Today there are nine intelligences, and the possibility of others may eventually expand the list.",
-          correctOrder: 2, // NUEVO ORDEN
-        },
-        {
-          text: "Beyond these three categories, many theories of and approaches toward human learning potential have been established.",
-          correctOrder: 4, // NUEVO ORDEN
-        },
-        {
-          text: "Many of us are familiar with three broad categories in which people learn: visual learning, auditory learning, and kinesthetic learning.",
-          correctOrder: 1, // NUEVO ORDEN
-        },
-        {
-          text: "Gardner's early work in psychology and later in human cognition and human potential led to his development of the initial six intelligences.",
-          correctOrder: 3, // NUEVO ORDEN
-        },
-        {
-          text: "Among them is the theory of multiple intelligences developed by Howard Gardner at Harvard University.",
-          correctOrder: 5, // NUEVO ORDEN
-        },
-      ],
-    },
-  
-    // ID 2 – Se deja igual
-    {
-      id: 2,
-      instructions: "Reorder the sentences to create a logical paragraph about climate change.",
-      paragraphs: [
-        {
-          text: "Scientists continue to study climate systems to predict future trends and inform policy decisions.",
-          correctOrder: 5,
-        },
-        {
-          text: "Rising global temperatures have caused ice caps to melt and sea levels to rise.",
-          correctOrder: 1,
-        },
-        {
-          text: "Human activities such as deforestation and fossil fuel use contribute significantly to environmental changes.",
-          correctOrder: 2,
-        },
-        {
-          text: "Extreme weather events such as hurricanes and droughts have become more frequent.",
-          correctOrder: 3,
-        },
-        {
-          text: "Governments and organizations are working to mitigate the effects through renewable energy and conservation initiatives.",
-          correctOrder: 4,
-        },
-      ],
-    },
-  
-    // ID 3 – Igual
-    {
-      id: 3,
-      instructions: "Reorder the sentences to form a paragraph about artificial intelligence.",
-      paragraphs: [
-        {
-          text: "Machine learning allows computers to analyze data, identify patterns, and make predictions.",
-          correctOrder: 1,
-        },
-        {
-          text: "AI is transforming fields such as healthcare, finance, and transportation.",
-          correctOrder: 2,
-        },
-        {
-          text: "Autonomous vehicles use AI to navigate safely by interpreting complex sensor data.",
-          correctOrder: 3,
-        },
-        {
-          text: "However, ethical concerns such as privacy and bias must be addressed.",
-          correctOrder: 4,
-        },
-        {
-          text: "Researchers and policymakers are creating frameworks to ensure responsible AI development.",
-          correctOrder: 5,
-        },
-      ],
-    },
-  ];
-  
-  export default ReorderParagraphExercises;
-  
+  text: string;
+  correctOrder: number;
+}
+
+export interface ReorderParagraphExercise {
+  id: number;
+  instructions: string;
+  paragraphs: ReorderParagraphItem[];
+  answer: string;
+}
+
+export const ReorderParagraphExercises: ReorderParagraphExercise[] = [
+  {
+    id: 1,
+    instructions: "Reorder the sentences about aviation history.",
+    paragraphs: [
+      { text: "1)Manufacturers such as Cessna, Piper, and Beechcraft expanded production to provide light aircraft for the new middle-class market.", correctOrder: 4 },
+      { text: "2)At the same time, turboprop propulsion began to appear for smaller commuter planes, making it possible to serve small-volume routes in a much wider range of weather conditions.", correctOrder: 1 },
+      { text: "3)By the 1950s, the development of civil jets grew, beginning with the de Havilland Comet, though the first widely used passenger jet was the Boeing 707 because it was much more economical than other aircraft at that time.", correctOrder: 3 },
+      { text: "4)After World War II, especially in North America, there was a boom in general aviation, both private and commercial, as thousands of pilots were released from military service and much inexpensive war-surplus transport and training aircraft became available.", correctOrder: 2 },
+    ],
+    answer: "2,4,3,1",
+  },
+  {
+    id: 2,
+    instructions: "Reorder the sentences about animal specialization and evolution.",
+    paragraphs: [
+      { text: "1)It depends on how specialized they have become during the course of evolution.", correctOrder: 3 },
+      { text: "2)If they have put all their effort into the perfection of one survival trick, they do not bother so much with the general complexities of the world around them.", correctOrder: 1 },
+      { text: "3)All animals have a strong exploratory urge, but for some it is more crucial than others.", correctOrder: 2 },
+      { text: "4)So long as the ant eater had its ants and the koala bear had gum leaves, then they are satisfied and the living is easy.", correctOrder: 5 },
+      { text: "5)The non-specialists, however, the opportunities of the animal world, can never afford to relax.", correctOrder: 4 },
+    ],
+    answer: "2,3,1,5,4",
+  },
+  {
+    id: 3,
+    instructions: "Reorder the sentences about students studying abroad.",
+    paragraphs: [
+      { text: "1)Whatever the reason, thousands of students each year make their dreams of a university education come true.", correctOrder: 5 },
+      { text: "2)Some students go overseas because they love travel.", correctOrder: 4 },
+      { text: "3)They may choose a university because of its interesting courses or perhaps because they like the country and its language.", correctOrder: 3 },
+      { text: "4)They don't all have the same reasons for going or for choosing a particular place to study.", correctOrder: 2 },
+      { text: "5)All over the world students are changing countries for their university studies.", correctOrder: 1 },
+    ],
+    answer: "5,4,3,2,1",
+  },
+  {
+    id: 4,
+    instructions: "Reorder the sentences about biases in journalism.",
+    paragraphs: [
+      { text: "1)Some perspectives ultimately are not included.", correctOrder: 4 },
+      { text: "2)Although experts like journalists are expected to be unbiased, they invariably share the system biases of the disciplines and cultures in which they work.", correctOrder: 1 },
+      { text: "3)Journalists try to be fair and objective by presenting all sides of a particular issue.", correctOrder: 2 },
+      { text: "4)Practically speaking, however, it is about as easy to present all sides of an issue as it is to invite candidates from all political parties to a presidential debate.", correctOrder: 3 },
+    ],
+    answer: "2,3,4,1",
+  },
+  {
+    id: 5,
+    instructions: "Reorder the sentences about mastering English for international communication.",
+    paragraphs: [
+      { text: "1)Many think the best way to make foreigners understand is to be chatty and informal.", correctOrder: 4 },
+      { text: "2)Anyone wanting to get to the top of international business, medicine or academia (but possibly not sport) needs to be able to speak English to a pretty high level.", correctOrder: 1 },
+      { text: "3)This may seem friendly but, as it probably involves using colloquial expressions, it makes comprehension harder.", correctOrder: 5 },
+      { text: "4)Equally, any native English speaker wanting to deal with these new high achievers needs to know how to talk without baffling them.", correctOrder: 2 },
+      { text: "5)Because so many English-speakers today are monoglots, they have little idea how difficult it is to master another language.", correctOrder: 3 },
+    ],
+    answer: "2,4,5,1,3",
+  },
+  {
+    id: 6,
+    instructions: "Reorder the sentences about the 1906 San Francisco earthquake and fire.",
+    paragraphs: [
+      { text: "1)But when calculating destruction, the earthquake took second place to the great fire that followed.", correctOrder: 2 },
+      { text: "2)The fire, lasting four days, most likely started with broken gas lines (and, in some cases, was helped along by people hoping to collect insurance for their property—they were covered for fire, but not earthquake, damage).", correctOrder: 3 },
+      { text: "3)At 5:12 a.m. on April 18, 1906, the people of San Francisco were awakened by an earthquake that would devastate the city.", correctOrder: 1 },
+      { text: "4)The main temblor, having a 7.7-7.9 magnitude, lasted about one minute and was the result of the rupturing of the northernmost 296 miles of the 800-mile San Andreas fault.", correctOrder: 4 },
+    ],
+    answer: "3,4,1,2",
+  },
+  {
+    id: 7,
+    instructions: "Reorder the sentences about the rise of Airbnb and the sharing economy.",
+    paragraphs: [
+      { text: "1)People with spare bedrooms would welcome strangers into their homes and share restaurant recommendations with them for a small fee.", correctOrder: 2 },
+      { text: "2)Fast forward to 2016 and the big, successful Airbnb is considered a mainstay of what we now call 'the sharing economy'.", correctOrder: 3 },
+      { text: "3)Back in 2008 a small company in San Francisco called Airbnb had a dream.", correctOrder: 1 },
+      { text: "4)It is also the business that defines the mentality of the millennial.", correctOrder: 4 },
+    ],
+    answer: "3,1,2,4",
+  },
+  {
+    id: 8,
+    instructions: "Reorder the sentences about rugby in Wales.",
+    paragraphs: [
+      { text: "1)From outside Wales, too, it is the rugby that commonly defines the nation - with the sport providing both widespread interest and one of the few positive associations of outsiders' perceptions of Wales.", correctOrder: 4 },
+      { text: "2)In many ways rugby in Wales defines what Wales is and what people in Wales share.", correctOrder: 3 },
+      { text: "3)Rugby in Wales is a particularly strong example of this phenomenon, being perhaps the main thing that unites people in Wales.", correctOrder: 2 },
+      { text: "4)Citizens commonly identify with their nation in the context of major sporting events: imagining the nation is easier when there is a national team playing another nation (Hobsbawm, 1990).", correctOrder: 1 },
+    ],
+    answer: "4,3,2,1",
+  },
+  {
+    id: 9,
+    instructions: "Reorder the sentences about the Internet of Things.",
+    paragraphs: [
+      { text: "1)But what does this really mean to you, your company and your country?", correctOrder: 3 },
+      { text: "2)Decades ago, we connected computers and got today's powerful Internet.", correctOrder: 1 },
+      { text: "3)What are the possibilities it offers, and the threats it poses?", correctOrder: 4 },
+      { text: "4)In the last few years, we started to connect everyday objects using machine-to-machine (M2M) technologies, to create the Internet of Things.", correctOrder: 2 },
+    ],
+    answer: "2,4,1,3",
+  },
+  {
+    id: 10,
+    instructions: "Reorder the sentences about painting and photography.",
+    paragraphs: [
+      { text: "1)How these two media leapfrogged through the Victorian age, defining themselves against one another, is the subject of Tate Britain's exhibition Painting with Light.", correctOrder: 3 },
+      { text: "2)Photography, from its appearance in 1839, looked to painting for fundamental models of depiction.", correctOrder: 2 },
+      { text: "3)Dependence, rivalry, envy, emulation: painting and photography, like members of a dysfunctional yet inseparable family, just cannot cast off lineages of influence and appropriation.", correctOrder: 1 },
+      { text: "4)Yet it threw the older medium into crisis, removing at a stroke painting's unique capacity to bear witness.", correctOrder: 4 },
+    ],
+    answer: "3,2,4,1",
+  },
+  {
+    id: 11,
+    instructions: "Reorder the sentences about drones used to monitor elephants in Gabon.",
+    paragraphs: [
+      { text: "1)Earlier this year, researchers from Duke University went to Gabon to monitor that country's dwindling elephant population. They took along three drones, which they planned to use to count the elephants, follow their herds, and map their migrations.", correctOrder: 1 },
+      { text: "2)The elephants reacted so strongly, the researchers believe, because drones, it turns out, sound a lot like bees. And elephants do not like bees. At all.", correctOrder: 4 },
+      { text: "3)The elephants noticed the drones, which hovered anywhere from 25 feet to 300 feet above them. And it wasn’t just that the elephants noticed them; in many cases, the elephants were clearly agitated. Some of them took off running. In at least one case, an elephant used her trunk to hurl mud in the drone's direction.", correctOrder: 3 },
+      { text: "4)Only things didn't exactly go as planned.", correctOrder: 2 },
+    ],
+    answer: "1,4,3,2",
+  },
+  {
+    id: 12,
+    instructions: "Reorder the sentences about a Brazilian folklore research mission in 1938.",
+    paragraphs: [
+      { text: "1)The intention was to record as much music as possible as quickly as possible, before encroaching influences like radio and cinema began transforming the region’s distinctive culture.", correctOrder: 2 },
+      { text: "2)Early in 1938, Mario de Andrade, the municipal secretary of culture here, dispatched a four-member Folklore Research Mission to the northeaster hinterlands of Brazil on a similar mission.", correctOrder: 1 },
+      { text: "3)They recorded whoever and whatever seemed to be interesting: piano carriers, cowboys, beggars, voodoo priests, quarry workers, fishermen, dance troupes and even children at play.", correctOrder: 3 },
+      { text: "4)But the Brazilian mission’s collection ended up languishing in vaults here.", correctOrder: 4 },
+    ],
+    answer: "2,1,3,4",
+  },
+  {
+    id: 13,
+    instructions: "Reorder the sentences about ecological footprint and bio-capacity.",
+    paragraphs: [
+      { text: "1)Both the ecological footprint and bio-capacity are expressed in global hectares—globally comparable, standardized hectares with world average productivity.", correctOrder: 5 },
+      { text: "2)It tracks the use of six categories of productive surface areas; cropland, grazing land, fishing grounds, built-up land, forest area, and carbon demand on land.", correctOrder: 3 },
+      { text: "3)On the demand side, the ecological footprint measures the ecological assets that a given population requires to produce the natural resources it consumes.", correctOrder: 2 },
+      { text: "4)Ecological footprint accounting measures the demand on and supply of nature.", correctOrder: 4 },
+      { text: "5)On the supply side, a city, state or nation's bio- capacity represents the productivity of its ecological assets.", correctOrder: 1 },
+    ],
+    answer: "4,3,2,5,1",
+  },
+  {
+    id: 14,
+    instructions: "Reorder the sentences about young workers and employment challenges in the UK.",
+    paragraphs: [
+      { text: "1)They can be surprised by the results.", correctOrder: 4 },
+      { text: "2)But a growing number of companies are setting up schemes to recruit young workers.", correctOrder: 3 },
+      { text: "3)They are sceptical about young people's skills and their readiness for work.", correctOrder: 2 },
+      { text: "4)Employers are often reluctant to hire young people, even though there are more than 850,000 unemployed 16 to 24-year-olds and UK businesses are struggling to fill one in five vacancies because of skills shortages.", correctOrder: 1 },
+    ],
+    answer: "4,3,2,1",
+  },
+  {
+    id: 15,
+    instructions: "Reorder the sentences about Marx's journalism and perspectives.",
+    paragraphs: [
+      { text: "1)During his 11 years writing for the New York Tribune - their collaboration began in 1852 - Marx tackled an abundance of topics, from issues of class and the state to world affairs.", correctOrder: 2 },
+      { text: "2)Above all, Marx's fresh perspective on nineteenth-century events encouraged his readers to think, and his writing is surprisingly relevant today.", correctOrder: 4 },
+      { text: "3)Particularly moving pieces highlight social inequality and starvation in Britain, while others explore his ground-breaking views on the slave and opium trades — Marx believed Western powers relied on these and would stop at nothing to protect their interests.", correctOrder: 3 },
+      { text: "4)Karl Marx is arguably the most of the most famous political philosopher of all time, but he was also one of the great foreign correspondents of the nineteenth century.", correctOrder: 1 },
+    ],
+    answer: "4,1,3,2",
+  },
+  {
+    id: 16,
+    instructions: "Reorder the sentences about tutorials and student behavior.",
+    paragraphs: [
+      { text: "1)They think it is like a small lecture where the tutor gives them information.", correctOrder: 5 },
+      { text: "2)Maybe they do not know the purpose of a tutorial.", correctOrder: 3 },
+      { text: "3)Why is that?", correctOrder: 2 },
+      { text: "4)Even if students do know what a tutorial is for, there can be other reasons why they keep quiet.", correctOrder: 4 },
+      { text: "5)Many students sit in a tutorial week after week without saying anything.", correctOrder: 1 },
+    ],
+    answer: "2,3,1,5,4",
+  },
+  {
+    id: 17,
+    instructions: "Reorder the sentences about a Monash Abroad student in California.",
+    paragraphs: [
+      { text: "1)Mechanical engineering student Ne Tan is spending the first semester of this year studying at the University of California, Berkeley as part of the Monash Abroad program.", correctOrder: 1 },
+      { text: "2)Now in her third year of study, the Monash Abroad program will see her complete four units of study in the US before returning to Australia in May 2009.", correctOrder: 4 },
+      { text: "3)There she completed a diploma that enabled her to enter Monash University as a second-year student.", correctOrder: 3 },
+      { text: "4)Ne (Tan), an international student from Shanghai, China, began her Monash journey at Monash College in October 2006.", correctOrder: 2 },
+    ],
+    answer: "1,4,3,2",
+  },
+  {
+    id: 18,
+    instructions: "Reorder the sentences about Mars Pathfinder and Sojourner rover.",
+    paragraphs: [
+      { text: "1)More recent missions to Mars include the hugely successful Mars Pathfinder, which landed a small ‘rover’ called Sojourner on the surface to explore a region where there may once have been life.", correctOrder: 1 },
+      { text: "2)The only unfortunate thing to have arisen from the mission is the naming of the rocks at the landing site (including everything from Scooby Doo to Darth Vader).", correctOrder: 4 },
+      { text: "3)Similarly the lander, which imaged several areas around the landing site (dubbed the Carl Sagan Memorial site) and took atmospheric measurements, lasted a good deal longer than expected.", correctOrder: 3 },
+      { text: "4)Sojourner has now been effectively switched off, but lasted almost twelve times its expected lifetime.", correctOrder: 2 },
+    ],
+    answer: "1,4,3,2",
+  },
+  {
+    id: 19,
+    instructions: "Reorder the sentences about the Box Tunnel and railway observations.",
+    paragraphs: [
+      { text: "1)\"When you look from the east portal, the cutting provides a lovely V-shape,\" communications manager Paul Gentleman told the Guardian.", correctOrder: 5 },
+      { text: "2)The question was this: did the railway's creator, Isambard Kingdom Brunel, really have the tunnel carved in such a way that when the sun rose on his birthday—April 9th—it would be flooded with light?", correctOrder: 2 },
+      { text: "3)While the west side's view wasn't quite so impressive, the engineers generously chalked that up to centuries of dirt and grime.", correctOrder: 4 },
+      { text: "4)This past Sunday, April 9th, the railway's current engineers decided to test the rumor once and for all. They weren't disappointed.", correctOrder: 1 },
+      { text: "5)Railway, in the 1 840s, intrigue has swirled around the Box Tunnel, a long, steep bypass near Bath, England.", correctOrder: 3 },
+    ],
+    answer: "5,2,4,1,3",
+  },
+  {
+    id: 20,
+    instructions: "Reorder the sentences about Deep Blue, AI, and computer games.",
+    paragraphs: [
+      { text: "1)Today, though, they are pressing the attack on every front.", correctOrder: 3 },
+      { text: "2)Ever since the stunning victory of Deep Blue, a program running on an IBM supercomputer, over Gary Kasparov, the world chess champion, in 1997, it has been clear that computers would dominate that particular game.", correctOrder: 4 },
+      { text: "3)Researchers in the field of artificial intelligence have long been intrigued by games, and not just as a way of avoiding work.", correctOrder: 5 },
+      { text: "4)Games provide an ideal setting to explore important elements of the design of cleverer machines, such as pattern recognition, learning and planning.", correctOrder: 2 },
+      { text: "5)They also hold out the tantalising possibility of fame and fortune should the program ever clobber a human champion.", correctOrder: 1 },
+    ],
+    answer: "3,4,5,2,1",
+  },
+  {
+    id: 21,
+    instructions: "Reorder the sentences about the energy sector and skills shortage.",
+    paragraphs: [
+      { text: "1)The energy sector has a fantastic skills shortage at all levels, both now and looming over it for the next 10 years.", correctOrder: 2 },
+      { text: "2)With the pressures of climate change and the energy gap, in the last few years funding from the research councils has probably doubled.", correctOrder: 4 },
+      { text: "3)Engineers are much needed to develop greener technologies.", correctOrder: 1 },
+      { text: "4)Not only are there some good career opportunities, but there's a lot of money going into the research side, too.", correctOrder: 3 },
+    ],
+    answer: "3,1,4,2",
+  },
+  {
+    id: 22,
+    instructions: "Reorder the sentences about reading and human abilities.",
+    paragraphs: [
+      { text: "1)So though we may be predisposed to being able to read and usually have the abilities necessary to master reading, it is something that most of us only accomplish through the direct help of others.", correctOrder: 4 },
+      { text: "2)Reading also is special because, unlike language, most children have to be taught to read, write and spell.", correctOrder: 3 },
+      { text: "3)Humans appear to be the only species which is able to translate their communication into another medium, and in this case the medium provides a semi-durable record of the elements of the communication.", correctOrder: 1 },
+      { text: "4)So reading is a very special ability that we have.", correctOrder: 2 },
+    ],
+    answer: "3,4,2,1",
+  },
+  {
+    id: 23,
+    instructions: "Reorder the sentences about environmental behavior and rewards.",
+    paragraphs: [
+      { text: "1)We should emphasize the old-fashioned virtues of uniting in the face of a crisis, of resourcefulness and community action.", correctOrder: 5 },
+      { text: "2)He proposes that instead of arguing for sacrifice, environmentalists should show where the rewards might lie: that understanding what the science is saying and planning accordingly is the smart thing to do, which will protect your interests more effectively than flinging abuse at scientists.", correctOrder: 2 },
+      { text: "3)Our view is formed by the views of people with whom we mix.", correctOrder: 3 },
+      { text: "4)In his fascinating book Carbon Detox, George Marshall argues that people are not persuaded by information.", correctOrder: 1 },
+      { text: "5)Of the narratives that might penetrate these circles, we are more likely to listen to those that offer us some reward.", correctOrder: 4 },
+    ],
+    answer: "4,3,5,2,1",
+  },
+  {
+    id: 24,
+    instructions: "Reorder the sentences about language competence and performance.",
+    paragraphs: [
+      { text: "1)Separate from actual performance- what he or she does while producing or comprehending language. In other words, competence is put to use through performance.", correctOrder: 2 },
+      { text: "2)In actual driving, however, the driver has to relate the Code to a continuous flow of changing circumstances, and may even break it from time to time.", correctOrder: 4 },
+      { text: "3)An analogy can be made to the Highway Code for driving. Drivers know the Code and have indeed been tested on it to obtain a driving license.", correctOrder: 3 },
+      { text: "4)Knowing the Highway Code is not the same as driving.", correctOrder: 5 },
+      { text: "5)In language learning, there is a distinction between competence and performance. Competence is a state of the speaker's mind. What does he or she know?", correctOrder: 1 },
+    ],
+    answer: "5,1,3,2,4",
+  },
+  {
+    id: 25,
+    instructions: "Reorder the sentences about innovation and IT in India.",
+    paragraphs: [
+      { text: "1)He suggests the country’s computer services industry can simply outsource research to foreign universities if the capability is not available locally.", correctOrder: 4 },
+      { text: "2)Innovation in India is as much due to entrepreneurialism as it is to IT skills, says Arun Maria, chairman of Boston Consulting Group in India.", correctOrder: 1 },
+      { text: "3)Indian businessmen have used IT to create new business models that enable them to provide services in a more cost-effective way.", correctOrder: 2 },
+      { text: "4)“This way, I will have access to the best scientists in the world without having to produce them myself” says Mr. Maria.", correctOrder: 5 },
+      { text: "5)This is not something that necessarily requires expensive technical research.", correctOrder: 3 },
+    ],
+    answer: "2,3,5,1,4",
+  },
+  {
+    id: 26,
+    instructions: "Reorder the sentences about the Arcelor Mittal takeover.",
+    paragraphs: [
+      { text: "1)Second, and more important, the Arcelor Mittal deal demonstrates Europe’s deepening integration into the global economy.", correctOrder: 5 },
+      { text: "2)The story tells us two things about European business, both positive.", correctOrder: 3 },
+      { text: "3)First, shareholder activism is increasing in a continent where until recently it was depressingly rare.", correctOrder: 1 },
+      { text: "4)It was taken over by Mittal, a Dutch-registered company run from London by its biggest single shareholder, Lakshmi Mittal, an Indian who started his first business in Indonesia.", correctOrder: 2 },
+      { text: "5)The takeover battle raged for six months before Arcelor’s bosses finally listened to shareholders who wanted the board to accept Mittal's third offer.", correctOrder: 4 },
+    ],
+    answer: "4,5,2,3,1",
+  },
+  {
+    id: 27,
+    instructions: "Reorder the sentences about Inuit child development.",
+    paragraphs: [
+      { text: "1)Young children don't possess these qualities and are easily angered, cry frequently and are incapable of understanding the external difficulties facing the community, such as shortages of food.", correctOrder: 2 },
+      { text: "2)Jean Briggs has worked with the Inuit of the Canadian Arctic and has described how, within these communities, growing up is largely seen as a process of acquiring thought, reason and understanding (known in Inuit as human).", correctOrder: 1 },
+      { text: "3)It’s only when they are older and begin to acquire thought that parents attempt to teach them or discipline them.", correctOrder: 4 },
+      { text: "4)Because they can’t be reasoned with, and don’t understand, parents treat them with a great deal of tolerance and leniency.", correctOrder: 3 },
+    ],
+    answer: "2,1,4,3",
+  },
+  {
+    id: 28,
+    instructions: "Reorder the sentences about jet streams and aviation.",
+    paragraphs: [
+      { text: "1)In the Northern Hemisphere the jet stream is sought by eastbound aircraft, in order to gain speed and save fuel, and avoided by westbound aircraft.", correctOrder: 5 },
+      { text: "2)Instead of moving along a straight line, the jet stream flows in a wavelike fashion; the waves propagate eastward (in the Northern Hemisphere) at speeds considerably slower than the wind speed itself.", correctOrder: 3 },
+      { text: "3)Jet stream, narrow, swift currents or tubes of air found at heights ranging from 7 to 8 mi (11.3–12.9 km) above the surface of the earth.", correctOrder: 1 },
+      { text: "4)They are caused by great temperature differences between adjacent air masses.", correctOrder: 2 },
+      { text: "5)Since the progress of an airplane is aided or impeded depending on whether tail winds or head winds are encountered.", correctOrder: 4 },
+    ],
+    answer: "3,4,2,5,1",
+  },
+  {
+    id: 29,
+    instructions: "Reorder the sentences about early hand-axe technology.",
+    paragraphs: [
+      { text: "1)Eventually whole societies existed that seemed to do little else.", correctOrder: 5 },
+      { text: "2)He (or very possibly she) took one stone and carefully used it to shape another.", correctOrder: 2 },
+      { text: "3)It was so superior to existing tools that soon others were following the inventor’s lead and making hand-axes of their own.", correctOrder: 4 },
+      { text: "4)The result was a simple teardrop-shaped hand- axe, but it was the world’s first piece of advanced technology.", correctOrder: 3 },
+      { text: "5)Sometime about a million and a half years ago, some forgotten genius of the hominid world did an unexpected thing.", correctOrder: 1 },
+    ],
+    answer: "5,2,4,3,1",
+  },
+  {
+    id: 30,
+    instructions: "Reorder the sentences about private equity investment strategies.",
+    paragraphs: [
+      { text: "1)Leave to cook for five years and you have a feast of profits.", correctOrder: 3 },
+      { text: "2)Add some generous helping of debt, a few spoonsful of management incentives and trim all the fat.", correctOrder: 2 },
+      { text: "3)Take an underperforming company", correctOrder: 1 },
+      { text: "4)That has been the recipe for private-equity groups during the past 200 years.", correctOrder: 4 },
+    ],
+    answer: "3,2,1,4",
+  },
+  {
+    id: 31,
+    instructions: "Reorder the sentences about neutron scattering summer school.",
+    paragraphs: [
+      { text: "1)The aim of the school is to cover a wide range of topics associated with thermal neutron scattering, including powder diffraction, stress analysis, texture, reflectometry, and small-angle neutron scattering together with the underlying theory associated with neutron scattering.", correctOrder: 2 },
+      { text: "2)The theory will be presented in a way that should be understood by people in any of these fields.", correctOrder: 3 },
+      { text: "3)For more information, see the Canadian Institute for Neutron Scattering’s Neutron Summer School.", correctOrder: 4 },
+      { text: "4)The Canadian Institute for Neutron Scattering will be holding the eleventh neutron summer school at Chalk River on May 8- 13, 2011.", correctOrder: 1 },
+    ],
+    answer: "4,1,2,3",
+  },
+  {
+    id: 32,
+    instructions: "Reorder the sentences about management and motivation.",
+    paragraphs: [
+      { text: "1)In order to do this, the manager should be able to motivate its employees.", correctOrder: 2 },
+      { text: "2)The job of a manger in the workplace is to get things done through the employees.", correctOrder: 1 },
+      { text: "3)However, this easier said than done.", correctOrder: 3 },
+      { text: "4)Motivation practice and theory are difficult, complex subjects touching on several disciplines.", correctOrder: 4 },
+    ],
+    answer: "2,1,3,4",
+  },
+  {
+    id: 33,
+    instructions: "Reorder the sentences about tectonic plates and the mantle.",
+    paragraphs: [
+      { text: "1)The movement also creates gaps in tectonic plates, which reduce the pressure on the mantle beneath it, allowing it to melt and push through.", correctOrder: 3 },
+      { text: "2)The build-up and sudden release of friction from this movement can cause earthquakes.", correctOrder: 2 },
+      { text: "3)This leads the tectonic plates on top to slowly jostle one another.", correctOrder: 3 },
+      { text: "4)The mantle makes up 84 percent of Earth's volume, and though it's solid rock, over the course of millions of years, it behaves like a liquid.", correctOrder: 1 },
+    ],
+    answer: "4,3,2,1",
+  },
+  {
+    id: 34,
+    instructions: "Reorder the sentences about global tree species and the BCGI.",
+    paragraphs: [
+      { text: "1)The BCGI (Botanical Gardens Conservation International), a charity that compiled the list of trees on the basis of data gathered from its network of 500 members organizations.", correctOrder: 2 },
+      { text: "2)The researchers claim to have collected information over a period of two years from sources including over 500 published contents and 80 experts in the BCGI's network.", correctOrder: 3 },
+      { text: "3)A recent research has revealed that more than 60,000 species of trees are available globally.", correctOrder: 1 },
+      { text: "4)The data will be kept updated with the discovery of new species or the extinction of some, said the researchers.", correctOrder: 4 },
+      { text: "5)All the data required for the world’s trees is now available in one database, thanks to Global Tree Search.", correctOrder: 5 },
+    ],
+    answer: "3,1,2,4,5",
+  },
+  {
+    id: 35,
+    instructions: "Reorder the sentences about restaurant location and success.",
+    paragraphs: [
+      { text: "1)The physical location of a restaurant in the competitive landscape of the city has long been known as a major factor in its likely success or failure.", correctOrder: 1 },
+      { text: "2)All they can do is work to improve customer access to their premises.", correctOrder: 3 },
+      { text: "3)Once restaurants are established in such environments, they can do little about their location.", correctOrder: 2 },
+      { text: "4)Restaurateurs often do this by engaging in battles with local authorities about car parking.", correctOrder: 4 },
+    ],
+    answer: "1,3,2,4",
+  },
+  {
+    id: 36,
+    instructions: "Reorder the sentences about the town of Liberal and politics.",
+    paragraphs: [
+      { text: "1)Liberal's mayor, Joe Decoyer, who was raised in a Democratic family near Chicago and moved to Liberal in search of work.", correctOrder: 4 },
+      { text: "2)Liberal is conservative in a moderate Midwestern kind of way which is changing fast due to big National Beef Packing plant which relies on Hispanic migrants, and thus four-fifths of the children in Liberal's public-school system are Hispanic.", correctOrder: 2 },
+      { text: "3)The town of Liberal is said to have been named for an early settler famous among travelers for being free with drinking water.", correctOrder: 1 },
+      { text: "4)Mr. Decoyer voted for Mr. Trump by being impressed by his promise, though he thinks it unlikely that the president will keep his promises.", correctOrder: 5 },
+      { text: "5)This should make the town receptive to Democrats, but Mr. Trump easily won the county of which it forms a part.", correctOrder: 3 },
+    ],
+    answer: "3,2,5,1,4",
+  },
+  {
+    id: 37,
+    instructions: "Reorder the sentences about the $300 house idea.",
+    paragraphs: [
+      { text: "1)Who could create a house for $300 and if it was possible, why hadn't it been done before?", correctOrder: 3 },
+      { text: "2)Nonetheless, they closed their blog with a challenge: \"We ask chief executives, governments, NGOs, foundations: Are there any takers?\"", correctOrder: 4 },
+      { text: "3)When Vijay Govindarajan and Christian Sarkar wrote a blog entry on Harvard Business Review in August 2010 mooting the idea of a \"$300- house for the poor\", they were merely expressing a suggestion.", correctOrder: 1 },
+      { text: "4)Of course, the idea we present here is an experiment,\" wrote Prof Govindarajan, a professor of international business at the Tuck School of Business at Dartmouth and Mr Sarkar, a marketing consultant who works on environmental issues - an almost apologetic disclaimer for having such a \"far-out\" idea.", correctOrder: 2 },
+    ],
+    answer: "3,4,1,2",
+  },
+  {
+    id: 38,
+    instructions: "Reorder the sentences about British housing before and after WWI.",
+    paragraphs: [
+      { text: "1)The construction of new houses came to a standstill during the war, and this, together with growing demand, led to an estimated shortage of close to a million houses when the war was over.", correctOrder: 3 },
+      { text: "2)In the absence of housing regulations, including the availability of loans to the less well-off, poor-quality housing was built by private enterprise to meet the growing demand at rents that people could afford.", correctOrder: 2 },
+      { text: "3)Before the First World War, most housing in Britain was provided on a rental basis as the cost of housing was beyond the means of the average family and mortgages were hard to come by.", correctOrder: 1 },
+      { text: "4)This created a dilemma, since wartime inflation had pushed up wages and the cost of building materials with the result that private enterprise was no longer able to provide the houses needed at rents which people could afford.", correctOrder: 4 },
+    ],
+    answer: "3,2,1,4",
+  },
+  {
+    id: 39,
+    instructions: "Reorder the sentences about evolutionary rates and fossil records.",
+    paragraphs: [
+      { text: "1)Others, however, believe that the fossil evidence suggests that, at various stages in the history of life, evolution progressed rapidly, in spurts, and that major changes occurred at these points.", correctOrder: 3 },
+      { text: "2)An evolving group may have reached a stage at which it had an advantage over other groups and was able to exploit new niches in nature. Climate change may also have produced a \"spurt\", as might the extinction of other groups or species, leaving many niches vacant.", correctOrder: 4 },
+      { text: "3)Today, many years later, many believe that evolution has progressed at the same steady rate and that the absence of transitional forms can be explained by Darwin's argument that there are huge gaps in the fossil record and that transition usually occurred in one restricted locality.", correctOrder: 2 },
+      { text: "4)Palaeontologists still argue about the origins of major groups, though new fossil finds since Darwin's time have cleared up many of the disparities in the fossil record. Even during Darwin's lifetime, some transitional forms were found.", correctOrder: 1 },
+    ],
+    answer: "4,3,1,2",
+  },
+  {
+    id: 40,
+    instructions: "Reorder the sentences about the formation of Mount Everest.",
+    paragraphs: [
+      { text: "1)One of the Tibetan names for this mountain translates as \"Mountain So High That No Bird Can Fly Over It\". It was first measured in 1852 and was called Peak XV until 1865, when it was named after the British Surveyor of India, Sir George Everest.", correctOrder: 4 },
+      { text: "2)About 200 million years ago, the Indian subcontinent broke away from a vast southern super-continent called Gondwanaland. It drifted northeast across the sea and collided with the Asian landmass. These two huge landmasses buckled, rather like cars in a head-on collision, and rose up to form the world's tallest mountain.", correctOrder: 2 },
+      { text: "3)Mapping the Himalayas and Everest wasn't easy. Foreigners were not welcome, so Himalayan traders were recruited to infiltrate the area and gather enough information to allow accurate maps to be made.", correctOrder: 3 },
+      { text: "4)Fossilized fish remains have been found high up on the slopes of Everest proving that the world's highest mountain once lay at the bottom of the sea. How did this happen?", correctOrder: 1 },
+    ],
+    answer: "4,2,1,3",
+  },
+
+  {
+    id: 41,
+    instructions: "Reorder the sentences about Volkswagen's stock situation.",
+    paragraphs: [
+      { text: "1)Despite posting healthy profits, Volkswagen shares trade at a discount to peers due to bad reputation among investors, high capital expenditure and its close links to the state of Lower Saxony, which effectively has a blocking minority.", correctOrder: 1 },
+      { text: "2)A disastrous capital hike, an expensive foray into truck business and uncertainty about the reason for a share buyback has in recent years left investors bewildered.", correctOrder: 2 },
+      { text: "3)“The main problem with Volkswagen is the past. Many investors have been disappointed and frightened away,” said one Paris-based fund manager.", correctOrder: 3 },
+      { text: "4)Volkswagen shares trade at about nine times the 2002 estimated earnings, compared to BMW's 19 and are the second cheapest in the sector.", correctOrder: 4 },
+    ],
+    answer: "1,2,3,4",
+  },
+  {
+    id: 42,
+    instructions: "Reorder the sentences about chimpanzees and language capacity.",
+    paragraphs: [
+      { text: "1)Perhaps they can acquire grammar like humans if they could only express it some other way.", correctOrder: 5 },
+      { text: "2)It does not follow from their lack of speech, however, that chimpanzees are incapable of language.", correctOrder: 4 },
+      { text: "3)Chimpanzees cannot speak because, unlike homo sapiens, their vocal cords are located higher in their throats and cannot be controlled as delicately as human vocal cords.", correctOrder: 3 },
+      { text: "4)A logical candidate for such a species is the chimpanzee, which shares 98.4% of the human genetic code.", correctOrder: 2 },
+      { text: "5)A simple way to disprove this hypothesis (the Innateness Hypothesis) is to demonstrate that other species have the capacity to speak but for some reason simply have not developed speech.", correctOrder: 1 },
+    ],
+    answer: "5,4,3,2,1",
+  },
+  {
+    id: 43,
+    instructions: "Reorder the sentences about immigration debates in the early 21st century.",
+    paragraphs: [
+      { text: "1)It is also a recurrent theme in the press, from the highbrow pages of Prospect to the populism of the Daily Mail.", correctOrder: 2 },
+      { text: "2)In the early years of the twenty-first century the impact of immigrants on the welfare state has become a staple of discussion among policy makers and politicians.", correctOrder: 1 },
+      { text: "3)Inevitably, these discussions focus on present-day dilemmas.", correctOrder: 3 },
+      { text: "4)But the issues themselves are not new and have historical roots that go much deeper than have been acknowledged.", correctOrder: 4 },
+    ],
+    answer: "2,1,3,4",
+  },
+  {
+    id: 44,
+    instructions: "Reorder the sentences about Scottish banks and currency.",
+    paragraphs: [
+      { text: "1)When this bank was founded in 1695, Scots coinage was in short supply and of uncertain value, compared with English, Dutch, Flemish or French coin.", correctOrder: 4 },
+      { text: "2)In most countries it is only the government, through their central banks, who are permitted to issue currency.", correctOrder: 1 },
+      { text: "3)But in Scotland three banks are still allowed to issue banknotes.", correctOrder: 2 },
+      { text: "4)To face growth of trade it was deemed necessary to remedy this lack of an adequate currency.", correctOrder: 5 },
+      { text: "5)The first Scottish bank to do this was the Bank of Scotland.", correctOrder: 3 },
+    ],
+    answer: "2,3,5,1,4",
+  },
+  {
+    id: 45,
+    instructions: "Reorder the sentences about markets, state, and social equality.",
+    paragraphs: [
+      { text: "1)There had already been some legislation to prevent such abuses - such as various Factory Acts to prevent the exploitation of child workers.", correctOrder: 3 },
+      { text: "2)Mill was able to see an expanded role for the State in such legislation to protect us against powerful interests.", correctOrder: 4 },
+      { text: "3)These markets had become rapidly dominated by powerful enterprises who were able to act in their own interests, against the interests of both workers and consumers.", correctOrder: 2 },
+      { text: "4)He was able to argue that the State was the only organ that was genuinely capable of responding to social needs and social interests, unlike markets.", correctOrder: 5 },
+      { text: "5)Markets may be good at encouraging innovation and following trends, but they were no good at ensuring social equality.", correctOrder: 1 },
+    ],
+    answer: "5,3,1,2,4",
+  },
+  {
+    id: 46,
+    instructions: "Reorder the sentences about Mother of Storms characters.",
+    paragraphs: [
+      { text: "1)Unlike Barnes' previous books, Mother of Storms has a fairly large cast of viewpoint characters.", correctOrder: 1 },
+      { text: "2)But even the Evil American Corporate Magnate is a pretty likable guy.", correctOrder: 4 },
+      { text: "3)They're not all necessarily good guys, either, although with the hurricanes wreaking wholesale destruction upon the world's coastal areas, ethical categories tend to become irrelevant.", correctOrder: 3 },
+      { text: "4)This usually irritates me, but I didn't mind it here, and their interactions are well-handled and informative, although occasionally in moving those about the author's manipulations are a bit blatant. (Especially when one character's ex-girlfriend, who has just undergone a sudden and not entirely credible change in personality, is swept up by a Plot Device in Shining Armor and transported directly across most of Mexico and a good bit of the States to where she happens to bump into another viewpoint character.)", correctOrder: 2 },
+    ],
+    answer: "1,4,3,2",
+  },
+  {
+    id: 47,
+    instructions: "Reorder the sentences about the Kepler-62 planetary system discovery.",
+    paragraphs: [
+      { text: "1)A team of scientists has discovered two Earth-like planets in the habitable orbit of a Sun-like star.", correctOrder: 1 },
+      { text: "2)Using observations gathered by NASA's Kepler Mission, the team found five planets orbiting a Sun-like star called Kepler-62.", correctOrder: 2 },
+      { text: "3)Four of these planets are so-called super-Earths, larger than our own planet, but smaller than even the smallest ice giant planet in our Solar System.", correctOrder: 3 },
+      { text: "4)These new super-Earths have radii of 1.3, 1.4, 1.6, and 1.9 times that of Earth. In addition, one of the five was a roughly Mars-sized planet, half the size of Earth.", correctOrder: 4 },
+    ],
+    answer: "1,2,3,4",
+  },
+  {
+    id: 48,
+    instructions: "Reorder the sentences about cash, electronic money, and e-commerce.",
+    paragraphs: [
+      { text: "1)Cash transactions offer both privacy and anonymity as it does not contain information that can be used to identify the parties nor the transaction history.", correctOrder: 1 },
+      { text: "2)Moreover, money is worth what it is because we have come to accept it.", correctOrder: 2 },
+      { text: "3)The whole structure of traditional money is built on faith and so will electronic money have to be.", correctOrder: 3 },
+      { text: "4)To support e-commerce, we need effective payment systems and secure communication channels and data integrity.", correctOrder: 5 },
+      { text: "5)Electronic transactions are happening in closed group networks and Internet. Electronic commerce is one of the most important aspects of Internet to emerge.", correctOrder: 4 },
+    ],
+    answer: "1,2,3,5,4",
+  },
+  {
+    id: 49,
+    instructions: "Reorder the sentences about art history and its scope.",
+    paragraphs: [
+      { text: "1)Art historians compare different time periods in art history.", correctOrder: 4 },
+      { text: "2)The study includes painting, sculpture, architecture, ceramics, furniture, and other decorative objects.", correctOrder: 2 },
+      { text: "3)Art history is the history of different groups of people and their culture represented throughout their artwork.", correctOrder: 3 },
+      { text: "4)Art history is the study of objects of art in their historical development and stylistic contexts.", correctOrder: 1 },
+      { text: "5)As a term, art history (its product being history of art) encompasses several methods of studying the visual arts; in common usage referring to works of art and architecture.", correctOrder: 5 },
+    ],
+    answer: "4,2,3,1,5",
+  },
+  {
+    id: 50,
+    instructions: "Reorder the sentences about St. Augustine and Spanish Florida.",
+    paragraphs: [
+      { text: "1)In 1571, it became the capital of Spanish Florida.", correctOrder: 4 },
+      { text: "2)He erected fort San Marcos in six days in defence against a Native American attack such as the one that forced the abandonment of the town a year earlier.", correctOrder: 2 },
+      { text: "3)The town had flourished, nearing 400 residents, since its establishment more than a decade earlier in 1566 by Pedro Menendez de Aviles who had founded La Florida and St. Augustine the year before.", correctOrder: 3 },
+      { text: "4)Marquez arrived in October 1577 at the abandoned town of Santa Elena with two ships carrying pre-fabricated posts and heavy planking.", correctOrder: 1 },
+    ],
+    answer: "4,2,3,1",
+  },
+  {
+    id: 51,
+    instructions: "Reorder the sentences about advertising and quality.",
+    paragraphs: [
+      { text: "1)Over the years, I have had the opportunities to observe and understand the thought process behind the ads that have been flooding both the print and the TV.", correctOrder: 1 },
+      { text: "2)Although there is a huge shift in the quality of ads that we come across on daily basis-thanks essentially to improvement in technology, I somehow can’t help but feel that the quality of communication of the message has become diluted.", correctOrder: 2 },
+      { text: "3)There is an increasing attempt by most companies to be seen as cool and funky.", correctOrder: 3 },
+      { text: "4)Proportionally, the numbers of ads that lack in quality have gone up exponentially as well.", correctOrder: 5 },
+      { text: "5)Another reason could be the burgeoning number of companies, which means an exponential increase in the number of ads that are being made.", correctOrder: 4 },
+    ],
+    answer: "1,2,3,5,4",
+  },
+  {
+    id: 52,
+    instructions: "Reorder the sentences about Delhi in September.",
+    paragraphs: [
+      { text: "1)Normally in Delhi, September is a month of almost equatorial fertility and the land seems refreshed and newly-washed.", correctOrder: 1 },
+      { text: "2)Nevertheless the air was still sticky with damp-heat, and it was in a cloud of perspiration that we began to unpack.", correctOrder: 4 },
+      { text: "3)But in the year of our arrival, after a parching summer, the rains had lasted for only three weeks.", correctOrder: 2 },
+      { text: "4)As a result dust was everywhere and the city’s trees and flowers all looked as if they had been lightly sprinkled with talcum powder.", correctOrder: 3 },
+    ],
+    answer: "1,3,4,2",
+  },
+  {
+    id: 53,
+    instructions: "Reorder the sentences about Julia Bocking's LADS project.",
+    paragraphs: [
+      { text: "1)Julia Bocking's Literacy and Dads (LADS) project aims to increase the number of fathers participating as literacy helpers in K-1 school reading programs at Quimbaya Primary Schools.", correctOrder: 2 },
+      { text: "2)A University of Canberra student has launched the nation’s first father-led literacy project, to encourage fathers to become more involved in their children’s literacy.", correctOrder: 1 },
+      { text: "3)Having worked as a literacy tutor with teenagers, she saw the need for good attitudes towards reading to be formed early on - with the help of more male role models.", correctOrder: 3 },
+      { text: "4)'A male that values reading sets a powerful role model, particularly for young boys, who are statistically more likely to end up in remedial literacy program', she said.", correctOrder: 4 },
+    ],
+    answer: "2,1,3,4",
+  },
+  {
+    id: 54,
+    instructions: "Reorder the sentences about engineers and energy research.",
+    paragraphs: [
+      { text: "1)Many countries are suffering a shortage of scholars of new energy.", correctOrder: 1 },
+      { text: "2)Becoming an engineer not only means more opportunities in their career but will gain more money in their research.", correctOrder: 4 },
+      { text: "3)The money distributed in energy research will double.", correctOrder: 3 },
+      { text: "4)Especially engineers about new energy with the climate change.", correctOrder: 2 },
+    ],
+    answer: "1,4,3,2",
+  },
+  {
+    id: 55,
+    instructions: "Reorder the sentences about green tea and health studies.",
+    paragraphs: [
+      { text: "1)They theorized that the 1.2 litters of green tea that is consumed by many Asians each day provides high levels of polyphenols and other antioxidants.", correctOrder: 2 },
+      { text: "2)They pointed to what they called an \"Asian paradox,\" which refers to lower rates of heart disease and cancer in Asia despite high rates of cigarette smoking.", correctOrder: 3 },
+      { text: "3)In May 2006, researchers at Yale University School of Medicine weighed in on the issue with a review article that looked at more than 300 studies on the health benefits of green tea.", correctOrder: 1 },
+      { text: "4)These compounds may work in several ways to improve cardiovascular health.", correctOrder: 5 },
+      { text: "5)Specifically, green tea may prevent the oxidation of LDL cholesterol (the “bad” type), which, in turn, can reduce the build-up of plaque in arteries, the researchers wrote.", correctOrder: 4 },
+    ],
+    answer: "3,1,2,5,4",
+  },
+  {
+    id: 56,
+    instructions: "Reorder the sentences about internet privacy and search engines.",
+    paragraphs: [
+      { text: "1)This presents a challenge to internet search companies, which have built a multibillion-dollar industry out of targeted advertising based on the information users reveal about themselves online.", correctOrder: 6 },
+      { text: "2)However, that may be changing.", correctOrder: 4 },
+      { text: "3)In the lobby of an internet search engine company’s headquarters in California, computer screens display lists of the words being entered into the company's search engine.", correctOrder: 1 },
+      { text: "4)Over the past year, a series of privacy gaffes and government attempts to gain access to internet users' online histories have, along with consolidation among online search and advertising groups, thrust the issue of internet privacy into the spotlight.", correctOrder: 5 },
+      { text: "5)Although it says the system is designed to filter out any scandalous or potentially compromising queries, the fact that even a fraction of searches can be seen by visitors to the world’s biggest search company is likely to come as a shock to internet users who think of web browsing as a private affair.", correctOrder: 2 },
+      { text: "6)People generally believe that using a search engine is the equivalent of talking to a priest or a rabbi, “says Larry Pokémon, head of the Pokémon Institute, a privacy think-tank. “The public in general doesn’t seem to fully understand how their privacy may be at risk.", correctOrder: 3 },
+    ],
+    answer: "3,5,6,2,4,1",
+  },
+  {
+    id: 57,
+    instructions: "Reorder the sentences about nomadic societies and food storage.",
+    paragraphs: [
+      { text: "1)So, while some nomadic hunter-gatherers may occasionally bag more food than they can consume in a few days, such a bonanza is of little use to them because they cannot protect it.", correctOrder: 2 },
+      { text: "2)Hence nomadic hunter-gatherer societies have few or no such full-time specialists, who instead first appear in sedentary societies.", correctOrder: 4 },
+      { text: "3)A consequence of a settled existence is that it permits one to store food surpluses, since storage would be pointless if one didn’t remain nearby to guard the stored food.", correctOrder: 1 },
+      { text: "4)But stored food is essential for feeding non-food-producing specialists, and certainly for supporting whole towns of them.", correctOrder: 3 },
+    ],
+    answer: "3,1,4,2",
+  },
+  {
+    id: 58,
+    instructions: "Reorder the sentences about trade unions in the 18th and 19th centuries.",
+    paragraphs: [
+      { text: "1)In the late 18th century, groups of skilled workers began to control the hiring of apprentices, and bargained with employers for better working conditions, but, as the movement grew, these trade unions tried to find ways of creating an alliance among themselves.", correctOrder: 2 },
+      { text: "2)The first meeting of the Trades Union Congress look place in Manchester, at which thirty-four delegates represented well over a hundred thousand trade union members.", correctOrder: 3 },
+      { text: "3)Trade unions were legalized in an Act of 1871, and by the end of the century more than one and a half million workers were members. Conditions for workers slowly improved over the years, but it wasn’t until 1974 that legislation covering the health and safety of all employees was introduced.", correctOrder: 4 },
+      { text: "4)Until the 19th century, workers were given little or no protection. Child labour was common, as were long hours worked in unsafe conditions for minimal pay.", correctOrder: 1 },
+    ],
+    answer: "4,1,2,3",
+  },
+  {
+    id: 59,
+    instructions: "Reorder the sentences about Copernicus and the publication of his work.",
+    paragraphs: [
+      { text: "1)Copernicus probably hit upon his main idea sometime between 1508 and 1514.", correctOrder: 1 },
+      { text: "2)For years, however, he delayed publication of his controversial work, which contradicted all the authorities of the time.", correctOrder: 2 },
+      { text: "3)According to legend, Copernicus received a copy as he was dying, on May 24, 1543.", correctOrder: 4 },
+      { text: "4)The historic book that contains the final version of his theory, De revolutionises erbium celestial libri vi (\"Six Books Concerning the Revolutions of the Heavenly Orbs\"), did not appear in print until 1543, the year of his death.", correctOrder: 3 },
+    ],
+    answer: "1,2,4,3",
+  },
+  {
+    id: 60,
+    instructions: "Reorder the sentences about the history of trousers and jackets.",
+    paragraphs: [
+      { text: "1)By 1817, trousers were shoe-length. Popular with the king, they became accepted as standard daywear by 1825, and were worn with a waistcoat and, by day, a frock coat, but with a tailcoat in the evening.", correctOrder: 2 },
+      { text: "2)Jackets didn’t become fashionable for casual wear until the 1850s. The jacket was derived from the short jacket worn by boys and working men, and in the age of mass-production and ready-made suits, its simple style was easier to produce than the tailored coat.", correctOrder: 4 },
+      { text: "3)It was Cerge \"Beau\" Brummell, the champion of simple English style, who started a trend for wearing tight black trousers in the early 1800s.", correctOrder: 1 },
+      { text: "4)The favourite patterns for trousers were strong plaids, stripes and checks. The loose straight cut came in about the 1860s, and front creases in the 1880s. By the turn of the century, they had become the common way to dress.", correctOrder: 3 },
+    ],
+    answer: "3,1,4,2",
+  },
+  {
+    id: 61,
+    instructions: "Reorder the sentences about volcanic eruptions and climate impact.",
+    paragraphs: [
+      { text: "1)Between May and August 1783, two volcanic eruptions had occurred, one in Iceland and one in Japan. The northern hemisphere had been covered in a \"great fog\".", correctOrder: 5 },
+      { text: "2)A year earlier, a volcano had erupted in Indonesia, sending up vast quantities of fine volcanic dust into the atmosphere. Circling the Earth, the dust reflected sunlight back into space.", correctOrder: 2 },
+      { text: "3)This, of course, was an extraordinary event. In fact, it is considered one of the most catastrophic global events in recorded history. But something like it had happened before, and within living memory.", correctOrder: 4 },
+      { text: "4)The Earth literally darkened; temperatures dropped. Throughout western Europe and North America crops failed, and cattle died. A large portion of the world lay under a huge volcanic cloud.", correctOrder: 3 },
+      { text: "5)In the spring of 1816, the weather suddenly changed. The unseasonably warm spring turned cold and people were forced indoors by continual rain. The skies darkened and there was no summer.", correctOrder: 1 },
+    ],
+    answer: "5,2,4,3,1",
+  },
+  {
+    id: 62,
+    instructions: "Reorder the sentences about early football tournaments and Olympics.",
+    paragraphs: [
+      { text: "1)Only four years later did football become an official competition at the Games. At this stage it was, of course, for amateurs only.", correctOrder: 3 },
+      { text: "2)Ironically, the first tournament was won by an amateur team from the north- cast of England, who had been especially invited after the British Football Association refused to be associated with the competition.", correctOrder: 5 },
+      { text: "3)The first international football match was played in 1872 between England and Scotland, when football was rarely played anywhere outside Great Britain.", correctOrder: 1 },
+      { text: "4)As an alternative, Sir Thomas Lipton decided to organize an event for professionals. Often described as The First World Cup, it took place in Turin in 1909 and featured the most prestigious professional clubs from Italy, Germany and Switzerland.", correctOrder: 4 },
+      { text: "5)However, as football increased in popularity, it was admitted to the Olympics TM in 1900 and 1904, but only as a sideshow and not in the competition for medals.", correctOrder: 2 },
+    ],
+    answer: "3,5,1,4,2",
+  },
+  {
+    id: 63,
+    instructions: "Reorder the sentences about rural energy and solar panels.",
+    paragraphs: [
+      { text: "1)One such example is a solar panel which could charge an LED lamp to create hours of light each day.", correctOrder: 4 },
+      { text: "2)In addition to being fairly costly, these create smoke pollution and carbon emissions.", correctOrder: 2 },
+      { text: "3)Therefore, alternatives are being investigated.", correctOrder: 3 },
+      { text: "4)A result of not being connected to the electricity grid in rural areas of some countries means people light their homes using kerosene lamps.", correctOrder: 1 },
+    ],
+    answer: "4,2,3,1",
+  },
+  {
+    id: 64,
+    instructions: "Reorder the sentences about job satisfaction and career change.",
+    paragraphs: [
+      { text: "1)The fear of criticism from colleagues, friends and family is the main factor that obstructs a change in their employment situation.", correctOrder: 5 },
+      { text: "2)However, most of these workers would not consider career alternatives.", correctOrder: 3 },
+      { text: "3)It seems that the lack of psychological reward is the reason for their dissatisfaction.", correctOrder: 2 },
+      { text: "4)Despite the financial stability a high salary brings, research has shown that the majority of top earners are not happy in their jobs.", correctOrder: 1 },
+      { text: "5)Interestingly, it is not the risk of a decrease in salary which prevents this move.", correctOrder: 4 },
+    ],
+    answer: "4,3,2,5,1",
+  },
+  {
+    id: 65,
+    instructions: "Reorder the sentences about women's socialization and perceived inferiority.",
+    paragraphs: [
+      { text: "1)There you will see how women are consistently portrayed as weak and in need of male protection.", correctOrder: 5 },
+      { text: "2)This acceptance that men were the superior gender had not developed by chance.", correctOrder: 2 },
+      { text: "3)It had been the view that had been socialized into them from the moment of their birth.", correctOrder: 3 },
+      { text: "4)This will become clear if you look at any girls’ magazine or popular film of the period.", correctOrder: 4 },
+      { text: "5)In the 1960s, the greatest obstacle for those who wanted to organize women was said to be women’s conviction that they were actually inferior to men.", correctOrder: 1 },
+    ],
+    answer: "5,2,3,4,1",
+  },
+  {
+    id: 66,
+    instructions: "Reorder the sentences about British fishermen's knitted jerseys.",
+    paragraphs: [
+      { text: "1)It is mainly due to the quality of the fabric which effectively resists salt water, direct sunshine and cold winds.", correctOrder: 5 },
+      { text: "2)Traditionally they are navy blue and they are basically square in shape, without a curved armhole or inset sleeve.", correctOrder: 2 },
+      { text: "3)Fishermen’s knitted jerseys have always been recognizable in Britain by their colour and their shape.", correctOrder: 1 },
+      { text: "4)This continuing popularity cannot just be put down to a fondness for tradition.", correctOrder: 4 },
+      { text: "5)These navy jerseys are still a familiar sight on any quay or harbour in the land.", correctOrder: 3 },
+    ],
+    answer: "3,2,5,4,1",
+  },
+  {
+    id: 67,
+    instructions: "Reorder the sentences about Norwegian oil policy and Arctic development.",
+    paragraphs: [
+      { text: "1)The Norwegian Government is doing its best to keep the oil industry under control. A new law limits exploration to an area south of the southern end of the long coastline; production limits have been laid down (though these have already been raised); and oil companies have not been allowed to employ more than a limited number of foreign workers.", correctOrder: 1 },
+      { text: "2)But the oil industry has a way of getting over such problems, and few people believe that the Government will be able to hold things back for long.", correctOrder: 2 },
+      { text: "3)Ever since the war, the Government has been carrying out a programme of development in the area north of the Arctic Circle. During the past few years this programme has had a great deal of success: Troms has been built up into a local capital with a university, a large hospital and a healthy industry.", correctOrder: 4 },
+      { text: "4)As on Norwegian politician said last week: \"We will soon be changed beyond all recognition.\"", correctOrder: 3 },
+    ],
+    answer: "1,2,4,3",
+  },
+  {
+    id: 68,
+    instructions: "Reorder the sentences about television's impact on family life.",
+    paragraphs: [
+      { text: "1)We even used to read books and listen to music and broadcast talks occasionally. All that belongs to the past. Now all our free time is regulated by the goggle box. We rush home or gulp down our meals to be in time for this or that programme.", correctOrder: 2 },
+      { text: "2)Whole generations are growing up addicted to the telly. Food is left uneaten, homework undone and sleep is lost.", correctOrder: 5 },
+      { text: "3)We have even given up sitting at table and having a leisurely evening meal, exchanging the news of the day. A sandwich and a glass of beer will do- anything, providing it don't interfere with the programme. The monster demands and obtains absolute silence and attention.", correctOrder: 3 },
+      { text: "4)Television hasn't been with us all that long, but we are already beginning to forget what the world was like without it. Before we admitted the one-eyed monster into our homes, we never found it difficult to occupy our spare time. We used to enjoy civilized pleasures. For instance, we used to have hobbies, we used to entertain our friends and be entertained by them, we used to go outside for our amusements to theatres, cinemas, restaurants and sporting events.", correctOrder: 1 },
+      { text: "5)If any member of the family dares to open his mouth during a programme, he is quickly silenced.", correctOrder: 4 },
+    ],
+    answer: "4,1,3,5,2",
+  },
+  {
+    id: 69,
+    instructions: "Reorder the sentences about racial prejudice and violence.",
+    paragraphs: [
+      { text: "1)In some countries where racial prejudice is acute, violence has so come to be taken for granted as a means of solving differences, that it is not even questioned.", correctOrder: 1 },
+      { text: "2)There are countries where the white man imposes his rule by brute force; there are countries where the black man protests by setting fire to cities and by looting and pillaging.", correctOrder: 2 },
+      { text: "3)What is really frightening, what really fills you with despair, is the realization that when it comes to the crunch, we have made no actual progress at all.", correctOrder: 5 },
+      { text: "4)We may wear collars and ties instead of war-paint, but our instincts remain basically unchanged.", correctOrder: 6 },
+      { text: "5)Important people on both sides, who would in other respects appear to be reasonable men, get up and calmly argue in favor of violence – as if it were a legitimate solution, like any other.", correctOrder: 3 },
+    ],
+    answer: "1,2,5,3,4",
+  },
+  {
+    id: 70,
+    instructions: "Reorder the sentences about the invention of the shipping container.",
+    paragraphs: [
+      { text: "1)The shipping system required many changes and other technical innovations before the containers could be used.", correctOrder: 4 },
+      { text: "2)This situation caused delays and created opportunities for damage that were only reduced when the shipping container was invented.", correctOrder: 2 },
+      { text: "3)60 years ago, when businesses did not think of the distribution of goods as a single process, someone had to physically transfer every box each time goods were moved from one transport to another.", correctOrder: 1 },
+      { text: "4)It was also necessary to build new roads and rail lines, requiring companies to invest millions.", correctOrder: 5 },
+      { text: "5)While this invention promised companies a lot of benefits, there were many difficulties at first.", correctOrder: 3 },
+    ],
+    answer: "3,2,5,1,4",
+  },
+
+
+
+
+];
+
+export default ReorderParagraphExercises;

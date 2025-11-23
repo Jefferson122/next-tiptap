@@ -713,7 +713,6 @@ export interface BlankOption {
     "`for` indica el propósito de entender la base genética de la evolución."
   ]
 },
-
 // -------------------------
 // EJERCICIO 27
 // -------------------------

@@ -1,5 +1,3 @@
-// exercisesData.ts
-
 export interface BlankOption {
     options: string[];
     correct?: string;

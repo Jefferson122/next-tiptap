@@ -150,7 +150,7 @@ export default function StudyMenu() {
   
       if (!q || !q.blanks || !q.userSelections) return prev;
   
-      let total = q.blanks.length;
+      const total = q.blanks.length;
       let correct = 0;
   
       q.blanks.forEach((blank, i) => {

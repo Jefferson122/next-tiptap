@@ -267,40 +267,6 @@ export default function StudyMenu() {
 
   const [reorderFeedback, setReorderFeedback] = useState<number[]>([]);
 
-  //NUEVOOOOOOOOOOOOOOO
-  const checkReorder = (qIdx: number) => {
-    setQuestions(prev => {
-      const copy = [...prev];
-      const q = copy[qIdx];
-      const correct = q.correctOrder ?? [];
-      const user = q.userOrder ?? [];
-  
-      const feedback = correct.map((c, i) => (c === user[i] ? 1 : -1)); // 1 verde, -1 rojo
-      setReorderFeedback(feedback);
-  
-      const total = correct.length;
-      const scoreCount = feedback.filter(f => f === 1).length;
-      q.score = `${scoreCount}/${total} (${Math.round((scoreCount/total)*100)}%)`;
-      copy[qIdx] = q;
-      return copy;
-    });
-  };
-  
-  const showCorrectOrder = (qIdx: number) => {
-    setQuestions(prev => {
-      const copy = [...prev];
-      const q = copy[qIdx];
-      q.userOrder = [...(q.correctOrder ?? [])]; // reordena al orden correcto
-      copy[qIdx] = q;
-  
-      setReorderFeedback((q.correctOrder ?? []).map(() => 1)); // todos verdes
-      return copy;
-    });
-  };
-  
-  
-
-
   // Generar preguntas e instrucciones
   const handleGenerateInstructions = () => {
     let result = "";

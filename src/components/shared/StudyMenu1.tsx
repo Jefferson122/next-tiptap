@@ -134,8 +134,6 @@ export default function StudyMenu() {
       return copy;
     });
   };
-  
-
   const [activeSection, setActiveSection] = useState<keyof typeof sections>("Speaking and Writing");
   const [counts, setCounts] = useState(
     Object.fromEntries(
@@ -144,9 +142,7 @@ export default function StudyMenu() {
       )
     )
   );
-
   const [questions, setQuestions] = useState<Exercise[]>([]);
-
   const handleMCSelection = (qIdx: number, blankIdx: number, option: string) => {
     setQuestions((prev: Exercise[]) => {
       const copy = [...prev];
@@ -166,8 +162,6 @@ export default function StudyMenu() {
       return copy;
     });
   };
-  
-
   const gradeMCQuestion = (qIdx: number) => {
     setQuestions((prev: Exercise[]) => {
       const copy = [...prev];
@@ -215,23 +209,15 @@ export default function StudyMenu() {
       return copy;
     });
   };
-  
-  
-  
-
-
   const [instructions, setInstructions] = useState("");
-
   const checkReorder = (qIdx: number) => {
     setQuestions(prev => {
       const copy = [...prev];
       const q = copy[qIdx];
       const correct = q.correctOrder ?? [];
       const user = q.userOrder ?? [];
-  
       const feedback = correct.map((c, i) => (c === user[i] ? 1 : -1)); // 1 verde, -1 rojo
       setReorderFeedback(feedback);
-  
       const total = correct.length;
       const scoreCount = feedback.filter(f => f === 1).length;
       q.score = `${scoreCount}/${total} (${Math.round((scoreCount/total)*100)}%)`;
@@ -239,7 +225,6 @@ export default function StudyMenu() {
       return copy;
     });
   };
-  
   const showCorrectOrder = (qIdx: number) => {
     setQuestions(prev => {
       const copy = [...prev];
@@ -251,7 +236,6 @@ export default function StudyMenu() {
       return copy;
     });
   };
-
   // función para actualizar la selección de un blank
   const handleBlankChange = (qIdx: number, blankIdx: number, value: string) => {
     setQuestions((prev: Exercise[]) => {
@@ -315,12 +299,10 @@ export default function StudyMenu() {
     updated[currentQuestion] = qCurr;
     setQuestions(updated);
   };
-
   ////// Inicializar con false para cada pregunta
   const [showExplanation, setShowExplanation] = useState<boolean[]>(
     () => questions.map(() => false)
   );
-
   const toggleExplanation = (idx: number) => {
     setShowExplanation(prev => {
       const copy = [...prev];
@@ -328,8 +310,6 @@ export default function StudyMenu() {
       return copy;
     });
   };
-
-
 // COMPONENETES DE SINGLE ANSWER
   const handleOCSelection = (qIndex: number, questionIndex: number, option: string) => {
     setQuestions(prev =>
@@ -345,8 +325,6 @@ export default function StudyMenu() {
       )
     );
   };
-
-
   const gradeOCQuestion = (qIndex: number) => {
     setQuestions(prev =>
       prev.map((item, idx) => {
@@ -362,8 +340,6 @@ export default function StudyMenu() {
       })
     );
   };
-  
-
    // Generar preguntas e instrucciones
    const handleGenerateInstructions = () => {
     let result = "";
@@ -513,7 +489,7 @@ export default function StudyMenu() {
                 questions: Item.questions, // <-- importante
               });
             }           
-          
+
           }
   
           // --- Listening ---
@@ -540,8 +516,6 @@ export default function StudyMenu() {
     setAllResults(Array(q.length).fill([]));
     setCurrentQuestion(0);
   };
-
-
 /////////////////////////////////////////////////////////////////
 
   // Audio / Dictation
@@ -564,9 +538,7 @@ export default function StudyMenu() {
     const cleanValue = parseInt(value.replace(/^0+/, ""), 10) || 0;
     setCounts({ ...counts, [key]: cleanValue });
   };
-
   const handleStartClick = () => { startRecording(); };
-
   // Grabación
   const startRecording = async () => {
     if (recording || !questions[currentQuestion]) return;
@@ -620,8 +592,6 @@ export default function StudyMenu() {
     mediaRecorderRef.current = recorder;
   };
   const stopRecording = () => mediaRecorderRef.current?.state==="recording" && mediaRecorderRef.current.stop();
-
-
   // Mostrar resultado de read aloud / repeat sentence
   const loadResult = (idx:number) => {
     const dataArray = allResults[idx];
@@ -633,9 +603,7 @@ export default function StudyMenu() {
       }).join(" "));
     } else { setPronDetail(""); setPronEsp(""); }
   };
-
   const [reorderFeedback, setReorderFeedback] = useState<number[]>([]);
-
   // Scoring para dictado
   const scoreWords = (modelo: string, intento: string) => {
     const clean = (text: string) =>
@@ -665,16 +633,13 @@ export default function StudyMenu() {
   const [countdown30, setCountdown30] = useState(30);
   const countdownRef = useRef<NodeJS.Timeout | null>(null);
   const [countdownRunning, setCountdownRunning] = useState(false);
-
-
   // Controles de dictado
   const handleInputChange = (value: string) => {
     const updated = [...questions];
     updated[currentQuestion].userInput = value;
     setQuestions(updated);
   };
-  
-  
+
   const nextQuestion = () => setCurrentQuestion(prev=>Math.min(prev+1,questions.length-1));
   const prevQuestion = () => setCurrentQuestion(prev=>Math.max(prev-1,0));
   const retryTest = () => { handleGenerateInstructions(); };
@@ -688,16 +653,13 @@ export default function StudyMenu() {
   const [showTextStates, setShowTextStates] = useState<boolean[]>(
     () => questions.map(() => false)
   );
-
   // Función para toggle
   const toggleShowText = (idx: number) => {
     const copy = [...showTextStates];
     copy[idx] = !copy[idx];
     setShowTextStates(copy);
   };
-
   const [showAnswers, setShowAnswers] = useState(false);
-
 
   useEffect(() => {
     const ping = setInterval(() => {
@@ -706,7 +668,7 @@ export default function StudyMenu() {
     return () => clearInterval(ping);
   }, []);
   
-  
+
   return (
     <div className="mt-6 bg-white dark:bg-[#1e1e2f] rounded-2xl shadow-xl p-6 sm:p-8 max-w-full sm:max-w-7xl mx-auto border border-gray-100 dark:border-gray-700">
       <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100">📊 Study Planner</h2>
@@ -759,6 +721,7 @@ export default function StudyMenu() {
             const q = questions[currentQuestion];
             
             switch (q.type) {
+/////////////////////////// SPEAKING SECTION ///////////////////////////
               case "ReadAloud":
                 return (
                   <div className="mb-4 p-4 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200 break-words">
@@ -834,7 +797,6 @@ export default function StudyMenu() {
                     </div>
                   </div>
                 );
-
               case "repeatsentences":
                   return (
                     <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
@@ -935,8 +897,7 @@ export default function StudyMenu() {
                         </button>
                       </div>
                     </div>
-                  );
-              
+                  );        
               case "DescribeImage":
                     return (
                       <div className="text-center">
@@ -1025,8 +986,7 @@ export default function StudyMenu() {
                           />
                         )}
                       </div>
-                    );
-              
+                    );    
               case "RetellLecture":
                   return (
                     <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
@@ -1128,7 +1088,6 @@ export default function StudyMenu() {
                       </div>
                     </div>
                   );
-        
               case "AnswerShortQuestion":
                     return (
                       <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
@@ -1209,8 +1168,7 @@ export default function StudyMenu() {
                             ))}
                         </div>
                       </div>
-                    );
-                  
+                    );             
               case "summarize":
                       return (
                         <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
@@ -1299,9 +1257,7 @@ export default function StudyMenu() {
                               ))}
                           </div>
                         </div>
-                      );
-                
-                      
+                      );                      
               case "respond_to_situation":
                         return (
                           <div className="mb-4 p-4 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
@@ -1357,7 +1313,7 @@ export default function StudyMenu() {
                             </div>
                           </div>
                         );
-               
+ ///////////////////////// WRITING SECTION  ////////////////////////////////
               case "SummarizeWrittentext":
                           return (
                             <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
@@ -1404,8 +1360,7 @@ export default function StudyMenu() {
                               )} */}
                             </div>
 
-                          );
-                                            
+                          );                                           
               case "Essay":
                           return (
                             <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
@@ -1453,46 +1408,7 @@ export default function StudyMenu() {
                             </div>
 
                           );
-                                  
-              case "WritingDictation":
-                return (
-                  <div className="mb-4">
-                    <p className="text-red-600 font-semibold mb-2">
-                      📝 Listen and write what you hear
-                    </p>
-
-
-                    <audio ref={audioRef} controls src={q.audio} className="w-full mb-2" />
-
-                    <textarea
-                      value={q.userInput || ""}
-                      onChange={(e) => handleInputChange(e.target.value)}
-                      placeholder="Write your attempt here..."
-                      className="w-full p-2 border rounded dark:bg-gray-700 dark:text-gray-200 mb-2"
-                      rows={3}
-                    />
-
-                    <div className="flex gap-2 mb-2">
-                      <button
-                        onClick={checkScore}
-                        className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition"
-                      >
-                        Check Score
-                      </button>
-                    </div>
-
-                    {q.score && (
-                      <p
-                        className={`font-bold ${
-                          q.score.startsWith("0") ? "text-red-500" : "text-green-500"
-                        }`}
-                      >
-                        Score: {q.score}
-                      </p>
-                    )}
-                  </div>
-                );
-
+/////////////////////////  READING SECTION  ////////////////////////////////                        
               case "FillInTheBlanks":
                   return (
                     <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
@@ -1660,235 +1576,6 @@ export default function StudyMenu() {
                       </div>
                     </div>
                   );
-                    
-              case "FillInTheBlanksDrag": {
-                    if (!questions[currentQuestion]) return null;
-                  
-                    const qCurr = questions[currentQuestion] as Exercise;
-                    const blanks = (qCurr.blanks as BlankOptionDrag[]) || [];
-                    const options = qCurr.draggableOptions || [];
-                    const userSelections = qCurr.userSelections || Array(blanks.length).fill("");
-                  
-                    const textChunks: string[] = Array.isArray(qCurr.text)
-                      ? (qCurr.text as string[])
-                      : [qCurr.text as string];
-                  
-                    const handleDragToBlank = (blankIdx: number, option: string) => {
-                      const updatedSelections = [...userSelections];
-                      updatedSelections[blankIdx] = option;
-                  
-                      setQuestions((prev: Exercise[]) => {
-                        const copy = [...prev];
-                        copy[currentQuestion] = { ...qCurr, userSelections: updatedSelections };
-                        return copy;
-                      });
-                    };
-                  
-                    const gradeFillInTheBlanksDrag = () => {
-                      const feedbackArray = blanks.map((blank, i) => {
-                        const userAns = (userSelections[i] || "").toLowerCase().trim();
-                        const correctAns = (blank.correct || "").toLowerCase().trim();
-                        return userAns === correctAns ? 1 : -1;
-                      });
-                  
-                      const correctCount = feedbackArray.filter(f => f === 1).length;
-                      const total = blanks.length;
-                  
-                      setQuestions(prev => {
-                        const copy = [...prev];
-                        copy[currentQuestion] = {
-                          ...qCurr,
-                          score: `${correctCount}/${total} (${Math.round(
-                            (correctCount / total) * 100
-                          )}%)`,
-                          blankFeedback: feedbackArray // ← añadido
-                        };
-                        return copy;
-                      });
-                    };
-                  
-                    return (
-                      <DragDropContext
-                        onDragEnd={(result: DropResult) => {
-                          const { destination, draggableId } = result;
-                          if (!destination) return;
-                          if (destination.droppableId.startsWith("blank-")) {
-                            const blankIdx = parseInt(destination.droppableId.split("-")[1], 10);
-                            handleDragToBlank(blankIdx, draggableId);
-                          }
-                        }}
-                      >
-                        <div className="fill-blanks-drag-wrapper space-y-6">
-                  
-                          {/* TEXTO CON BLANKS */}
-                          <p className="drag-text text-lg leading-relaxed text-gray-800 dark:text-gray-200">
-                            {textChunks.map((chunk: string, idx: number) => {
-                              
-                              // feedback viene del check answers
-                              const feedback = qCurr.blankFeedback?.[idx];
-                  
-                              // COLOR SOLO SI SHOWANSWER, NO POR FEEDBACK
-                              const bgColor = showAnswers
-                                ? "bg-green-200 border-green-500 text-green-900"
-                                : "bg-blue-50 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border-blue-400 dark:border-blue-300";
-                  
-                              return (
-                                <React.Fragment key={idx}>
-                                  <span>{chunk} </span>
-                  
-                                  {idx < blanks.length && (
-                                    <Droppable droppableId={`blank-${idx}`}>
-                                      {(provided) => (
-                                        <span
-                                          ref={provided.innerRef}
-                                          {...provided.droppableProps}
-                                          className={`blank-box inline-block w-28 h-10 border-2 border-dashed rounded-md text-center align-middle mx-1 px-2 py-1 font-semibold transition-all duration-300 ${bgColor}`}
-                                        >
-                                          {showAnswers
-                                            ? blanks[idx].correct
-                                            : userSelections[idx] || "____"}
-                  
-                                          {/* ÍCONOS DE FEEDBACK (correct/incorrect) */}
-                                          {feedback === 1 && !showAnswers && (
-                                            <svg
-                                              className="w-4 h-4 inline-block text-green-700 dark:text-green-300 ml-1"
-                                              fill="none"
-                                              stroke="currentColor"
-                                              strokeWidth="2"
-                                              viewBox="0 0 24 24"
-                                            >
-                                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                            </svg>
-                                          )}
-                  
-                                          {feedback === -1 && !showAnswers && (
-                                            <svg
-                                              className="w-4 h-4 inline-block text-red-700 dark:text-red-300 ml-1"
-                                              fill="none"
-                                              stroke="currentColor"
-                                              strokeWidth="2"
-                                              viewBox="0 0 24 24"
-                                            >
-                                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                            </svg>
-                                          )}
-                  
-                                          {provided.placeholder}
-                                        </span>
-                                      )}
-                                    </Droppable>
-                                  )}
-                                </React.Fragment>
-                              );
-                            })}
-                          </p>
-                  
-                          {/* OPCIONES */}
-                          {!showAnswers && (
-                            <Droppable droppableId="options" direction="horizontal">
-                              {(provided) => (
-                                <div
-                                  ref={provided.innerRef}
-                                  {...provided.droppableProps}
-                                  className="options-container flex flex-wrap gap-3 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg border border-gray-300 dark:border-gray-600 shadow-inner"
-                                >
-                                  {options.map((option: string, idx: number) => (
-                                    <Draggable key={option} draggableId={option} index={idx}>
-                                      {(provided) => (
-                                        <div
-                                          ref={provided.innerRef}
-                                          {...provided.draggableProps}
-                                          {...provided.dragHandleProps}
-                                          className="option-item bg-white dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-800 
-                                            border border-gray-300 dark:border-gray-500 rounded-md px-4 py-2 font-medium 
-                                            shadow-sm cursor-grab select-none transition duration-200"
-                                        >
-                                          {option}
-                                        </div>
-                                      )}
-                                    </Draggable>
-                                  ))}
-                                  {provided.placeholder}
-                                </div>
-                              )}
-                            </Droppable>
-                          )}
-                  
-                                        
-                                                  {/* 🔥 CONTENEDOR DE BOTONES */}
-                        <div className="flex flex-wrap gap-4 mt-4">
-
-                        {/* CHECK ANSWERS */}
-                        <button
-                          className="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 
-                            text-white font-semibold py-2 px-6 rounded-xl shadow-md 
-                            transition-all duration-200 hover:-translate-y-1"
-                          onClick={gradeFillInTheBlanksDrag}
-                        >
-                          Check Answers
-                        </button>
-
-                        {/* SHOW ANSWERS */}
-                        <button
-                          className="bg-gradient-to-r from-purple-400 to-pink-500 hover:from-purple-500 hover:to-pink-600 
-                            text-white font-semibold py-2 px-6 rounded-xl shadow-md 
-                            transition-all duration-200 hover:-translate-y-1"
-                          onClick={() => setShowAnswers(!showAnswers)}
-                        >
-                          {showAnswers ? "Hide Answers" : "Show Answers"}
-                        </button>
-
-                        {/* SHOW EXPLANATION */}
-                        <button
-                          className="bg-gradient-to-r from-yellow-300 to-yellow-500 hover:from-yellow-400 hover:to-yellow-600 
-                            text-black font-semibold py-2 px-6 rounded-xl shadow-md 
-                            transition-all duration-200 hover:-translate-y-1"
-                          onClick={() => toggleExplanation(currentQuestion)}
-                        >
-                          {showExplanation[currentQuestion] ? "Hide Explanation" : "Show Explanation"}
-                        </button>
-
-                        </div>
-
-
-                        {/* 🔥 CAJA DE EXPLICACIONES */}
-                        {showExplanation[currentQuestion] && qCurr.explanation && (
-                        <div className="bg-yellow-50 dark:bg-yellow-900/40 
-                          border-l-4 border-yellow-500 dark:border-yellow-300 
-                          p-4 mt-4 rounded-lg shadow-sm">
-
-                          <h3 className="font-bold text-lg mb-3 text-gray-800 dark:text-gray-200">
-                            Explanation:
-                          </h3>
-
-                          <ul className="list-disc pl-6 space-y-1 text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
-
-                            {(Array.isArray(qCurr.explanation)
-                              ? qCurr.explanation
-                              : [qCurr.explanation]
-                            ).map((exp: string, idx: number) => (
-                              <li key={idx}>{exp}</li>
-                            ))}
-
-                          </ul>
-                        </div>
-                        )}
-
-
-                        {/* ✅ SCORE */}
-                        {qCurr.score && (
-                        <div className="text-lg font-semibold text-gray-700 dark:text-gray-200 mt-3">
-                          Score: {qCurr.score}
-                        </div>
-                        )}
-
-
-                        </div>
-                      </DragDropContext>
-                    );
-                  }
-                  
-                     
               case "MultipleChoice":
                     return (
                       <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
@@ -1993,7 +1680,7 @@ export default function StudyMenu() {
                         </div>
                       </div>
                     );
-                    
+  
               case "ReorderParagraph": {
                       const q = questions[currentQuestion] as typeof questions[number] & { showAnswer?: boolean };
                       const paragraphs: string[] = q?.paragraphs ?? [];
@@ -2137,13 +1824,232 @@ export default function StudyMenu() {
                         </div>
                       );
                     }
+              case "FillInTheBlanksDrag": {
+                      if (!questions[currentQuestion]) return null;
                     
+                      const qCurr = questions[currentQuestion] as Exercise;
+                      const blanks = (qCurr.blanks as BlankOptionDrag[]) || [];
+                      const options = qCurr.draggableOptions || [];
+                      const userSelections = qCurr.userSelections || Array(blanks.length).fill("");
                     
+                      const textChunks: string[] = Array.isArray(qCurr.text)
+                        ? (qCurr.text as string[])
+                        : [qCurr.text as string];
                     
+                      const handleDragToBlank = (blankIdx: number, option: string) => {
+                        const updatedSelections = [...userSelections];
+                        updatedSelections[blankIdx] = option;
                     
-            
+                        setQuestions((prev: Exercise[]) => {
+                          const copy = [...prev];
+                          copy[currentQuestion] = { ...qCurr, userSelections: updatedSelections };
+                          return copy;
+                        });
+                      };
                     
-              
+                      const gradeFillInTheBlanksDrag = () => {
+                        const feedbackArray = blanks.map((blank, i) => {
+                          const userAns = (userSelections[i] || "").toLowerCase().trim();
+                          const correctAns = (blank.correct || "").toLowerCase().trim();
+                          return userAns === correctAns ? 1 : -1;
+                        });
+                    
+                        const correctCount = feedbackArray.filter(f => f === 1).length;
+                        const total = blanks.length;
+                    
+                        setQuestions(prev => {
+                          const copy = [...prev];
+                          copy[currentQuestion] = {
+                            ...qCurr,
+                            score: `${correctCount}/${total} (${Math.round(
+                              (correctCount / total) * 100
+                            )}%)`,
+                            blankFeedback: feedbackArray // ← añadido
+                          };
+                          return copy;
+                        });
+                      };
+                    
+                      return (
+                        <DragDropContext
+                          onDragEnd={(result: DropResult) => {
+                            const { destination, draggableId } = result;
+                            if (!destination) return;
+                            if (destination.droppableId.startsWith("blank-")) {
+                              const blankIdx = parseInt(destination.droppableId.split("-")[1], 10);
+                              handleDragToBlank(blankIdx, draggableId);
+                            }
+                          }}
+                        >
+                          <div className="fill-blanks-drag-wrapper space-y-6">
+                    
+                            {/* TEXTO CON BLANKS */}
+                            <p className="drag-text text-lg leading-relaxed text-gray-800 dark:text-gray-200">
+                              {textChunks.map((chunk: string, idx: number) => {
+                                
+                                // feedback viene del check answers
+                                const feedback = qCurr.blankFeedback?.[idx];
+                    
+                                // COLOR SOLO SI SHOWANSWER, NO POR FEEDBACK
+                                const bgColor = showAnswers
+                                  ? "bg-green-200 border-green-500 text-green-900"
+                                  : "bg-blue-50 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border-blue-400 dark:border-blue-300";
+                    
+                                return (
+                                  <React.Fragment key={idx}>
+                                    <span>{chunk} </span>
+                    
+                                    {idx < blanks.length && (
+                                      <Droppable droppableId={`blank-${idx}`}>
+                                        {(provided) => (
+                                          <span
+                                            ref={provided.innerRef}
+                                            {...provided.droppableProps}
+                                            className={`blank-box inline-block w-28 h-10 border-2 border-dashed rounded-md text-center align-middle mx-1 px-2 py-1 font-semibold transition-all duration-300 ${bgColor}`}
+                                          >
+                                            {showAnswers
+                                              ? blanks[idx].correct
+                                              : userSelections[idx] || "____"}
+                    
+                                            {/* ÍCONOS DE FEEDBACK (correct/incorrect) */}
+                                            {feedback === 1 && !showAnswers && (
+                                              <svg
+                                                className="w-4 h-4 inline-block text-green-700 dark:text-green-300 ml-1"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                viewBox="0 0 24 24"
+                                              >
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                              </svg>
+                                            )}
+                    
+                                            {feedback === -1 && !showAnswers && (
+                                              <svg
+                                                className="w-4 h-4 inline-block text-red-700 dark:text-red-300 ml-1"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                viewBox="0 0 24 24"
+                                              >
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                              </svg>
+                                            )}
+                    
+                                            {provided.placeholder}
+                                          </span>
+                                        )}
+                                      </Droppable>
+                                    )}
+                                  </React.Fragment>
+                                );
+                              })}
+                            </p>
+                    
+                            {/* OPCIONES */}
+                            {!showAnswers && (
+                              <Droppable droppableId="options" direction="horizontal">
+                                {(provided) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.droppableProps}
+                                    className="options-container flex flex-wrap gap-3 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg border border-gray-300 dark:border-gray-600 shadow-inner"
+                                  >
+                                    {options.map((option: string, idx: number) => (
+                                      <Draggable key={option} draggableId={option} index={idx}>
+                                        {(provided) => (
+                                          <div
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                            className="option-item bg-white dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-800 
+                                              border border-gray-300 dark:border-gray-500 rounded-md px-4 py-2 font-medium 
+                                              shadow-sm cursor-grab select-none transition duration-200"
+                                          >
+                                            {option}
+                                          </div>
+                                        )}
+                                      </Draggable>
+                                    ))}
+                                    {provided.placeholder}
+                                  </div>
+                                )}
+                              </Droppable>
+                            )}
+                    
+                                          
+                                                    {/* 🔥 CONTENEDOR DE BOTONES */}
+                          <div className="flex flex-wrap gap-4 mt-4">
+  
+                          {/* CHECK ANSWERS */}
+                          <button
+                            className="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 
+                              text-white font-semibold py-2 px-6 rounded-xl shadow-md 
+                              transition-all duration-200 hover:-translate-y-1"
+                            onClick={gradeFillInTheBlanksDrag}
+                          >
+                            Check Answers
+                          </button>
+  
+                          {/* SHOW ANSWERS */}
+                          <button
+                            className="bg-gradient-to-r from-purple-400 to-pink-500 hover:from-purple-500 hover:to-pink-600 
+                              text-white font-semibold py-2 px-6 rounded-xl shadow-md 
+                              transition-all duration-200 hover:-translate-y-1"
+                            onClick={() => setShowAnswers(!showAnswers)}
+                          >
+                            {showAnswers ? "Hide Answers" : "Show Answers"}
+                          </button>
+  
+                          {/* SHOW EXPLANATION */}
+                          <button
+                            className="bg-gradient-to-r from-yellow-300 to-yellow-500 hover:from-yellow-400 hover:to-yellow-600 
+                              text-black font-semibold py-2 px-6 rounded-xl shadow-md 
+                              transition-all duration-200 hover:-translate-y-1"
+                            onClick={() => toggleExplanation(currentQuestion)}
+                          >
+                            {showExplanation[currentQuestion] ? "Hide Explanation" : "Show Explanation"}
+                          </button>
+  
+                          </div>
+  
+  
+                          {/* 🔥 CAJA DE EXPLICACIONES */}
+                          {showExplanation[currentQuestion] && qCurr.explanation && (
+                          <div className="bg-yellow-50 dark:bg-yellow-900/40 
+                            border-l-4 border-yellow-500 dark:border-yellow-300 
+                            p-4 mt-4 rounded-lg shadow-sm">
+  
+                            <h3 className="font-bold text-lg mb-3 text-gray-800 dark:text-gray-200">
+                              Explanation:
+                            </h3>
+  
+                            <ul className="list-disc pl-6 space-y-1 text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+  
+                              {(Array.isArray(qCurr.explanation)
+                                ? qCurr.explanation
+                                : [qCurr.explanation]
+                              ).map((exp: string, idx: number) => (
+                                <li key={idx}>{exp}</li>
+                              ))}
+  
+                            </ul>
+                          </div>
+                          )}
+  
+  
+                          {/* ✅ SCORE */}
+                          {qCurr.score && (
+                          <div className="text-lg font-semibold text-gray-700 dark:text-gray-200 mt-3">
+                            Score: {qCurr.score}
+                          </div>
+                          )}
+  
+  
+                          </div>
+                        </DragDropContext>
+                      );
+                    }
               case "OneChoiceExercises":
                       return (
                         <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
@@ -2225,7 +2131,46 @@ export default function StudyMenu() {
                           </div>
                         </div>
                       );
-                    
+/////////////////////////  LISTENING SECTION  ////////////////////////////////               
+              case "WritingDictation":
+                        return (
+                          <div className="mb-4">
+                            <p className="text-red-600 font-semibold mb-2">
+                              📝 Listen and write what you hear
+                            </p>
+        
+        
+                            <audio ref={audioRef} controls src={q.audio} className="w-full mb-2" />
+        
+                            <textarea
+                              value={q.userInput || ""}
+                              onChange={(e) => handleInputChange(e.target.value)}
+                              placeholder="Write your attempt here..."
+                              className="w-full p-2 border rounded dark:bg-gray-700 dark:text-gray-200 mb-2"
+                              rows={3}
+                            />
+        
+                            <div className="flex gap-2 mb-2">
+                              <button
+                                onClick={checkScore}
+                                className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                              >
+                                Check Score
+                              </button>
+                            </div>
+        
+                            {q.score && (
+                              <p
+                                className={`font-bold ${
+                                  q.score.startsWith("0") ? "text-red-500" : "text-green-500"
+                                }`}
+                              >
+                                Score: {q.score}
+                              </p>
+                            )}
+                          </div>
+                        );
+                
                 
                          
               default:

@@ -496,6 +496,7 @@ export default function StudyMenu() {
                 draggableOptions: item.draggableOptions,
                 userSelections: Array(item.blanks.length).fill(""),
                 type: "FillInTheBlanksDrag",
+                explanation: item.explanation ?? [], // <-- aquí agregamos la explicación
               });
   
             } else if (taskName === "Multiple Choice, Single Answer") {
@@ -1813,31 +1814,75 @@ export default function StudyMenu() {
                             </Droppable>
                           )}
                   
-                          {/* BOTONES */}
-                          <div className="flex gap-4">
-                            <button
-                              className="btn-grade bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 
-                                text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-transform transform hover:-translate-y-1"
-                              onClick={gradeFillInTheBlanksDrag}
-                            >
-                              Check Answers
-                            </button>
-                  
-                            <button
-                              className="btn-show bg-gradient-to-r from-purple-400 to-pink-500 hover:from-purple-500 hover:to-pink-600 
-                                text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-transform transform hover:-translate-y-1"
-                              onClick={() => setShowAnswers(!showAnswers)}
-                            >
-                              {showAnswers ? "Hide Answers" : "Show Answers"}
-                            </button>
-                          </div>
-                  
-                          {/* SCORE */}
-                          {qCurr.score && (
-                            <div className="score-box text-lg font-semibold text-gray-700 dark:text-gray-200">
-                              Score: {qCurr.score}
-                            </div>
-                          )}
+                                        
+                                                  {/* 🔥 CONTENEDOR DE BOTONES */}
+                        <div className="flex flex-wrap gap-4 mt-4">
+
+                        {/* CHECK ANSWERS */}
+                        <button
+                          className="bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 
+                            text-white font-semibold py-2 px-6 rounded-xl shadow-md 
+                            transition-all duration-200 hover:-translate-y-1"
+                          onClick={gradeFillInTheBlanksDrag}
+                        >
+                          Check Answers
+                        </button>
+
+                        {/* SHOW ANSWERS */}
+                        <button
+                          className="bg-gradient-to-r from-purple-400 to-pink-500 hover:from-purple-500 hover:to-pink-600 
+                            text-white font-semibold py-2 px-6 rounded-xl shadow-md 
+                            transition-all duration-200 hover:-translate-y-1"
+                          onClick={() => setShowAnswers(!showAnswers)}
+                        >
+                          {showAnswers ? "Hide Answers" : "Show Answers"}
+                        </button>
+
+                        {/* SHOW EXPLANATION */}
+                        <button
+                          className="bg-gradient-to-r from-yellow-300 to-yellow-500 hover:from-yellow-400 hover:to-yellow-600 
+                            text-black font-semibold py-2 px-6 rounded-xl shadow-md 
+                            transition-all duration-200 hover:-translate-y-1"
+                          onClick={() => toggleExplanation(currentQuestion)}
+                        >
+                          {showExplanation[currentQuestion] ? "Hide Explanation" : "Show Explanation"}
+                        </button>
+
+                        </div>
+
+
+                        {/* 🔥 CAJA DE EXPLICACIONES */}
+                        {showExplanation[currentQuestion] && qCurr.explanation && (
+                        <div className="bg-yellow-50 dark:bg-yellow-900/40 
+                          border-l-4 border-yellow-500 dark:border-yellow-300 
+                          p-4 mt-4 rounded-lg shadow-sm">
+
+                          <h3 className="font-bold text-lg mb-3 text-gray-800 dark:text-gray-200">
+                            Explanation:
+                          </h3>
+
+                          <ul className="list-disc pl-6 space-y-1 text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+
+                            {(Array.isArray(qCurr.explanation)
+                              ? qCurr.explanation
+                              : [qCurr.explanation]
+                            ).map((exp: string, idx: number) => (
+                              <li key={idx}>{exp}</li>
+                            ))}
+
+                          </ul>
+                        </div>
+                        )}
+
+
+                        {/* ✅ SCORE */}
+                        {qCurr.score && (
+                        <div className="text-lg font-semibold text-gray-700 dark:text-gray-200 mt-3">
+                          Score: {qCurr.score}
+                        </div>
+                        )}
+
+
                         </div>
                       </DragDropContext>
                     );

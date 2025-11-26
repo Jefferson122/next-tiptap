@@ -31,33 +31,27 @@ export interface BlankOption {
   options: string[];
   correct?: string;
 }
-
 // Colócalo al inicio del archivo, antes de usarlo
 export interface MultipleChoiceQuestion {
   question: string;
   options: string[];
   correctAnswers: string[];
 }
-
 export interface MultipleChoiceExercise {
   id: number;
   text: string;
   questions: MultipleChoiceQuestion[];
 }
-
 export interface OneChoiceQuestion {
   question: string;
   options: string[];
   correctAnswer: string; // SOLO UNA RESPUESTA
 }
-
 export interface OneChoiceExercise {
   id: number;
   text: string;
   questions: OneChoiceQuestion[];
 }
-
-
 
 interface Exercise {
   id?: string| number;

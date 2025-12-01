@@ -109,6 +109,181 @@ export default function StudyMenu() {
       { name: "Write from Dictation", timePerQ: 60, instructions: "Write exactly what you hear from the dictation." },
     ],
   };
+// Mapeo de datos de ejercicios
+  const exerciseData: Record<string, any[]> = {
+    "Speaking and Writing-Read Aloud": ReadAloud,
+    "Speaking and Writing-Repeat Sentence": repeatsentences,
+    "Speaking and Writing-Describe Image": describeimage,
+    "Speaking and Writing-Retell Lecture": RetellLecture,
+    "Speaking and Writing-Answer Short Question": Answershortquestion,
+    "Speaking and Writing-Summarize Group Discussion": readings,
+    "Speaking and Writing-Respond to a Situation": respondSituations,
+    "Speaking and Writing-Write Essay": Essay,
+    "Reading-Fill in the Blanks (RW)": FillInTheBlanks,
+    "Reading-Fill in the Blanks": FillInTheBlanksDrag,
+    "Reading-Re order Paragraphs": ReorderParagraphExercises,
+    "Reading-Multiple Choice, Multiple Answer": MultipleChoiceExercises,
+    "Reading-Multiple Choice, Single Answer": OneChoiceExercises,
+    "Writing-Summarize Written Text": SummarizeWrittentext,
+    "Listening-Write from Dictation": WritingDictation,
+    // "Listening-Fill in the Blanks": ListeningFillInTheBlanks, // si tienes
+    // "Listening-Summarize Spoken Text": ListeningSummarize,
+    // "Listening-Highlight Correct Summary": ListeningHighlight,
+  };
+  
+  // Al inicio de StudyMenu1.tsx es el limite por tarea
+  const applyLimit = (taskKey: string, requestedCount: number) => {
+    const arr = exerciseData[taskKey];
+    if (!arr) return 0;
+    return Math.min(requestedCount, arr.length);
+  };
+  
+
+  // Se hizo lo del dia pero con la limitacion
+  const handleSelectDay = (day: number) => {
+    // 1️⃣ Limpiar todo
+    const newCounts: Record<string, number> = {};
+    Object.keys(counts).forEach(key => (newCounts[key] = 0));
+  
+    if (day === 0) {
+      setCounts(newCounts);
+      return;
+    }
+  
+    // 2️⃣ Asignar tareas por día usando applyLimit
+    switch (day) {
+      case 1:
+        newCounts["Speaking and Writing-Read Aloud"] =
+          applyLimit("Speaking and Writing-Read Aloud", 15);
+        newCounts["Speaking and Writing-Repeat Sentence"] =
+          applyLimit("Speaking and Writing-Repeat Sentence", 15);
+        newCounts["Speaking and Writing-Describe Image"] =
+          applyLimit("Speaking and Writing-Describe Image", 4);
+        newCounts["Speaking and Writing-Respond to a Situation"] =
+          applyLimit("Speaking and Writing-Respond to a Situation", 5);
+        newCounts["Reading-Fill in the Blanks (RW)"] =
+          applyLimit("Reading-Fill in the Blanks (RW)", 10);
+        newCounts["Reading-Fill in the Blanks"] =
+          applyLimit("Reading-Fill in the Blanks", 6);
+        newCounts["Writing-Summarize Written Text"] =
+          applyLimit("Writing-Summarize Written Text", 4);
+        break;
+  
+      case 2:
+        newCounts["Listening-Write from Dictation"] =
+          applyLimit("Listening-Write from Dictation", 10);
+        newCounts["Listening-Fill in the Blanks"] =
+          applyLimit("Listening-Fill in the Blanks", 8);
+        newCounts["Listening-Summarize Spoken Text"] =
+          applyLimit("Listening-Summarize Spoken Text", 5);
+        newCounts["Listening-Highlight Correct Summary"] =
+          applyLimit("Listening-Highlight Correct Summary", 4);
+        newCounts["Speaking and Writing-Repeat Sentence"] =
+          applyLimit("Speaking and Writing-Repeat Sentence", 8);
+        break;
+  
+      case 3:
+        newCounts["Reading-Fill in the Blanks (RW)"] =
+          applyLimit("Reading-Fill in the Blanks (RW)", 12);
+        newCounts["Reading-Fill in the Blanks"] =
+          applyLimit("Reading-Fill in the Blanks", 8);
+        newCounts["Reading-Re order Paragraphs"] =
+          applyLimit("Reading-Re order Paragraphs", 6);
+        newCounts["Reading-Multiple Choice, Multiple Answer"] =
+          applyLimit("Reading-Multiple Choice, Multiple Answer", 3);
+        newCounts["Reading-Multiple Choice, Single Answer"] =
+          applyLimit("Reading-Multiple Choice, Single Answer", 3);
+        newCounts["Speaking and Writing-Describe Image"] =
+          applyLimit("Speaking and Writing-Describe Image", 5);
+        newCounts["Speaking and Writing-Respond to a Situation"] =
+          applyLimit("Speaking and Writing-Respond to a Situation", 4);
+        break;
+  
+      case 4:
+        newCounts["Speaking and Writing-Retell Lecture"] =
+          applyLimit("Speaking and Writing-Retell Lecture", 6);
+        newCounts["Speaking and Writing-Summarize Group Discussion"] =
+          applyLimit("Speaking and Writing-Summarize Group Discussion", 6);
+        newCounts["Speaking and Writing-Write Essay"] =
+          applyLimit("Speaking and Writing-Write Essay", 3);
+        newCounts["Speaking and Writing-Respond to a Situation"] =
+          applyLimit("Speaking and Writing-Respond to a Situation", 5);
+        newCounts["Speaking and Writing-Read Aloud"] =
+          applyLimit("Speaking and Writing-Read Aloud", 8);
+        newCounts["Writing-Summarize Written Text"] =
+          applyLimit("Writing-Summarize Written Text", 5);
+        break;
+  
+      case 5:
+        newCounts["Listening-Write from Dictation"] =
+          applyLimit("Listening-Write from Dictation", 10);
+        newCounts["Listening-Fill in the Blanks"] =
+          applyLimit("Listening-Fill in the Blanks", 6);
+        newCounts["Listening-Summarize Spoken Text"] =
+          applyLimit("Listening-Summarize Spoken Text", 5);
+        newCounts["Reading-Fill in the Blanks (RW)"] =
+          applyLimit("Reading-Fill in the Blanks (RW)", 9);
+        newCounts["Reading-Fill in the Blanks"] =
+          applyLimit("Reading-Fill in the Blanks", 6);
+        newCounts["Speaking and Writing-Repeat Sentence"] =
+          applyLimit("Speaking and Writing-Repeat Sentence", 6);
+        break;
+  
+      case 6:
+        newCounts["Speaking and Writing-Read Aloud"] =
+          applyLimit("Speaking and Writing-Read Aloud", 12);
+        newCounts["Speaking and Writing-Repeat Sentence"] =
+          applyLimit("Speaking and Writing-Repeat Sentence", 12);
+        newCounts["Speaking and Writing-Answer Short Question"] =
+          applyLimit("Speaking and Writing-Answer Short Question", 5);
+        newCounts["Speaking and Writing-Describe Image"] =
+          applyLimit("Speaking and Writing-Describe Image", 6);
+        newCounts["Writing-Summarize Written Text"] =
+          applyLimit("Writing-Summarize Written Text", 5);
+        break;
+  
+      case 7:
+        newCounts["Speaking and Writing-Write Essay"] =
+          applyLimit("Speaking and Writing-Write Essay", 3);
+        newCounts["Writing-Summarize Written Text"] =
+          applyLimit("Writing-Summarize Written Text", 5);
+        newCounts["Reading-Fill in the Blanks (RW)"] =
+          applyLimit("Reading-Fill in the Blanks (RW)", 9);
+        newCounts["Reading-Re order Paragraphs"] =
+          applyLimit("Reading-Re order Paragraphs", 6);
+        newCounts["Reading-Fill in the Blanks"] =
+          applyLimit("Reading-Fill in the Blanks", 6);
+        newCounts["Speaking and Writing-Summarize Group Discussion"] =
+          applyLimit("Speaking and Writing-Summarize Group Discussion", 5);
+        newCounts["Speaking and Writing-Respond to a Situation"] =
+          applyLimit("Speaking and Writing-Respond to a Situation", 4);
+        break;
+  
+      case 8:
+        newCounts["Listening-Write from Dictation"] =
+          applyLimit("Listening-Write from Dictation", 10);
+        newCounts["Listening-Fill in the Blanks"] =
+          applyLimit("Listening-Fill in the Blanks", 6);
+        newCounts["Listening-Summarize Spoken Text"] =
+          applyLimit("Listening-Summarize Spoken Text", 5);
+        newCounts["Speaking and Writing-Read Aloud"] =
+          applyLimit("Speaking and Writing-Read Aloud", 8);
+        newCounts["Speaking and Writing-Repeat Sentence"] =
+          applyLimit("Speaking and Writing-Repeat Sentence", 8);
+        newCounts["Speaking and Writing-Describe Image"] =
+          applyLimit("Speaking and Writing-Describe Image", 6);
+        newCounts["Reading-Fill in the Blanks (RW)"] =
+          applyLimit("Reading-Fill in the Blanks (RW)", 8);
+        newCounts["Speaking and Writing-Respond to a Situation"] =
+          applyLimit("Speaking and Writing-Respond to a Situation", 5);
+        break;
+    }
+  
+    // 3️⃣ Aplicar conteos al estado
+    setCounts(newCounts);
+  };
+  
+  
 
   const handleDragEnd = (result: DropResult) => {
     const { destination, source } = result;
@@ -335,181 +510,192 @@ export default function StudyMenu() {
     );
   };
    // Generar preguntas e instrucciones
-   const handleGenerateInstructions = () => {
-    let result = "";
-    let qIndex = 0;
-    const q: Exercise[] = [];
-  
-    Object.entries(counts).forEach(([key, count]) => {
-      const [section, taskName] = key.split("-");
-      const task = sections[section as keyof typeof sections].find(t => t.name === taskName);
-  
-      if (task && count > 0) {
-        for (let i = 1; i <= count; i++) {
-          result += `${task.name} - Pregunta ${i}: ${task.instructions}\n`;
-  
-          // --- Speaking & Writing ---
-          if (section === "Speaking and Writing") {
-            if (taskName === "Read Aloud") {
-              q.push({
-                text: ReadAloud[qIndex % ReadAloud.length].text,
-                type: "ReadAloud",
-              });
-            } else if (taskName === "Repeat Sentence") {
-              const sentenceIndex = repeatsentences.length - i;
-              const sentence = repeatsentences[sentenceIndex];
-              q.push({
-                text: sentence.text,
-                audio: sentence.audio,
-                type: "repeatsentences",
-              });
-            } else if (taskName === "Describe Image") {
-              const img = describeimage[qIndex % describeimage.length];
-              q.push({
-                text: img.text,
-                image: img.image,
-                type: "DescribeImage",
-              });
-            } else if (taskName === "Retell Lecture") {
-              const sentenceIndex = RetellLecture.length - i;
-              const sentence = RetellLecture[sentenceIndex];
-              q.push({
-                text: sentence.text,
-                audio: sentence.audio,
-                type: "RetellLecture",
-              });
-            } else if (taskName === "Answer Short Question") {
-              const questionData = Answershortquestion[qIndex % Answershortquestion.length];
-              q.push({
-                text: questionData.question,
-                audio: questionData.audio,
-                userInput: "",
-                type: "AnswerShortQuestion",
-                score: "",
-              });
-            } else if (taskName === "Summarize Group Discussion") {
-              const sentence = readings[readings.length - i];
-              q.push({
-                text: sentence.text,
-                audio: sentence.audio[0],
-                type: "summarize",
-              });
-            } else if (taskName === "Respond to a Situation") {
-              const rs = respondSituations[respondSituations.length - i];
-              q.push({
-                text: rs.situation,
-                type: "respond_to_situation",
-              });
-            } else if (taskName === "Summarize Written Text") {
-              const swt = SummarizeWrittentext[SummarizeWrittentext.length - i];
-              q.push({
-                text: swt.text,
-                type: "SummarizeWrittentext",
-              });
-            } else if (taskName === "Write Essay") {
-              const essay = Essay[Essay.length - i];
-              q.push({
-                text: essay.text,
-                type: "Essay",
-              });
-            }
-          }
-  
-          // --- Reading ---
-          else if (section === "Reading") {
-            if (taskName === "Fill in the Blanks (RW)") {
-              const item = FillInTheBlanks[FillInTheBlanks.length - 1 - i];
-              q.push({
-                text: item.text,
-                blanks: item.blanks,
-                userSelections: Array(item.blanks?.length || 0).fill(""),
-                type: "FillInTheBlanks",
-                explanation: item.explanation ?? [], // <-- aquí agregamos la explicación
-              });
-            } else if (taskName === "Multiple Choice, Multiple Answer") {
-              const mcItem = MultipleChoiceExercises[qIndex % MultipleChoiceExercises.length];
-            
-              q.push({
-                text: mcItem.text,
-                blanks: mcItem.questions.map(q => ({
-                  options: q.options,
-                  correct: q.correctAnswers.join(";;") // asegura que correct tenga los datos
-                })),
-                userSelections: mcItem.questions.map(() => []), // <-- importante
-                type: "MultipleChoice",
-                questions: mcItem.questions, // <-- importante
-              });
-            } else if (taskName === "Re order Paragraphs") {
-              const rpIdx = (i - 1) % ReorderParagraphExercises.length; // índice seguro
-              const rpItem = ReorderParagraphExercises[rpIdx];
-            
-              if (rpItem?.paragraphs) {
-                q.push({
-                  text: "", 
-                  type: "ReorderParagraph",
-                  paragraphs: rpItem.paragraphs.map(p => p.text),
-                  correctOrder: rpItem.paragraphs.map(p => p.correctOrder - 1), 
-                  userOrder: rpItem.paragraphs.map((_, idx) => idx),
-                  answer: rpItem.answer, // <-- aquí agregas la respuesta final
-                });
-              }
-            }
-            
-            
-            else if (taskName === "Fill in the Blanks") {
-              const index = FillInTheBlanksDrag.length - i; // o i, según orden
-              const item = FillInTheBlanksDrag[index];
+   // Generar preguntas e instrucciones
+  const handleGenerateInstructions = () => {
+  let result = "";
+  let qIndex = 0;
+  const q: Exercise[] = [];
 
-              q.push({
-                text: item.text,           // array
-                blanks: item.blanks,       // blanks [{correct:""}]
-                draggableOptions: item.draggableOptions,
-                userSelections: Array(item.blanks.length).fill(""),
-                type: "FillInTheBlanksDrag",
-                explanation: item.explanation ?? [], // <-- aquí agregamos la explicación
-              });
-  
-            } else if (taskName === "Multiple Choice, Single Answer") {
-              const Item = OneChoiceExercises[qIndex % OneChoiceExercises.length];
-            
-              q.push({
-                text: Item.text,
-                blanks: Item.questions.map(q => ({
-                  options: q.options,
-                  correct: q.correctAnswer, // asegura que correct tenga los datos
-                })),
-                userSelections: Item.questions.map(() => "" as string), // cada pregunta empieza sin respuesta
-                type: "OneChoiceExercises",
-                questions: Item.questions, // <-- importante
-              });
-            }           
+  Object.entries(counts).forEach(([key, count]) => {
+    if (count <= 0) return;
 
-          }
-  
-          // --- Listening ---
-          else if (section === "Listening") {
-            if (taskName === "Write from Dictation") {
-              const dict = WritingDictation[qIndex % WritingDictation.length];
-              q.push({
-                text: dict.text,
-                audio: dict.audio,
-                userInput: "",
-                score: "0/0",
-                type: "WritingDictation",
-              });
-            }
-          }
-  
-          qIndex++;
+    const index = key.indexOf("-");
+    if (index === -1) return; // seguridad
+
+    const section = key.slice(0, index).trim();
+    const taskName = key.slice(index + 1).trim();
+
+    // Validar que la sección exista
+    const sectionTasks = sections[section as keyof typeof sections];
+    if (!sectionTasks) {
+      console.warn(`Sección no encontrada: ${section}`);
+      return;
+    }
+
+    // Buscar la tarea
+    const task = sectionTasks.find(t => t.name === taskName);
+    if (!task) {
+      console.warn(`Tarea no encontrada: ${taskName} en sección ${section}`);
+      return;
+    }
+
+    // Generar instrucciones y preguntas
+    for (let i = 1; i <= count; i++) {
+      result += `${task.name} - Pregunta ${i}: ${task.instructions}\n`;
+
+      // --- Speaking & Writing ---
+      if (section === "Speaking and Writing") {
+        if (taskName === "Read Aloud") {
+          q.push({
+            text: ReadAloud[qIndex % ReadAloud.length].text,
+            type: "ReadAloud",
+          });
+        } else if (taskName === "Repeat Sentence") {
+          const sentenceIndex = repeatsentences.length - i;
+          const sentence = repeatsentences[sentenceIndex];
+          q.push({
+            text: sentence.text,
+            audio: sentence.audio,
+            type: "repeatsentences",
+          });
+        } else if (taskName === "Describe Image") {
+          const img = describeimage[qIndex % describeimage.length];
+          q.push({
+            text: img.text,
+            image: img.image,
+            type: "DescribeImage",
+          });
+        } else if (taskName === "Retell Lecture") {
+          const sentenceIndex = RetellLecture.length - i;
+          const sentence = RetellLecture[sentenceIndex];
+          q.push({
+            text: sentence.text,
+            audio: sentence.audio,
+            type: "RetellLecture",
+          });
+        } else if (taskName === "Answer Short Question") {
+          const questionData = Answershortquestion[qIndex % Answershortquestion.length];
+          q.push({
+            text: questionData.question,
+            audio: questionData.audio,
+            userInput: "",
+            type: "AnswerShortQuestion",
+            score: "",
+          });
+        } else if (taskName === "Summarize Group Discussion") {
+          const sentence = readings[readings.length - i];
+          q.push({
+            text: sentence.text,
+            audio: sentence.audio[0],
+            type: "summarize",
+          });
+        } else if (taskName === "Respond to a Situation") {
+          const rs = respondSituations[respondSituations.length - i];
+          q.push({
+            text: rs.situation,
+            type: "respond_to_situation",
+          });
+        } else if (taskName === "Summarize Written Text") {
+          const swt = SummarizeWrittentext[SummarizeWrittentext.length - i];
+          q.push({
+            text: swt.text,
+            type: "SummarizeWrittentext",
+          });
+        } else if (taskName === "Write Essay") {
+          const essay = Essay[Essay.length - i];
+          q.push({
+            text: essay.text,
+            type: "Essay",
+          });
         }
       }
-    });
-  
-    setInstructions(result.trim());
-    setQuestions(q);
-    setAllResults(Array(q.length).fill([]));
-    setCurrentQuestion(0);
-  };
+
+      // --- Reading ---
+      else if (section === "Reading") {
+        if (taskName === "Fill in the Blanks (RW)") {
+          const item = FillInTheBlanks[FillInTheBlanks.length - 1 - i];
+          q.push({
+            text: item.text,
+            blanks: item.blanks,
+            userSelections: Array(item.blanks?.length || 0).fill(""),
+            type: "FillInTheBlanks",
+            explanation: item.explanation ?? [],
+          });
+        } else if (taskName === "Multiple Choice, Multiple Answer") {
+          const mcItem = MultipleChoiceExercises[qIndex % MultipleChoiceExercises.length];
+          q.push({
+            text: mcItem.text,
+            blanks: mcItem.questions.map(q => ({
+              options: q.options,
+              correct: q.correctAnswers.join(";;"),
+            })),
+            userSelections: mcItem.questions.map(() => []),
+            type: "MultipleChoice",
+            questions: mcItem.questions,
+          });
+        } else if (taskName === "Re order Paragraphs") {
+          const rpIdx = (i - 1) % ReorderParagraphExercises.length;
+          const rpItem = ReorderParagraphExercises[rpIdx];
+          if (rpItem?.paragraphs) {
+            q.push({
+              text: "",
+              type: "ReorderParagraph",
+              paragraphs: rpItem.paragraphs.map(p => p.text),
+              correctOrder: rpItem.paragraphs.map(p => p.correctOrder - 1),
+              userOrder: rpItem.paragraphs.map((_, idx) => idx),
+              answer: rpItem.answer,
+            });
+          }
+        } else if (taskName === "Fill in the Blanks") {
+          const index = FillInTheBlanksDrag.length - i;
+          const item = FillInTheBlanksDrag[index];
+          q.push({
+            text: item.text,
+            blanks: item.blanks,
+            draggableOptions: item.draggableOptions,
+            userSelections: Array(item.blanks.length).fill(""),
+            type: "FillInTheBlanksDrag",
+            explanation: item.explanation ?? [],
+          });
+        } else if (taskName === "Multiple Choice, Single Answer") {
+          const Item = OneChoiceExercises[qIndex % OneChoiceExercises.length];
+          q.push({
+            text: Item.text,
+            blanks: Item.questions.map(q => ({
+              options: q.options,
+              correct: q.correctAnswer,
+            })),
+            userSelections: Item.questions.map(() => "" as string),
+            type: "OneChoiceExercises",
+            questions: Item.questions,
+          });
+        }
+      }
+
+      // --- Listening ---
+      else if (section === "Listening") {
+        if (taskName === "Write from Dictation") {
+          const dict = WritingDictation[qIndex % WritingDictation.length];
+          q.push({
+            text: dict.text,
+            audio: dict.audio,
+            userInput: "",
+            score: "0/0",
+            type: "WritingDictation",
+          });
+        }
+      }
+
+      qIndex++;
+    }
+  });
+
+  setInstructions(result.trim());
+  setQuestions(q);
+  setAllResults(Array(q.length).fill([]));
+  setCurrentQuestion(0);
+};
+
 /////////////////////////////////////////////////////////////////
 
   // Audio / Dictation
@@ -655,6 +841,36 @@ export default function StudyMenu() {
   };
   const [showAnswers, setShowAnswers] = useState(false);
 
+  // Cantidad disponible por tipo de pregunta
+  const availableQuestions: Record<string, number> = {
+  // SPEAKING & WRITING
+  "Speaking and Writing-Read Aloud": ReadAloud.length,
+  "Speaking and Writing-Repeat Sentence": repeatsentences.length,
+  "Speaking and Writing-Describe Image": describeimage.length,
+  "Speaking and Writing-Respond to a Situation": respondSituations.length,
+  "Speaking and Writing-Retell Lecture": RetellLecture.length,
+  "Speaking and Writing-Summarize Group Discussion": readings.length,
+  "Speaking and Writing-Answer Short Question": Answershortquestion.length,
+  "Speaking and Writing-Summarize Written Text": SummarizeWrittentext.length,
+  "Speaking and Writing-Write Essay": Essay.length,
+
+  // READING
+  "Reading-Fill in the Blanks (RW)": FillInTheBlanks.length,
+  "Reading-Multiple Choice, Multiple Answer": MultipleChoiceExercises.length,
+  "Reading-Re order Paragraphs": ReorderParagraphExercises.length,
+  "Reading-Fill in the Blanks": FillInTheBlanksDrag.length,
+  "Reading-Multiple Choice, Single Answer": OneChoiceExercises.length,
+
+  // LISTENING
+  // "Listening-Summarize Spoken Text": SummarizeSpokenText.length,
+  // "Listening-Multiple Choice, Multiple Answer": ListeningMultipleChoiceExercises.length,
+  // "Listening-Fill in the Blanks": ListeningFillBlanks.length,
+  // "Listening-Highlight Correct Summary": HighlightSummary.length,
+  // "Listening-Select Missing Word": SelectMissingWord.length,
+  "Listening-Write from Dictation": WritingDictation.length,
+  };
+
+
   useEffect(() => {
     const ping = setInterval(() => {
       fetch("https://backend1-exyd.onrender.com/").catch(() => {});
@@ -686,14 +902,48 @@ export default function StudyMenu() {
             <div key={key} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
               <span className="font-medium text-gray-700 dark:text-gray-200 mb-1 sm:mb-0">{task.name}</span>
               <div className="flex items-center gap-2 sm:gap-3">
-                <input type="number" min="0" className="w-28 sm:w-32 border rounded-lg px-2 py-1 text-center shadow-sm focus:ring-2 focus:ring-blue-400 outline-none dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"
-                  value={counts[key]} onChange={e=>handleChange(key,e.target.value)} />
+                  <input type="number" value={counts[key]} onChange={(e) => { let newValue = Number(e.target.value); const max = availableQuestions[key] ?? 0; if (newValue > max) newValue = max; if (newValue < 0) newValue = 0; setCounts(prev => ({ ...prev, [key]: newValue })); }} />
                 <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-300">{task.timePerQ}s / pregunta</span>
               </div>
             </div>
           )
         })}
       </div>
+      {/* 📅 Botones de días */}
+      <div className="mt-6 flex flex-wrap justify-center gap-3">
+        {Array.from({ length: 8 }, (_, i) => i + 1).map(day => (
+    <button
+      key={day}
+      onClick={() => handleSelectDay(day)}
+      className="
+        px-4 sm:px-5 py-2 sm:py-2.5 rounded-2xl font-semibold text-sm sm:text-base
+        bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500
+        text-white shadow-lg
+        hover:scale-105 hover:brightness-110
+        transition-all duration-300 ease-in-out
+      "
+    >
+      Día {day}
+    </button>
+          ))}
+      </div>
+      <div className="flex justify-center mt-6">
+      <button
+        onClick={() => handleSelectDay(0)}
+        className="
+          px-8 py-3 rounded-3xl 
+          bg-gradient-to-r from-blue-600 to-blue-400 
+          text-white font-bold text-lg
+          shadow-xl hover:scale-105 hover:brightness-110 
+          transition-all duration-300 ease-in-out
+        "
+      >
+        Cleaner
+      </button>
+</div>
+
+
+
 
       {/* Total y Generate */}
       <div className="mt-6 sm:mt-8 p-4 sm:p-5 bg-blue-50 dark:bg-blue-900 rounded-xl text-center border border-blue-100 dark:border-blue-700">

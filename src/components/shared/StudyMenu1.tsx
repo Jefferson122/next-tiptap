@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import React, { Fragment } from "react";
+import { saveFeedbackAudio } from "@/components/Creaciones/feedbackAudioDB";
+
 
 
 //Section Speak
@@ -749,7 +751,8 @@ export default function StudyMenu() {
       formData.append("session_id", sessionIdRef.current);
 
       try {
-        const resp = await fetch("https://backend1-exyd.onrender.com/upload-audio/", { method: "POST", body: formData });
+        // const resp = await fetch("https://backend1-exyd.onrender.com/upload-audio/", { method: "POST", body: formData });
+        const resp = await fetch("http://localhost:8000/upload-audio/", { method: "POST", body: formData });
         const data = await resp.json();
        
         if(data.error) return alert("Error: "+data.error);
@@ -771,7 +774,22 @@ export default function StudyMenu() {
     recorder.start();
     mediaRecorderRef.current = recorder;
   };
-  const stopRecording = () => mediaRecorderRef.current?.state==="recording" && mediaRecorderRef.current.stop();
+  const getRecordedBlob = async (): Promise<Blob | null> => {
+    if (audioChunksRef.current.length === 0) return null;
+    return new Blob(audioChunksRef.current, { type: "audio/webm" });
+  };
+  
+  // const stopRecording = () => mediaRecorderRef.current?.state==="recording" && mediaRecorderRef.current.stop();
+  const stopRecording = async () => {
+    mediaRecorderRef.current?.stop();
+    setRecording(false);
+  
+    const audioBlob = await getRecordedBlob(); // tu función que devuelve el Blob de audio
+    if (audioBlob) {
+      await sendAudioForFeedback(audioBlob);
+    }
+  };
+  
   // Mostrar resultado de read aloud / repeat sentence
   const loadResult = (idx:number) => {
     const dataArray = allResults[idx];
@@ -870,10 +888,72 @@ export default function StudyMenu() {
   "Listening-Write from Dictation": WritingDictation.length,
   };
 
+  
+
+  ///////////NUEVO WHISPER////////////
+
+  const sendAudioForFeedback = async (audioBlob: Blob) => {
+    if (!questions[currentQuestion]) return;
+  
+    const formData = new FormData();
+    formData.append("file", audioBlob, "recording.wav");
+  
+    const modeloText =
+      Array.isArray(questions[currentQuestion].text)
+        ? questions[currentQuestion].text.join(" ")
+        : questions[currentQuestion].text;
+  
+    formData.append("modelo", modeloText);
+    formData.append("session_id", sessionIdRef.current);
+    formData.append("use_whisper", "true");
+  
+    try {
+      const res = await fetch("http://localhost:10001/upload-audio/", {
+        method: "POST",
+        body: formData,
+      });
+  
+      const data = await res.json();
+      console.log("Backend response:", data);
+  
+      // 1️⃣ Guardar resultado normal
+      setAllResults((prev) => {
+        const copy = [...prev];
+        const attempts = copy[currentQuestion] || [];
+        copy[currentQuestion] = [...attempts, data];
+        return copy;
+      });
+  
+      // 2️⃣ Guardar AUDIO en IndexedDB
+      if (data.feedback_audio_base64) {
+        const attemptNumber =
+          (allResults[currentQuestion]?.length || 0) + 1;
+  
+        await saveFeedbackAudio(
+          sessionIdRef.current,
+          currentQuestion,
+          attemptNumber,
+          data.feedback_audio_base64
+        );
+  
+        // 3️⃣ Reproducir inmediatamente
+        const audio = new Audio(
+          `data:audio/mp3;base64,${data.feedback_audio_base64}`
+        );
+        audio.play();
+      }
+  
+    } catch (err) {
+      console.error("Error sending audio:", err);
+    }
+  };
+  
+  
 
   useEffect(() => {
     const ping = setInterval(() => {
-      fetch("https://backend1-exyd.onrender.com/").catch(() => {});
+      // fetch("https://backend1-exyd.onrender.com/").catch(() => {});
+      fetch("http://localhost:8000/").catch(() => {});
     }, 300000); // cada 5 minutos
     return () => clearInterval(ping);
   }, []);
@@ -997,30 +1077,41 @@ export default function StudyMenu() {
                         Results:
                       </h3>
                       {(allResults[currentQuestion] || [])
-                        .slice()
-                        .reverse()
-                        .map((res, i) => (
-                          <div
-                            key={i}
-                            className="mt-2 p-2 border rounded bg-white dark:bg-gray-800"
-                          >
-                            <p>Global Score: {res.global_score}</p>
-                            <p>
-                              Content: {res.content_score}, Pronunciation:{" "}
-                              {res.pronunciation_score}, Fluency: {res.fluency_score}
-                            </p>
-                            {res.url_audio && (
-                              <audio controls src={res.url_audio} className="mt-1 w-full" />
-                            )}
-                            {res.url_visual && (
-                              <img
-                                src={res.url_visual}
-                                alt="Fluency Graph"
-                                className="mt-1 max-h-40"
-                              />
-                            )}
-                          </div>
-                        ))}
+                      .slice()
+                      .reverse()
+                      .map((res, i) => (
+                        <div key={i} className="mt-2 p-2 border rounded bg-white dark:bg-gray-800">
+                          <p>Global Score: {res.global_score}</p>
+                          <p>
+                            Content: {res.content_score}, Pronunciation: {res.pronunciation_score}, Fluency: {res.fluency_score}
+                          </p>
+
+                          {/* Audio del usuario */}
+                          {res.url_audio && (
+                            <audio controls src={res.url_audio} className="mt-1 w-full" />
+                          )}
+
+                          {/* Audio del feedback */}
+                          {res.url_feedback_audio && (
+                            <audio controls src={res.url_feedback_audio} className="mt-1 w-full" />
+                          )}
+
+                          {/* Visual de fluidez */}
+                          {res.url_visual && (
+                            <img src={res.url_visual} alt="Fluency Graph" className="mt-1 max-h-40" />
+                          )}
+
+                          {/* Feedback escrito */}
+                          {res.feedback_text && (
+                            <div className="mt-2 p-2 bg-gray-100 dark:bg-gray-900 rounded">
+                              {res.feedback_text.split("\n").map((line: string, idx: number) => (
+                                <p key={idx}>{line}</p>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+
                     </div>
 
                     <div className="flex gap-2 mt-4">

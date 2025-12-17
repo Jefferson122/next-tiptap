@@ -6,40 +6,10 @@ import React, { Fragment } from "react";
 import { saveFeedbackAudio } from "@/components/Creaciones/feedbackAudioDB";
 
 // IDEA NUEVA:
-
-import { 
-  sections, 
-  exerciseData, 
-  Exercise, 
-  BlankOption, 
-  ReadAloud, 
-  repeatsentences, 
-  describeimage, 
-  RetellLecture, 
-  Answershortquestion, 
-  readings, 
-  respondSituations, 
-  SummarizeWrittentext, 
-  Essay, 
-  FillInTheBlanks, 
-  MultipleChoiceExercises, 
-  ReorderParagraphExercises, 
-  BlankOptionDrag, // <-- Agrégalo aquí
-  FillInTheBlanksDrag, 
-  OneChoiceExercises, 
-  WritingDictation 
-} from "@/components/shared/dataMenu"; // Asegúrate de que la ruta sea correcta
-
-// //Section Speak
-// import ReadAloud from "@/components/Data1/1.Speaking/1.ReadAloud";
-// import repeatsentences from "@/components/Data1/1.Speaking/2.RepeatSentence";
-// import describeimage from "@/components/Data1/1.Speaking/3.DescribeImage";
-// import RetellLecture from "@/components/Data1/1.Speaking/4.RetellLecture";
-// import Answershortquestion from "@/components/Data1/1.Speaking/5.AnswerShortQuestion";
-// import readings from "@/components/Data1/1.Speaking/6.SummarizeGroupdiscussion";
-// import respondSituations from "@/components/Data1/1.Speaking/7.RespondtoaSituation";
-// import SummarizeWrittentext from "@/components/Data1/2.Writing/1.SummarizeWrittenText";
-// import Essay from "@/components/Data1/2.Writing/2.Essay";
+// DataMenu
+import { sections, exerciseData, Exercise, BlankOption, ReadAloud, repeatsentences, describeimage, RetellLecture, Answershortquestion, readings, respondSituations, SummarizeWrittentext, Essay, FillInTheBlanks, MultipleChoiceExercises, ReorderParagraphExercises, BlankOptionDrag, FillInTheBlanksDrag, OneChoiceExercises, WritingDictation } from "@/components/shared/dataMenu";
+// Utilidades pero el plan de dias
+import { applyLimit, scoreWords, getDayConfig } from "@/components/shared/studyUtils";
 
 // Componentes Skpeaking
 import ReadAloudComponent from "@/components/shared/Questions/Speaking/ReadAloudComponent";
@@ -50,279 +20,17 @@ import AnswerShortQuestionComponent from "@/components/shared/Questions/Speaking
 import SummarizeComponent from "@/components/shared/Questions/Speaking/SummarizeComponent";
 import RespondSituationComponent from "@/components/shared/Questions/Speaking/RespondSituationComponent";
 
-// // Section Writing
-// import FillInTheBlanks from "@/components/Data1/3.Reading/1.FillintheBlanks(RW)";
-// import MultipleChoiceExercises from "@/components/Data1/3.Reading/2.MCMultipleAnswer";
-// import {ReorderParagraphExercises} from "@/components/Data1/3.Reading/3.ReorderParagraphs";
-// import { BlankOptionDrag, FillInTheBlanksDrag } from "@/components/Data1/3.Reading/4.FillintheBlanks";
-// import {OneChoiceExercises} from "@/components/Data1/3.Reading/5.MCSingleAnswer";
-
 // Componentes Writing
 import SummarizeWrittenComponent from "@/components/shared/Questions/Writing/SummarizeWrittenComponent";
 import EssayComponent from "@/components/shared/Questions/Writing/EssayComponent";
 
-// //Section Listening
-// import WritingDictation from "@/components/Data1/4.Listening/6.WritefromDictation";
-
-// // coloca esto en la parte superior, donde defines las interfaces
-// export interface BlankOption {
-//   options: string[];
-//   correct?: string;
-// }
-// // Colócalo al inicio del archivo, antes de usarlo
-// export interface MultipleChoiceQuestion {
-//   question: string;
-//   options: string[];
-//   correctAnswers: string[];
-// }
-// export interface MultipleChoiceExercise {
-//   id: number;
-//   text: string;
-//   questions: MultipleChoiceQuestion[];
-// }
-// export interface OneChoiceQuestion {
-//   question: string;
-//   options: string[];
-//   correctAnswer: string; // SOLO UNA RESPUESTA
-// }
-// export interface OneChoiceExercise {
-//   id: number;
-//   text: string;
-//   questions: OneChoiceQuestion[];
-// }
-
-// interface Exercise {
-//   id?: string| number;
-//    // 🔹 Aquí agregamos la propiedad explanation
-//   explanation?: string | string[];
-//   text: string | string[];
-//   userSelections?: string | string[] | string[][];
-//   blanks?: BlankOption[] | BlankOptionDrag[]; // <-- acepta ambos tipos
-//   draggableOptions?: string[]; // <-- AGREGA ESTO
-//   audio?: string;
-//   image?: string;
-//   userInput?: string;
-//   score?: string;
-//   questions?: MultipleChoiceQuestion[] | OneChoiceQuestion[];
-//   // 🔥 NUEVAS PROPIEDADES PARA REORDER
-//   // <-- Agregar esta línea
-//   // Nueva propiedad para FillInTheBlanks
-//   blankFeedback?: number[]; // 1 = correcto, -1 = incorrecto
-//   mcFeedback?: number[][]; // 1 = correcto, -1 = incorrecto, 0 = no seleccionado
-//   showAnswer?: boolean;
-//   paragraphs?: string[];
-//   correctOrder?: number[];
-//   userOrder?: number[];
-//   reorderFeedback?: number[]; // <-- agrega esto
-//   answer?: string; // <-- Agregado
-//   type?: "OneChoiceExercises"|"FillInTheBlanksDrag" |"ReorderParagraph"|"MultipleChoice"|"ReadAloud" |"repeatsentences"|"DescribeImage" | "RetellLecture"|"AnswerShortQuestion"|"respond_to_situation"|"summarize"|"Essay"|"FillInTheBlanks"|"SummarizeWrittentext"|"WritingDictation" |  string; // <-- aquí
-// }
-
 export default function StudyMenu() {
-//   const sections = {
-//     "Speaking and Writing":  [
-//       { name: "Read Aloud", timePerQ: 90, instructions: "Read the text aloud clearly." },
-//       { name: "Repeat Sentence", timePerQ: 40, instructions: "Listen and repeat the sentence exactly." },
-//       { name: "Describe Image", timePerQ: 60, instructions: "Describe the image in detail using full sentences." },
-//       { name: "Respond to a Situation", timePerQ: 90, instructions: "Respond appropriately to the situation using full sentences." },
-//       { name: "Retell Lecture", timePerQ: 90, instructions: "Listen and retell the lecture in your own words." },
-//       { name: "Summarize Group Discussion", timePerQ: 120, instructions: "Summarize the main points of the group discussion clearly." },
-//       { name: "Answer Short Question", timePerQ: 15, instructions: "Answer the question briefly and clearly." },
-//       { name: "Summarize Written Text", timePerQ: 600, instructions: "Summarize the text in your own words within 1-2 sentences." },
-//       { name: "Write Essay", timePerQ: 1200, instructions: "Write a well-structured essay on the given topic." }
-//     ],
-//     Reading: [
-//       { name: "Fill in the Blanks (RW)", timePerQ: 120, instructions: "Complete the missing words in the text." },
-//       { name: "Multiple Choice, Multiple Answer", timePerQ: 120, instructions: "Select all answers that apply." },
-//       { name: "Re order Paragraphs", timePerQ: 150, instructions: "Arrange the paragraphs in the correct order." },
-//       { name: "Fill in the Blanks", timePerQ: 120, instructions: "Fill in the missing words." },
-//       { name: "Multiple Choice, Single Answer", timePerQ: 90, instructions: "Select the correct answer." },
-//     ],
-//     Listening: [
-//       { name: "Summarize Spoken Text", timePerQ: 600, instructions: "Summarize the spoken text in writing." },
-//       { name: "Multiple Choice, Multiple Answer", timePerQ: 120, instructions: "Select all correct options." },
-//       { name: "Fill in the Blanks", timePerQ: 150, instructions: "Complete the missing words from the audio." },
-//       { name: "Highlight Correct Summary", timePerQ: 120, instructions: "Choose the summary that matches the audio." },
-//       { name: "Select Missing Word", timePerQ: 90, instructions: "Identify the missing word in the sentence." },
-//       { name: "Write from Dictation", timePerQ: 60, instructions: "Write exactly what you hear from the dictation." },
-//     ],
-//   };
-// // Mapeo de datos de ejercicios
-//   const exerciseData: Record<string, any[]> = {
-//     "Speaking and Writing-Read Aloud": ReadAloud,
-//     "Speaking and Writing-Repeat Sentence": repeatsentences,
-//     "Speaking and Writing-Describe Image": describeimage,
-//     "Speaking and Writing-Retell Lecture": RetellLecture,
-//     "Speaking and Writing-Answer Short Question": Answershortquestion,
-//     "Speaking and Writing-Summarize Group Discussion": readings,
-//     "Speaking and Writing-Respond to a Situation": respondSituations,
-//     "Speaking and Writing-Write Essay": Essay,
-//     "Reading-Fill in the Blanks (RW)": FillInTheBlanks,
-//     "Reading-Fill in the Blanks": FillInTheBlanksDrag,
-//     "Reading-Re order Paragraphs": ReorderParagraphExercises,
-//     "Reading-Multiple Choice, Multiple Answer": MultipleChoiceExercises,
-//     "Reading-Multiple Choice, Single Answer": OneChoiceExercises,
-//     "Writing-Summarize Written Text": SummarizeWrittentext,
-//     "Listening-Write from Dictation": WritingDictation,
-//     // "Listening-Fill in the Blanks": ListeningFillInTheBlanks, // si tienes
-//     // "Listening-Summarize Spoken Text": ListeningSummarize,
-//     // "Listening-Highlight Correct Summary": ListeningHighlight,
-//   };
   
-  // Al inicio de StudyMenu1.tsx es el limite por tarea
-  const applyLimit = (taskKey: string, requestedCount: number) => {
-    const arr = exerciseData[taskKey];
-    if (!arr) return 0;
-    return Math.min(requestedCount, arr.length);
-  };
-  
-
-  // Se hizo lo del dia pero con la limitacion
   const handleSelectDay = (day: number) => {
-    // 1️⃣ Limpiar todo
-    const newCounts: Record<string, number> = {};
-    Object.keys(counts).forEach(key => (newCounts[key] = 0));
-  
-    if (day === 0) {
-      setCounts(newCounts);
-      return;
-    }
-  
-    // 2️⃣ Asignar tareas por día usando applyLimit
-    switch (day) {
-      case 1:
-        newCounts["Speaking and Writing-Read Aloud"] =
-          applyLimit("Speaking and Writing-Read Aloud", 15);
-        newCounts["Speaking and Writing-Repeat Sentence"] =
-          applyLimit("Speaking and Writing-Repeat Sentence", 15);
-        newCounts["Speaking and Writing-Describe Image"] =
-          applyLimit("Speaking and Writing-Describe Image", 4);
-        newCounts["Speaking and Writing-Respond to a Situation"] =
-          applyLimit("Speaking and Writing-Respond to a Situation", 5);
-        newCounts["Reading-Fill in the Blanks (RW)"] =
-          applyLimit("Reading-Fill in the Blanks (RW)", 10);
-        newCounts["Reading-Fill in the Blanks"] =
-          applyLimit("Reading-Fill in the Blanks", 6);
-        newCounts["Writing-Summarize Written Text"] =
-          applyLimit("Writing-Summarize Written Text", 4);
-        break;
-  
-      case 2:
-        newCounts["Listening-Write from Dictation"] =
-          applyLimit("Listening-Write from Dictation", 10);
-        newCounts["Listening-Fill in the Blanks"] =
-          applyLimit("Listening-Fill in the Blanks", 8);
-        newCounts["Listening-Summarize Spoken Text"] =
-          applyLimit("Listening-Summarize Spoken Text", 5);
-        newCounts["Listening-Highlight Correct Summary"] =
-          applyLimit("Listening-Highlight Correct Summary", 4);
-        newCounts["Speaking and Writing-Repeat Sentence"] =
-          applyLimit("Speaking and Writing-Repeat Sentence", 8);
-        break;
-  
-      case 3:
-        newCounts["Reading-Fill in the Blanks (RW)"] =
-          applyLimit("Reading-Fill in the Blanks (RW)", 12);
-        newCounts["Reading-Fill in the Blanks"] =
-          applyLimit("Reading-Fill in the Blanks", 8);
-        newCounts["Reading-Re order Paragraphs"] =
-          applyLimit("Reading-Re order Paragraphs", 6);
-        newCounts["Reading-Multiple Choice, Multiple Answer"] =
-          applyLimit("Reading-Multiple Choice, Multiple Answer", 3);
-        newCounts["Reading-Multiple Choice, Single Answer"] =
-          applyLimit("Reading-Multiple Choice, Single Answer", 3);
-        newCounts["Speaking and Writing-Describe Image"] =
-          applyLimit("Speaking and Writing-Describe Image", 5);
-        newCounts["Speaking and Writing-Respond to a Situation"] =
-          applyLimit("Speaking and Writing-Respond to a Situation", 4);
-        break;
-  
-      case 4:
-        newCounts["Speaking and Writing-Retell Lecture"] =
-          applyLimit("Speaking and Writing-Retell Lecture", 6);
-        newCounts["Speaking and Writing-Summarize Group Discussion"] =
-          applyLimit("Speaking and Writing-Summarize Group Discussion", 6);
-        newCounts["Speaking and Writing-Write Essay"] =
-          applyLimit("Speaking and Writing-Write Essay", 3);
-        newCounts["Speaking and Writing-Respond to a Situation"] =
-          applyLimit("Speaking and Writing-Respond to a Situation", 5);
-        newCounts["Speaking and Writing-Read Aloud"] =
-          applyLimit("Speaking and Writing-Read Aloud", 8);
-        newCounts["Writing-Summarize Written Text"] =
-          applyLimit("Writing-Summarize Written Text", 5);
-        break;
-  
-      case 5:
-        newCounts["Listening-Write from Dictation"] =
-          applyLimit("Listening-Write from Dictation", 10);
-        newCounts["Listening-Fill in the Blanks"] =
-          applyLimit("Listening-Fill in the Blanks", 6);
-        newCounts["Listening-Summarize Spoken Text"] =
-          applyLimit("Listening-Summarize Spoken Text", 5);
-        newCounts["Reading-Fill in the Blanks (RW)"] =
-          applyLimit("Reading-Fill in the Blanks (RW)", 9);
-        newCounts["Reading-Fill in the Blanks"] =
-          applyLimit("Reading-Fill in the Blanks", 6);
-        newCounts["Speaking and Writing-Repeat Sentence"] =
-          applyLimit("Speaking and Writing-Repeat Sentence", 6);
-        break;
-  
-      case 6:
-        newCounts["Speaking and Writing-Read Aloud"] =
-          applyLimit("Speaking and Writing-Read Aloud", 12);
-        newCounts["Speaking and Writing-Repeat Sentence"] =
-          applyLimit("Speaking and Writing-Repeat Sentence", 12);
-        newCounts["Speaking and Writing-Answer Short Question"] =
-          applyLimit("Speaking and Writing-Answer Short Question", 5);
-        newCounts["Speaking and Writing-Describe Image"] =
-          applyLimit("Speaking and Writing-Describe Image", 6);
-        newCounts["Writing-Summarize Written Text"] =
-          applyLimit("Writing-Summarize Written Text", 5);
-        break;
-  
-      case 7:
-        newCounts["Speaking and Writing-Write Essay"] =
-          applyLimit("Speaking and Writing-Write Essay", 3);
-        newCounts["Writing-Summarize Written Text"] =
-          applyLimit("Writing-Summarize Written Text", 5);
-        newCounts["Reading-Fill in the Blanks (RW)"] =
-          applyLimit("Reading-Fill in the Blanks (RW)", 9);
-        newCounts["Reading-Re order Paragraphs"] =
-          applyLimit("Reading-Re order Paragraphs", 6);
-        newCounts["Reading-Fill in the Blanks"] =
-          applyLimit("Reading-Fill in the Blanks", 6);
-        newCounts["Speaking and Writing-Summarize Group Discussion"] =
-          applyLimit("Speaking and Writing-Summarize Group Discussion", 5);
-        newCounts["Speaking and Writing-Respond to a Situation"] =
-          applyLimit("Speaking and Writing-Respond to a Situation", 4);
-        break;
-  
-      case 8:
-        newCounts["Listening-Write from Dictation"] =
-          applyLimit("Listening-Write from Dictation", 10);
-        newCounts["Listening-Fill in the Blanks"] =
-          applyLimit("Listening-Fill in the Blanks", 6);
-        newCounts["Listening-Summarize Spoken Text"] =
-          applyLimit("Listening-Summarize Spoken Text", 5);
-        newCounts["Speaking and Writing-Read Aloud"] =
-          applyLimit("Speaking and Writing-Read Aloud", 8);
-        newCounts["Speaking and Writing-Repeat Sentence"] =
-          applyLimit("Speaking and Writing-Repeat Sentence", 8);
-        newCounts["Speaking and Writing-Describe Image"] =
-          applyLimit("Speaking and Writing-Describe Image", 6);
-        newCounts["Reading-Fill in the Blanks (RW)"] =
-          applyLimit("Reading-Fill in the Blanks (RW)", 8);
-        newCounts["Speaking and Writing-Respond to a Situation"] =
-          applyLimit("Speaking and Writing-Respond to a Situation", 5);
-        break;
-    }
-  
-    // 3️⃣ Aplicar conteos al estado
+    const newCounts = getDayConfig(day);
     setCounts(newCounts);
   };
   
-  
-
   const handleDragEnd = (result: DropResult) => {
     const { destination, source } = result;
     if (!destination) return;
@@ -839,29 +547,29 @@ export default function StudyMenu() {
   };
   const [reorderFeedback, setReorderFeedback] = useState<number[]>([]);
   // Scoring para dictado
-  const scoreWords = (modelo: string, intento: string) => {
-    const clean = (text: string) =>
-      text.toLowerCase().replace(/[^a-z0-9]/gi, "").trim();
+  // const scoreWords = (modelo: string, intento: string) => {
+  //   const clean = (text: string) =>
+  //     text.toLowerCase().replace(/[^a-z0-9]/gi, "").trim();
 
-    const modeloPal = modelo.split(/\s+/).map(clean).filter(Boolean);
-    const intentoPal = intento.split(/\s+/).map(clean).filter(Boolean);
+  //   const modeloPal = modelo.split(/\s+/).map(clean).filter(Boolean);
+  //   const intentoPal = intento.split(/\s+/).map(clean).filter(Boolean);
 
-    const total = modeloPal.length;
-    if (total === 0) return "0/0";
+  //   const total = modeloPal.length;
+  //   if (total === 0) return "0/0";
 
-    const modeloCount: Record<string, number> = {};
-    modeloPal.forEach((w) => (modeloCount[w] = (modeloCount[w] || 0) + 1));
+  //   const modeloCount: Record<string, number> = {};
+  //   modeloPal.forEach((w) => (modeloCount[w] = (modeloCount[w] || 0) + 1));
 
-    let correct = 0;
-    intentoPal.forEach((w) => {
-      if (modeloCount[w] > 0) {
-        correct++;
-        modeloCount[w]--;
-      }
-    });
+  //   let correct = 0;
+  //   intentoPal.forEach((w) => {
+  //     if (modeloCount[w] > 0) {
+  //       correct++;
+  //       modeloCount[w]--;
+  //     }
+  //   });
 
-    return `${correct}/${total} (${Math.round((correct / total) * 100)}%)`;
-  };
+  //   return `${correct}/${total} (${Math.round((correct / total) * 100)}%)`;
+  // };
 
   // Estado independiente para el nuevo countdown
   const [countdown30, setCountdown30] = useState(30);

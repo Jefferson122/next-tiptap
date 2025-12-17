@@ -19,7 +19,13 @@ import SummarizeWrittentext from "@/components/Data1/2.Writing/1.SummarizeWritte
 import Essay from "@/components/Data1/2.Writing/2.Essay";
 
 // Componentes Skpeaking
-import ReadAloudComponent from "@/components/shared/Questions/Speaking/Readaloud";
+import ReadAloudComponent from "@/components/shared/Questions/Speaking/ReadAloudComponent";
+import RepeatSentenceComponent from "@/components/shared/Questions/Speaking/RepeatSentenceComponent";
+import DescribeImageComponent from "@/components/shared/Questions/Speaking/DescribeImageComponent";
+import RetellLectureComponent from "@/components/shared/Questions/Speaking/RetellLectureComponent";
+import AnswerShortQuestionComponent from "@/components/shared/Questions/Speaking/AnswerShortQuestionComponent";
+import SummarizeComponent from "@/components/shared/Questions/Speaking/SummarizeComponent";
+import RespondSituationComponent from "@/components/shared/Questions/Speaking/RespondSituationComponent";
 
 // Section Writing
 import FillInTheBlanks from "@/components/Data1/3.Reading/1.FillintheBlanks(RW)";
@@ -27,6 +33,13 @@ import MultipleChoiceExercises from "@/components/Data1/3.Reading/2.MCMultipleAn
 import {ReorderParagraphExercises} from "@/components/Data1/3.Reading/3.ReorderParagraphs";
 import { BlankOptionDrag, FillInTheBlanksDrag } from "@/components/Data1/3.Reading/4.FillintheBlanks";
 import {OneChoiceExercises} from "@/components/Data1/3.Reading/5.MCSingleAnswer";
+
+// Componentes Writing
+import SummarizeWrittenComponent from "@/components/shared/Questions/Writing/SummarizeWrittenComponent";
+import EssayComponent from "@/components/shared/Questions/Writing/EssayComponent";
+
+// Componentes Reading
+import FillInTheBlanksComponent from "@/components/shared/Questions/Reading/FillInTheBlanksComponent";
 
 //Section Listening
 import WritingDictation from "@/components/Data1/4.Listening/6.WritefromDictation";
@@ -1050,91 +1063,6 @@ export default function StudyMenu() {
             switch (q.type) {
 /////////////////////////// SPEAKING SECTION ///////////////////////////
               case "ReadAloud":
-                // return (
-                //   <div className="mb-4 p-4 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200 break-words">
-                //     <p className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                //       Read aloud fluency with good pronunciation for get a good score.
-                //     </p>
-                //     {/* Contador debajo del texto */}
-                    
-                //     <p className="text-lg mb-2">{q.text}</p>
-
-                //     <div className="mt-3">
-                //       <button
-                //         onClick={() => setAlignmentVisible((v) => !v)}
-                //         className="px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
-                //       >
-                //         Toggle Alignment
-                //       </button>
-
-                //       {alignmentVisible && (
-                //         <div
-                //           className="mt-2 p-2 border rounded bg-gray-100 dark:bg-gray-900"
-                //           dangerouslySetInnerHTML={{ __html: pronDetail }}
-                //         />
-                //       )}
-                //     </div>
-
-                //     <div className="mt-4">
-                //       <h3 className="font-semibold text-gray-800 dark:text-gray-200">
-                //         Results:
-                //       </h3>
-                //       {(allResults[currentQuestion] || [])
-                //       .slice()
-                //       .reverse()
-                //       .map((res, i) => (
-                //         <div key={i} className="mt-2 p-2 border rounded bg-white dark:bg-gray-800">
-                //           <p>Global Score: {res.global_score}</p>
-                //           <p>
-                //             Content: {res.content_score}, Pronunciation: {res.pronunciation_score}, Fluency: {res.fluency_score}
-                //           </p>
-
-                //           {/* Audio del usuario */}
-                //           {res.url_audio && (
-                //             <audio controls src={res.url_audio} className="mt-1 w-full" />
-                //           )}
-
-                //           {/* Audio del feedback */}
-                //           {res.url_feedback_audio && (
-                //             <audio controls src={res.url_feedback_audio} className="mt-1 w-full" />
-                //           )}
-
-                //           {/* Visual de fluidez */}
-                //           {res.url_visual && (
-                //             <img src={res.url_visual} alt="Fluency Graph" className="mt-1 max-h-40" />
-                //           )}
-
-                //           {/* Feedback escrito */}
-                //           {res.feedback_text && (
-                //             <div className="mt-2 p-2 bg-gray-100 dark:bg-gray-900 rounded">
-                //               {res.feedback_text.split("\n").map((line: string, idx: number) => (
-                //                 <p key={idx}>{line}</p>
-                //               ))}
-                //             </div>
-                //           )}
-                //         </div>
-                //       ))}
-
-                //     </div>
-
-                //     <div className="flex gap-2 mt-4">
-                //       <button
-                //         onClick={handleStartClick}
-                //         disabled={recording}
-                //         className="flex-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
-                //       >
-                //         Start
-                //       </button>
-                //       <button
-                //         onClick={stopRecording}
-                //         disabled={!recording}
-                //         className="flex-1 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 disabled:opacity-50"
-                //       >
-                //         Stop
-                //       </button>
-                //     </div>
-                //   </div>
-                // );
                 return (
                   <ReadAloudComponent
                     q={questions[currentQuestion]}
@@ -1150,615 +1078,107 @@ export default function StudyMenu() {
                 );
               case "repeatsentences":
                   return (
-                    <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
-                      <p className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                        Listen carefully and repeat the sentence exactly.
-                      </p>
-                
-                      <p className="text-red-600 font-semibold mb-2">
-                        🎧 Listen and repeat when ready
-                      </p>
-                      {/* 🔹 NUEVO: Número de pregunta justo debajo */}
-                      <p className="text-blue-700 font-semibold mb-2">
-                              Question {currentQuestion + 1}:
-                      </p>
-                
-                      {/* 🎧 Audio */}
-                      <audio ref={audioRef} controls src={q.audio} className="w-full mb-2" />
-                
-                      {/* 🔹 Mostrar texto del modelo */}
-                      <button
-                        onClick={() => toggleShowText(currentQuestion)}
-                        className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition mb-3"
-                      >
-                        {showTextStates[currentQuestion] ? "Hide Text" : "Show Text"}
-                      </button>
-                
-                      {showTextStates[currentQuestion] && (
-                        <div className="mt-2 mb-3 p-3 border rounded-lg bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 text-lg">
-                          {q.text}
-                        </div>
-                      )}
-                
-                      {/* 🔹 Alignment Toggle (igual que Read Aloud) */}
-                      <div className="mt-3">
-                        <button
-                          onClick={() => setAlignmentVisible((v) => !v)}
-                          className="px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
-                        >
-                          Toggle Alignment
-                        </button>
-                
-                        {alignmentVisible && (
-                          <div
-                            className="mt-2 p-2 border rounded bg-gray-100 dark:bg-gray-900"
-                            dangerouslySetInnerHTML={{ __html: pronDetail }}
-                          />
-                        )}
-                      </div>
-                
-                      {/* 🎯 Resultados */}
-                      <div className="mt-4">
-                        {(allResults[currentQuestion] || [])
-                          .slice()
-                          .reverse()
-                          .map((res, i) => (
-                            <div
-                              key={i}
-                              className="mt-2 p-2 border rounded bg-white dark:bg-gray-700"
-                            >
-                              <p>Global Score: {res.global_score}</p>
-                              <p>
-                                Content: {res.content_score}, Pronunciation: {res.pronunciation_score},
-                                Fluency: {res.fluency_score}
-                              </p>
-                
-                              {/* 🎧 Audio grabado */}
-                              {res.url_audio && (
-                                <audio controls src={res.url_audio} className="mt-1 w-full" />
-                              )}
-                
-                              {/* 📈 Gráfico de pronunciación */}
-                              {res.url_visual && (
-                                <img
-                                  src={res.url_visual}
-                                  alt="Fluency Graph"
-                                  className="mt-2 max-h-40"
-                                />
-                              )}
-                            </div>
-                          ))}
-                      </div>
-                
-                      {/* 🎙 Controles */}
-                      <div className="flex gap-2 mt-4">
-                        <button
-                          onClick={handleStartClick}
-                          disabled={recording}
-                          className="flex-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
-                        >
-                          Start
-                        </button>
-                        <button
-                          onClick={stopRecording}
-                          disabled={!recording}
-                          className="flex-1 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 disabled:opacity-50"
-                        >
-                          Stop
-                        </button>
-                      </div>
-                    </div>
-                  );        
+                    <RepeatSentenceComponent
+                      q={questions[currentQuestion]}
+                      allResults={allResults}
+                      currentQuestion={currentQuestion}
+                      recording={recording}
+                      setAlignmentVisible={setAlignmentVisible}
+                      alignmentVisible={alignmentVisible}
+                      pronDetail={pronDetail}
+                      handleStartClick={handleStartClick}
+                      stopRecording={stopRecording}
+                      showTextStates={showTextStates}
+                      toggleShowText={toggleShowText}
+                    />
+                  );  
               case "DescribeImage":
                     return (
-                      <div className="text-center">
-                        <h3 className="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-100">
-                          Describe the following image as best as possible:
-                        </h3>
-                  
-                        {/* Imagen */}
-                        <img
-                          src={q.image}
-                          alt="Describe this"
-                          className="mx-auto max-h-80 rounded-lg shadow mb-4"
-                        />
-                  
-                        {/* 🔹 Botón Show/Hide Answer */}
-                        <button
-                          onClick={() => toggleShowText(currentQuestion)}
-                          className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition mb-3"
-                        >
-                          {showTextStates[currentQuestion] ? "Hide Answer" : "Show Answer"}
-                        </button>
-                  
-                        {/* 🔹 Texto descriptivo */}
-                        {showTextStates[currentQuestion] && (
-                          <div className="mt-2 mb-3 p-3 border rounded-lg bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 text-lg text-left max-w-3xl mx-auto">
-                            {q.text}
-                          </div>
-                        )}
-                  
-                         {/* 🎙 Controles */}
-                        <div className="flex gap-2 mt-4">
-                          <button
-                            onClick={handleStartClick}
-                            disabled={recording}
-                            className="flex-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
-                          >
-                            Start
-                          </button>
-                          <button
-                            onClick={stopRecording}
-                            disabled={!recording}
-                            className="flex-1 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 disabled:opacity-50"
-                          >
-                            Stop
-                          </button>
-                        </div>
-                  
-                        {/* 📊 Resultados (como ReadAloud y Repeat Sentence) */}
-                        <div className="mt-6">
-                          {(allResults[currentQuestion] || [])
-                            .slice()
-                            .reverse()
-                            .map((res, i) => (
-                              <div
-                                key={i}
-                                className="mt-2 p-3 border rounded bg-white dark:bg-gray-800 text-left"
-                              >
-                                <p>Global Score: {res.global_score}</p>
-                                <p>
-                                  Content: {res.content_score}, Pronunciation:{" "}
-                                  {res.pronunciation_score}, Fluency: {res.fluency_score}
-                                </p>
-                  
-                                {/* 🎧 Audio grabado */}
-                                {res.url_audio && (
-                                  <audio controls src={res.url_audio} className="mt-1 w-full" />
-                                )}
-                  
-                                {/* 📈 Imagen de pronunciación */}
-                                {res.url_visual && (
-                                  <img
-                                    src={res.url_visual}
-                                    alt="Pronunciation Graph"
-                                    className="mt-2 max-h-40"
-                                  />
-                                )}
-                              </div>
-                            ))}
-                        </div>
-                  
-                        {/* 🔹 Detalle de pronunciación (palabra por palabra) */}
-                        {pronDetail && (
-                          <div
-                            className="mt-4 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg text-left"
-                            dangerouslySetInnerHTML={{ __html: pronDetail }}
-                          />
-                        )}
-                      </div>
-                    );    
+                      <DescribeImageComponent
+                        q={questions[currentQuestion]}
+                        allResults={allResults}
+                        currentQuestion={currentQuestion}
+                        recording={recording}
+                        handleStartClick={handleStartClick}
+                        stopRecording={stopRecording}
+                        showTextStates={showTextStates}
+                        toggleShowText={toggleShowText}
+                        pronDetail={pronDetail}
+                      />
+                    ); 
               case "RetellLecture":
-                  return (
-                    <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
-                      <p className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                        Listen carefully and retell the lecture.
-                      </p>
-                
-                      <p className="text-red-600 font-semibold mb-2">
-                        🎧 Listen and retell the lecture
-                      </p>
-                      {/* 🔹 NUEVO: Número de pregunta justo debajo */}
-                      <p className="text-blue-700 font-semibold mb-2">
-                              Question {currentQuestion + 1}:
-                      </p>
-                
-                      {/* 🎧 Audio */}
-                      <audio ref={audioRef} controls src={q.audio} className="w-full mb-2" />
-                
-                      {/* 🔹 Mostrar texto del modelo */}
-                      <button
-                        onClick={() => toggleShowText(currentQuestion)}
-                        className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition mb-3"
-                      >
-                        {showTextStates[currentQuestion] ? "Hide Text" : "Show Text"}
-                      </button>
-                
-                      {showTextStates[currentQuestion] && (
-                        <div className="mt-2 mb-3 p-3 border rounded-lg bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 text-lg">
-                          {q.text}
-                        </div>
-                      )}
-                
-                      {/* 🔹 Alignment Toggle (igual que Read Aloud) */}
-                      <div className="mt-3">
-                        <button
-                          onClick={() => setAlignmentVisible((v) => !v)}
-                          className="px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
-                        >
-                          Toggle Alignment
-                        </button>
-                
-                        {alignmentVisible && (
-                          <div
-                            className="mt-2 p-2 border rounded bg-gray-100 dark:bg-gray-900"
-                            dangerouslySetInnerHTML={{ __html: pronDetail }}
-                          />
-                        )}
-                      </div>
-                
-                      {/* 🎯 Resultados */}
-                      <div className="mt-4">
-                        {(allResults[currentQuestion] || [])
-                          .slice()
-                          .reverse()
-                          .map((res, i) => (
-                            <div
-                              key={i}
-                              className="mt-2 p-2 border rounded bg-white dark:bg-gray-700"
-                            >
-                              <p>Global Score: {res.global_score}</p>
-                              <p>
-                                Content: {res.content_score}, Pronunciation: {res.pronunciation_score},
-                                Fluency: {res.fluency_score}
-                              </p>
-                
-                              {/* 🎧 Audio grabado */}
-                              {res.url_audio && (
-                                <audio controls src={res.url_audio} className="mt-1 w-full" />
-                              )}
-                
-                              {/* 📈 Gráfico de pronunciación */}
-                              {res.url_visual && (
-                                <img
-                                  src={res.url_visual}
-                                  alt="Fluency Graph"
-                                  className="mt-2 max-h-40"
-                                />
-                              )}
-                            </div>
-                          ))}
-                      </div>
-                
-                      {/* 🎙 Controles */}
-                      <div className="flex gap-2 mt-4">
-                        <button
-                          onClick={handleStartClick}
-                          disabled={recording}
-                          className="flex-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
-                        >
-                          Start
-                        </button>
-                        <button
-                          onClick={stopRecording}
-                          disabled={!recording}
-                          className="flex-1 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 disabled:opacity-50"
-                        >
-                          Stop
-                        </button>
-                      </div>
-                    </div>
-                  );
+                return (
+                  <RetellLectureComponent
+                    q={questions[currentQuestion]}
+                    allResults={allResults}
+                    currentQuestion={currentQuestion}
+                    recording={recording}
+                    handleStartClick={handleStartClick}
+                    stopRecording={stopRecording}
+                    showTextStates={showTextStates}
+                    toggleShowText={toggleShowText}
+                    alignmentVisible={alignmentVisible}
+                    setAlignmentVisible={setAlignmentVisible}
+                    pronDetail={pronDetail}
+                  />
+                );
               case "AnswerShortQuestion":
-                    return (
-                      <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
-                        <p className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                          Answer the question by saying the word aloud.
-                        </p>
-                  
-                        {/* Número de pregunta */}
-                        <p className="text-blue-700 font-semibold mb-2">
-                          Question {currentQuestion + 1}:
-                        </p>
-                  
-                        {/* Audio de la pregunta */}
-                        <audio ref={audioRef} controls src={q.audio} className="w-full mb-2" />
-
-                        {/* Botones para grabar la respuesta */}
-                        <div className="flex gap-2 mt-2 mb-2">
-                          <button
-                            onClick={handleStartClick}
-                            disabled={recording}
-                            className="flex-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
-                          >
-                            Start
-                          </button>
-                          <button
-                            onClick={stopRecording}
-                            disabled={!recording}
-                            className="flex-1 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 disabled:opacity-50"
-                          >
-                            Stop
-                          </button>
-                        </div>
-                  
-                        {/* Botón compacto Show/Hide para Pregunta + Respuesta */}
-                        <button
-                          onClick={() => toggleShowText(currentQuestion)}
-                          className="mb-2 px-3 py-1 bg-yellow-400 dark:bg-yellow-600 text-black dark:text-white font-semibold rounded-full hover:bg-yellow-500 dark:hover:bg-yellow-700 transition"
-                        >
-                          {showTextStates[currentQuestion] ? "Hide Q&A" : "Show Q&A"}
-                        </button>
-
-                        {/* Bloque que contiene Pregunta + Respuesta */}
-                        {showTextStates[currentQuestion] && (
-                          <div className="mt-2 p-3 border rounded bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 text-lg">
-                            {/* Pregunta */}
-                            <p className="font-semibold mb-2 text-blue-700">Question:</p>
-                            <p className="mb-4">{questions[currentQuestion].text}</p>
-
-                            {/* Respuesta */}
-                            <p className="font-semibold mb-2 text-green-700">Answer:</p>
-                            <p>{Answershortquestion[currentQuestion].answer}</p>
-                          </div>
-                        )}
-                  
-                        {/* Resultado de la evaluación de la palabra */}
-                        {pronDetail && (
-                          <div
-                            className="mt-4 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg text-left text-lg font-semibold"
-                            dangerouslySetInnerHTML={{ __html: pronDetail }}
-                          />
-                        )}
-                  
-                        {/* Mostrar resultados del backend (opcional) */}
-                        <div className="mt-4">
-                          {(allResults[currentQuestion] || [])
-                            .slice()
-                            .reverse()
-                            .map((res, i) => (
-                              <div key={i} className="mt-2 p-2 border rounded bg-white dark:bg-gray-700">
-                                <p>Global Score: {res.global_score}</p>
-                                <p>
-                                  Content: {res.content_score}, Pronunciation: {res.pronunciation_score}, Fluency: {res.fluency_score}
-                                </p>
-                                {res.url_audio && (
-                                  <audio controls src={res.url_audio} className="mt-1 w-full" />
-                                )}
-                              </div>
-                            ))}
-                        </div>
-                      </div>
-                    );             
+                return (
+                  <AnswerShortQuestionComponent
+                    q={questions[currentQuestion]}
+                    allResults={allResults}
+                    currentQuestion={currentQuestion}
+                    recording={recording}
+                    handleStartClick={handleStartClick}
+                    stopRecording={stopRecording}
+                    showTextStates={showTextStates}
+                    toggleShowText={toggleShowText}
+                    pronDetail={pronDetail}
+                    answerData={Answershortquestion}
+                  />
+                );            
               case "summarize":
-                      return (
-                        <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
-                    
-                          {/* Título */}
-                          <p className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                            Summarize the discussion in one or two sentences.
-                          </p>
-                    
-                          {/* Número */}
-                          <p className="text-blue-700 font-semibold mb-2">
-                            Question {currentQuestion + 1}:
-                          </p>
-                    
-                          {/* Audio del grupo (monólogo de varias voces) */}
-                          <audio
-                            ref={audioRef}
-                            controls
-                            src={q.audio}
-                            className="w-full mb-3"
-                          />
-                    
-                          {/* Controles de grabación */}
-                          <div className="flex gap-2 mt-2 mb-2">
-                            <button
-                              onClick={handleStartClick}
-                              disabled={recording}
-                              className="flex-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
-                            >
-                              Start
-                            </button>
-                            <button
-                              onClick={stopRecording}
-                              disabled={!recording}
-                              className="flex-1 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 disabled:opacity-50"
-                            >
-                              Stop
-                            </button>
-                          </div>
-                    
-                          {/* Botón mostrar/ocultar resumen */}
-                          <button
-                            onClick={() => toggleShowText(currentQuestion)}
-                            className="mb-2 px-3 py-1 bg-yellow-400 dark:bg-yellow-600 
-                            text-black dark:text-white font-semibold rounded-full 
-                            hover:bg-yellow-500 dark:hover:bg-yellow-700 transition"
-                          >
-                            {showTextStates[currentQuestion] ? "Hide Summary" : "Show Summary"}
-                          </button>
-                    
-                          {/* Bloque de texto del Summary (oculto por defecto) */}
-                          {showTextStates[currentQuestion] && (
-                            <div className="mt-2 p-3 border rounded bg-white dark:bg-gray-900 
-                            text-gray-800 dark:text-gray-200 text-lg">
-                              <p className="font-semibold mb-2 text-blue-700">Summary Response:</p>
-                              <p>{q.text}</p>
-                            </div>
-                          )}
-                    
-                          {/* Resultado PTE */}
-                          {pronDetail && (
-                            <div
-                              className="mt-4 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg 
-                              text-left text-lg font-semibold"
-                              dangerouslySetInnerHTML={{ __html: pronDetail }}
-                            />
-                          )}
-                    
-                          {/* Historial resultados */}
-                          <div className="mt-4">
-                            {(allResults[currentQuestion] || [])
-                              .slice()
-                              .reverse()
-                              .map((res, i) => (
-                                <div key={i} className="mt-2 p-2 border rounded bg-white dark:bg-gray-700">
-                                  <p>Global Score: {res.global_score}</p>
-                                  <p>
-                                    Content: {res.content_score},
-                                    Pronunciation: {res.pronunciation_score},
-                                    Fluency: {res.fluency_score}
-                                  </p>
-                                  {res.url_audio && (
-                                    <audio controls src={res.url_audio} className="mt-1 w-full" />
-                                  )}
-                                </div>
-                              ))}
-                          </div>
-                        </div>
-                      );                      
+                return (
+                  <SummarizeComponent
+                    q={questions[currentQuestion]}
+                    allResults={allResults}
+                    currentQuestion={currentQuestion}
+                    recording={recording}
+                    handleStartClick={handleStartClick}
+                    stopRecording={stopRecording}
+                    showTextStates={showTextStates}
+                    toggleShowText={toggleShowText}
+                    pronDetail={pronDetail}
+                  />
+                );                     
               case "respond_to_situation":
-                        return (
-                          <div className="mb-4 p-4 border border-gray-200 dark:border-gray-700 rounded bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
-                            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                              Respond to a situation:
-                            </h3>
-                            
-                            {/* 🔹 Mostrar el texto del escenario */}
-                            <div className="mb-4">
-                              <p className="font-medium text-gray-700 dark:text-gray-300">
-                                Situation:
-                              </p>
-                              <p className="text-lg">{q.text}</p>
-                            </div>
-                      
-                            {/* 🔹 Botón para grabar respuesta */}
-                            <div className="mt-4 flex items-center gap-4">
-                              <button
-                                onClick={recording ? stopRecording : startRecording}
-                                className={`px-4 py-2 rounded font-semibold text-white ${
-                                  recording ? "bg-red-600 hover:bg-red-700" : "bg-blue-600 hover:bg-blue-700"
-                                }`}
-                              >
-                                {recording ? "Stop Recording" : "Start Recording"}
-                              </button>
-                            </div>
-                      
-                            {/* 🔹 Mostrar el resultado de la grabación si hay */}
-                            <div className="mt-4">
-                              <h3 className="font-semibold text-gray-800 dark:text-gray-200">
-                                Previous Responses:
-                              </h3>
-                              {(allResults[currentQuestion] || []).length === 0 ? (
-                                <p className="text-sm text-gray-500 dark:text-gray-400">
-                                  No responses recorded yet.
-                                </p>
-                              ) : (
-                                (allResults[currentQuestion] || [])
-                                  .slice()
-                                  .reverse()
-                                  .map((res, i) => (
-                                    <div
-                                      key={i}
-                                      className="mt-2 p-2 border rounded bg-white dark:bg-gray-900"
-                                    >
-                                      <p>Global Score: {res.global_score}</p>
-                                      {res.url_audio && (
-                                        <audio controls src={res.url_audio} className="mt-1 w-full" />
-                                      )}
-                                    </div>
-                                  ))
-                              )}
-                            </div>
-                          </div>
-                        );
+                return (
+                  <RespondSituationComponent
+                    q={questions[currentQuestion]}
+                    allResults={allResults}
+                    currentQuestion={currentQuestion}
+                    recording={recording}
+                    handleStartClick={handleStartClick}
+                    stopRecording={stopRecording}
+                  />
+                );
  ///////////////////////// WRITING SECTION  ////////////////////////////////
               case "SummarizeWrittentext":
-                          return (
-                            <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
-                              <p className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                                {q.type === "SummarizeWrittentext"
-                                  ? "Write a Summarize on the given topic."
-                                  : "Write your answer below:"}
-                              </p>
-
-                              {/* Texto de referencia */}
-                              {q.text && (
-                                <div className="mb-3 p-3 border rounded bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-                                  {q.text}
-                                </div>
-                              )}
-
-                              {/* Área de escritura */}
-                              <textarea
-                                value={q.userInput || ""}
-                                onChange={(e) => handleInputChange(e.target.value)}
-                                className="w-full p-3 border rounded-lg bg-white dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                rows={6}
-                                placeholder="Type your answer here..."
-                              />
-
-                              {/* Contador de palabras */}
-                              <p className="mt-2 text-right text-sm text-gray-500 dark:text-gray-300">
-                                Word count: {(q.userInput?.trim().split(/\s+/).filter(Boolean).length) || 0}
-                              </p>
-
-                              {/* Botón para calcular score (opcional) */}
-                              <button
-                                onClick={checkScore}
-                                className="mt-3 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-                              >
-                                Check Score
-                              </button>
-
-                              {/* Resultado */}
-                              {/* {q.score && (
-                                <p className="mt-2 font-semibold text-gray-800 dark:text-gray-100">
-                                  Score: {q.score}
-                                </p>
-                              )} */}
-                            </div>
-
-                          );                                           
+                return (
+                  <SummarizeWrittenComponent
+                    q={questions[currentQuestion]}
+                    handleInputChange={handleInputChange}
+                    checkScore={checkScore}
+                  />
+                );                                         
               case "Essay":
-                          return (
-                            <div className="mb-4 p-4 border rounded bg-gray-50 dark:bg-gray-800">
-                              <p className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                                {q.type === "Essay"
-                                  ? "Write a well-structured essay on the given topic."
-                                  : "Write your answer below:"}
-                              </p>
-
-                              {/* Texto de referencia */}
-                              {q.text && (
-                                <div className="mb-3 p-3 border rounded bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-                                  {q.text}
-                                </div>
-                              )}
-
-                              {/* Área de escritura */}
-                              <textarea
-                                value={q.userInput || ""}
-                                onChange={(e) => handleInputChange(e.target.value)}
-                                className="w-full p-3 border rounded-lg bg-white dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                rows={6}
-                                placeholder="Type your answer here..."
-                              />
-
-                              {/* Contador de palabras */}
-                              <p className="mt-2 text-right text-sm text-gray-500 dark:text-gray-300">
-                                Word count: {(q.userInput?.trim().split(/\s+/).filter(Boolean).length) || 0}
-                              </p>
-
-                              {/* Botón para calcular score (opcional) */}
-                              <button
-                                onClick={checkScore}
-                                className="mt-3 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-                              >
-                                Check Score
-                              </button>
-
-                              {/* Resultado */}
-                              {/* {q.score && (
-                                <p className="mt-2 font-semibold text-gray-800 dark:text-gray-100">
-                                  Score: {q.score}
-                                </p>
-                              )} */}
-                            </div>
-
-                          );
+                return (
+                  <EssayComponent
+                    q={questions[currentQuestion]}
+                    handleInputChange={handleInputChange}
+                    checkScore={checkScore}
+                  />
+                );
 /////////////////////////  READING SECTION  ////////////////////////////////                        
               case "FillInTheBlanks":
                   return (

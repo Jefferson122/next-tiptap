@@ -7,18 +7,9 @@ import { saveFeedbackAudio } from "@/components/Creaciones/feedbackAudioDB";
 
 // IDEA NUEVA:
 // SUSTITUYE TUS IMPORTS DE DATOS Y UTILS POR ESTOS:
-import { 
-  sections, 
-  exerciseData, 
-  Exercise, 
-  BlankOption,
-  BlankOptionDrag 
-} from "@/components/shared/dataMenu";
+import { sections, exerciseData, Exercise, BlankOption,BlankOptionDrag} from "@/components/shared/dataMenu";
 
-import { 
-  scoreWords, 
-  getDayConfig, 
-  generateStudyQuestions // <--- Nueva función
+import { formatTime,scoreWords, getDayConfig, generateStudyQuestions // <--- todo el push de texto imagen y audio
 } from "@/components/shared/studyUtils";
 
 // Componentes Skpeaking
@@ -35,7 +26,8 @@ import SummarizeWrittenComponent from "@/components/shared/Questions/Writing/Sum
 import EssayComponent from "@/components/shared/Questions/Writing/EssayComponent";
 
 export default function StudyMenu() {
-  
+
+  ////
   const handleSelectDay = (day: number) => {
     const newCounts = getDayConfig(day);
     setCounts(newCounts);
@@ -265,7 +257,7 @@ export default function StudyMenu() {
       })
     );
   };
-   // Generar preguntas e instrucciones
+
    // Generar preguntas e instrucciones
    const handleGenerateInstructions = () => {
     // Ahora usamos la función que importamos de studyUtils
@@ -381,30 +373,6 @@ export default function StudyMenu() {
     } else { setPronDetail(""); setPronEsp(""); }
   };
   const [reorderFeedback, setReorderFeedback] = useState<number[]>([]);
-  // Scoring para dictado
-  // const scoreWords = (modelo: string, intento: string) => {
-  //   const clean = (text: string) =>
-  //     text.toLowerCase().replace(/[^a-z0-9]/gi, "").trim();
-
-  //   const modeloPal = modelo.split(/\s+/).map(clean).filter(Boolean);
-  //   const intentoPal = intento.split(/\s+/).map(clean).filter(Boolean);
-
-  //   const total = modeloPal.length;
-  //   if (total === 0) return "0/0";
-
-  //   const modeloCount: Record<string, number> = {};
-  //   modeloPal.forEach((w) => (modeloCount[w] = (modeloCount[w] || 0) + 1));
-
-  //   let correct = 0;
-  //   intentoPal.forEach((w) => {
-  //     if (modeloCount[w] > 0) {
-  //       correct++;
-  //       modeloCount[w]--;
-  //     }
-  //   });
-
-  //   return `${correct}/${total} (${Math.round((correct / total) * 100)}%)`;
-  // };
 
   // Estado independiente para el nuevo countdown
   const [countdown30, setCountdown30] = useState(30);
@@ -421,11 +389,7 @@ export default function StudyMenu() {
   const prevQuestion = () => setCurrentQuestion(prev=>Math.max(prev-1,0));
   const retryTest = () => { handleGenerateInstructions(); };
 
-  const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m}m : ${s}s`;
-  };
+  
     // Al inicio del componente
   const [showTextStates, setShowTextStates] = useState<boolean[]>(
     () => questions.map(() => false)
@@ -462,10 +426,7 @@ export default function StudyMenu() {
     "Listening-Write from Dictation": exerciseData["Listening-Write from Dictation"]?.length || 0,
   };
 
-  
-
   ///////////NUEVO WHISPER////////////
-
   const sendAudioForFeedback = async (audioBlob: Blob) => {
     if (!questions[currentQuestion]) return;
   
@@ -522,8 +483,6 @@ export default function StudyMenu() {
     }
   };
   
-  
-
   useEffect(() => {
     const ping = setInterval(() => {
       // fetch("https://backend1-exyd.onrender.com/").catch(() => {});
@@ -595,9 +554,6 @@ export default function StudyMenu() {
         Cleaner
       </button>
 </div>
-
-
-
 
       {/* Total y Generate */}
       <div className="mt-6 sm:mt-8 p-4 sm:p-5 bg-blue-50 dark:bg-blue-900 rounded-xl text-center border border-blue-100 dark:border-blue-700">

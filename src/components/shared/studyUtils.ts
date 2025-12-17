@@ -16,6 +16,8 @@ import {
     FillInTheBlanksDrag, 
     OneChoiceExercises, 
     WritingDictation,
+    BlankOption,
+    BlankOptionDrag,
     Exercise 
   } from "@/components/shared/dataMenu";
   

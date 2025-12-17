@@ -38,9 +38,6 @@ import {OneChoiceExercises} from "@/components/Data1/3.Reading/5.MCSingleAnswer"
 import SummarizeWrittenComponent from "@/components/shared/Questions/Writing/SummarizeWrittenComponent";
 import EssayComponent from "@/components/shared/Questions/Writing/EssayComponent";
 
-// Componentes Reading
-import FillInTheBlanksComponent from "@/components/shared/Questions/Reading/FillInTheBlanksComponent";
-
 //Section Listening
 import WritingDictation from "@/components/Data1/4.Listening/6.WritefromDictation";
 

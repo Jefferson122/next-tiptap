@@ -1,5 +1,5 @@
 "use client";
-
+// #region
 import { useState, useEffect, useRef } from "react";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import React, { Fragment } from "react";
@@ -24,9 +24,10 @@ import RespondSituationComponent from "@/components/shared/Questions/Speaking/Re
 // Componentes Writing
 import SummarizeWrittenComponent from "@/components/shared/Questions/Writing/SummarizeWrittenComponent";
 import EssayComponent from "@/components/shared/Questions/Writing/EssayComponent";
+// #endregion
 
 export default function StudyMenu() {
-
+// #region
   ////
   const handleSelectDay = (day: number) => {
     const newCounts = getDayConfig(day);
@@ -36,7 +37,7 @@ export default function StudyMenu() {
   const handleDragEnd = (result: DropResult) => {
     const { destination, source } = result;
     if (!destination) return;
-  
+
     setQuestions(prev => {
       const copy = [...prev];
       const q = copy[currentQuestion];
@@ -482,7 +483,7 @@ export default function StudyMenu() {
       console.error("Error sending audio:", err);
     }
   };
-  
+  // #endregion
   useEffect(() => {
     const ping = setInterval(() => {
       // fetch("https://backend1-exyd.onrender.com/").catch(() => {});
